@@ -318,7 +318,7 @@
             beforeAvatarUpload(file) {
                 this.fullscreenLoading = true
                 const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
-                const isLt2M = file.size / 1024 / 1024 < 1;
+                const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {
                     this.fullscreenLoading = false
@@ -326,7 +326,7 @@
                 }
                 if (!isLt2M) {
                     this.fullscreenLoading = false
-                    this.$message.error('图片大小不能超过 1MB!');
+                    this.$message.error('图片大小不能超过 2MB!');
                 }
                 return  isLt2M;
             },
