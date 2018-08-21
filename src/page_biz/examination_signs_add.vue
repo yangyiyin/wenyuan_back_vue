@@ -66,17 +66,17 @@
                     </el-select></el-input><span style="color: red">*</span>
                 </div>
                 <div class="search_item">
-                    <span class="pre_info" style="font-size: 14px;">父亲电话:</span>
-                    <el-input clearable placeholder="请输入父亲电话" v-model="data.content.father_tel" style="width: 250px"></el-input></el-input><span style="color: red">*</span>
+                    <span class="pre_info" style="font-size: 14px;">主要联系手机号:</span>
+                    <el-input clearable placeholder="请输入主要联系手机号" v-model="data.content.father_tel" style="width: 250px"></el-input></el-input><span style="color: red">*</span>
                 </div>
                 <div class="search_item">
-                    <span class="pre_info" style="font-size: 14px;">母亲电话:</span>
-                    <el-input clearable placeholder="请输入父亲电话" v-model="data.content.mother_tel" style="width: 250px"></el-input></el-input><span style="color: red">*</span>
+                    <span class="pre_info" style="font-size: 14px;">备用电话:</span>
+                    <el-input clearable placeholder="请输入备用电话" v-model="data.content.mother_tel" style="width: 250px"></el-input></el-input><span style="color: red">*</span>
                 </div>
             </template>
             <template v-if="!data.is_new">
                 <div class="search_item">
-                    <span class="pre_info" style="font-size: 14px;">父亲手机号(麦田报名手机号):</span>
+                    <span class="pre_info" style="font-size: 14px;">主要联系手机号(麦田报名手机号):</span>
                     <el-input clearable placeholder="请输入麦田报名手机号" v-model="data.content.father_tel" style="width: 250px"></el-input></el-input><span style="color: red">*</span>
                 </div>
             </template>
@@ -234,7 +234,7 @@
                 }
 
                 if (!this.data.content.father_tel) {
-                    var error_msg = '请填写父亲电话';
+                    var error_msg = '请填写主要联系手机';
                 }
 
                 if (!this.data.content.avatar) {
