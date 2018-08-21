@@ -23,7 +23,7 @@
                     <el-input clearable placeholder="请输入所属学校" v-model="data.content.school" style="width: 250px"></el-input><span style="color: red">*</span>
                 </div>
                 <div class="search_item">
-                    <span class="pre_info" style="font-size: 14px;">曾经就读学校:</span>
+                    <span class="pre_info" style="font-size: 14px;">曾经就读培训学校:</span>
                     <el-input clearable placeholder="请输入曾经就读学校" v-model="data.content.school_before" style="width: 250px"></el-input>
                 </div>
                 <div class="search_item">
