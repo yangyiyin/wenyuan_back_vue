@@ -262,6 +262,7 @@
                             user_tel:this.data.content.father_tel,
                         }).then(function(res){
                             if (res.code == this.$store.state.constant.status_success) {
+                                this.data.studentid = res.data.studentid ? res.data.studentid : '';
                                 return examination_signs_edit(this.data);
                             } else {
                                 this.$message({
@@ -286,6 +287,7 @@
 
                         }.bind(this));
                     } else {
+                        this.data.studentid = '';
                         var result = examination_signs_edit(this.data).then(function (res) {
                             if (res.code == this.$store.state.constant.status_success) {
                                 this.$message({
