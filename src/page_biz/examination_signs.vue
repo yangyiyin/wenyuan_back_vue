@@ -37,7 +37,7 @@
                                 <span>{{ props.row.content.mother_tel }}</span>
                             </el-form-item>
                             <el-form-item label="是否新生:" >
-                                <span>{{ props.row.is_new ? '是':'否' }}</span>
+                                <span>{{ props.row.is_new == 1 ? '是':'否' }}</span>
                             </el-form-item>
                             <el-form-item label="结果备注:" >
                                 <span>{{ props.row.content.remark }}</span>
