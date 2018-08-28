@@ -638,7 +638,7 @@ __WEBPACK_IMPORTED_MODULE_2_vue_quill_editor__["Quill"].register('modules/imageR
             if (!this.img) {
                 var error_msg = '请上传图片';
             }
-            if (!this.content) {
+            if (!this.content && !this.link) {
                 var error_msg = '请填写内容';
             }
             if (error_msg) {
