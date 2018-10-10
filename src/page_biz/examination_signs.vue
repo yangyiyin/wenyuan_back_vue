@@ -63,13 +63,12 @@
                 <el-table-column label="学生姓名" prop="student_name"></el-table-column>
                 <el-table-column label="家长手机号" prop="parent_tel"></el-table-column>
                 <el-table-column label="来源" prop="from"></el-table-column>
-                <!--<el-table-column label="操作" width="300">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<el-button size="mini"  type="warning" @click="handleGenTicket(scope.row)">生成准考证</el-button>-->
+                <el-table-column label="操作" width="300">
+                    <template slot-scope="scope">
 
-
-                    <!--</template>-->
-                <!--</el-table-column>-->
+                        <el-button size="mini"   @click="del(scope.row, scope.$index)">删除</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
                 <el-pagination
@@ -98,7 +97,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_signs_list,examination_gen_ticket,setCanEditAvatar} from '@/api/getDataEarth'
+    import {examination_signs_list,examination_gen_ticket,setCanEditAvatar,examination_sign_del} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -206,6 +205,31 @@
                     }
                     this.dialogFormVisibleTicket = false;
                 }.bind(this));
+            },
+            del(item, index) {
+
+                this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    examination_sign_del({id:item.id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.tableData.splice(index,1);
+                            this.count --;
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                }.bind(this))
+
             },
         },
     }

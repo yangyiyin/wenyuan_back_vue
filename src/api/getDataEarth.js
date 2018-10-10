@@ -38,6 +38,7 @@ export const examination_excel_out = data => fetch('/wenyuanjiaoyu/examination_s
 export const examination_gen_ticket = data => fetch('/wenyuanjiaoyu/examination_signs/gen_ticket', data, 'POST').then(check_login);
 export const examination_send_mail = data => fetch('/wenyuanjiaoyu/examination_signs/send_mail', data, 'POST').then(check_login);
 export const examination_signs_list = data => fetch('/wenyuanjiaoyu/examination_signs/index', data, 'POST').then(check_login);
+export const examination_sign_del = data => fetch('/wenyuanjiaoyu/examination_signs/del', data, 'POST').then(check_login);
 export const examination_signs_edit = data => fetch('/wenyuanjiaoyu/examination_signs/edit', data, 'POST').then(check_login);
 export const setCanEditAvatar = data => fetch('/wenyuanjiaoyu/examination_signs/setCanEditAvatar', data, 'POST').then(check_login);
 export const users_list = data => fetch('/wenyuanjiaoyu/users/index', data, 'POST').then(check_login);
