@@ -15,6 +15,20 @@
                     v-model="parent_tel"
                     clearable>
             </el-input>
+            <el-date-picker
+                    v-model="start_time"
+                    type="datetime"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="开始时间">
+            </el-date-picker>
+
+            <el-date-picker
+                    v-model="end_time"
+                    type="datetime"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="结束时间">
+            </el-date-picker>
+
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
 
         </div>
@@ -63,6 +77,7 @@
                 <el-table-column label="学生姓名" prop="student_name"></el-table-column>
                 <el-table-column label="家长手机号" prop="parent_tel"></el-table-column>
                 <el-table-column label="来源" prop="from"></el-table-column>
+                <el-table-column label="报名时间" prop="create_time"></el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
 
@@ -117,6 +132,8 @@
 //                categories:[],
                 student_name:'',
                 parent_tel:'',
+                start_time:'',
+                end_time:'',
                 loadingBtn:-1,
                 upload_url:this.$store.state.constant.examination_daoru_excel_url,
                 upload_data:{token:getStore('token') ? getStore('token') : ''}
@@ -140,7 +157,7 @@
         },
         methods: {
             list() {
-                examination_signs_list({id:this.id,page:this.currentPage,page_size:this.limit,student_name:this.student_name,parent_tel:this.parent_tel}).then(function(res){
+                examination_signs_list({id:this.id,page:this.currentPage,page_size:this.limit,student_name:this.student_name,parent_tel:this.parent_tel,start_time:this.start_time,end_time:this.end_time}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
