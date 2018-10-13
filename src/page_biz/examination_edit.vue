@@ -133,6 +133,7 @@
                 blocks:[
                     {id:1,name:'只限内部报名'},
                     {id:2,name:'内外都可报名'},
+                    {id:3,name:'只限外部报名'},
                 ],
                 blocks_form_type:[
                     {id:1,name:'新生入学'},
