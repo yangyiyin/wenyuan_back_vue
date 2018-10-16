@@ -20,11 +20,11 @@
 						<el-menu-item index="words">教师评语</el-menu-item>
 					</el-submenu>
 
-					<!--<el-submenu index="4">-->
-						<!--<template slot="title"><i class="el-icon-view"></i>用户管理</template>-->
+					<el-submenu index="4">
+						<template slot="title"><i class="el-icon-view"></i>精品课程</template>
 
-						<!--<el-menu-item index="users">微信小程序用户管理</el-menu-item>-->
-					<!--</el-submenu>-->
+						<el-menu-item index="goods">精品课管理</el-menu-item>
+					</el-submenu>
 
 					<el-submenu index="5">
 						<template slot="title"><i class="el-icon-setting"></i>系统设置</template>
@@ -44,9 +44,12 @@
 
 <script>
     export default {
+
 		computed: {
 			defaultActive: function(){
-				return this.$route.path.replace('/', '');
+				var index = this.$route.path.replace('/', '');
+				index = index.replace('add_', '');
+				return index;
 			}
 		},
     }

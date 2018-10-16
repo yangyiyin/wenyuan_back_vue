@@ -72,7 +72,7 @@
                                 <el-button size="mini"  type="warning" @click="handleGenTicket(props.row)">生成准考证</el-button>
                             </el-form-item>
 
-                            <el-form-item label="数据信息:" >
+                            <el-form-item label="数据信息:">
                                 <span>{{ props.row.sign_data }}</span>
                             </el-form-item>
                         </el-form>

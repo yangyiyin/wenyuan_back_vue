@@ -20,6 +20,8 @@ const suggest = r => require.ensure([], () => r(require('@/page_biz/suggest')), 
 const words = r => require.ensure([], () => r(require('@/page_biz/words')), 'words');
 const words_content = r => require.ensure([], () => r(require('@/page_biz/words_content')), 'words_content');
 const words_edit = r => require.ensure([], () => r(require('@/page_biz/words_edit')), 'words_edit');
+const goods = r => require.ensure([], () => r(require('@/page_biz/goods')), 'goods');
+const add_goods = r => require.ensure([], () => r(require('@/page_biz/add_goods')), 'add_goods');
 
 
 const routes = [
@@ -107,9 +109,18 @@ const routes = [
 				path: '/config',
 				component: config,
 				meta: ['系统设置', '参数配置'],
+			},
+			{
+				path: '/goods',
+				component: goods,
+				meta: ['精品课程', '课程'],
+			},
+			{
+				path: '/add_goods',
+				component: add_goods,
+				meta: ['精品课程', '编辑课程'],
 			}
-
-		]
+		],
 	}
 ]
 
