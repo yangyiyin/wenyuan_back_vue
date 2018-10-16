@@ -22,6 +22,7 @@ const words_content = r => require.ensure([], () => r(require('@/page_biz/words_
 const words_edit = r => require.ensure([], () => r(require('@/page_biz/words_edit')), 'words_edit');
 const goods = r => require.ensure([], () => r(require('@/page_biz/goods')), 'goods');
 const add_goods = r => require.ensure([], () => r(require('@/page_biz/add_goods')), 'add_goods');
+const avatar_upload = r => require.ensure([], () => r(require('@/page_biz/avatar_upload')), 'avatar_upload');
 
 
 const routes = [
@@ -119,6 +120,11 @@ const routes = [
 				path: '/add_goods',
 				component: add_goods,
 				meta: ['精品课程', '编辑课程'],
+			},
+			{
+				path: '/avatar_upload',
+				component: avatar_upload,
+				meta: ['学校管理', '头像上传'],
 			}
 		],
 	}

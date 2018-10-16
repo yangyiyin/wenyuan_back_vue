@@ -18,6 +18,7 @@
 						<el-menu-item index="users">微信小程序用户管理</el-menu-item>
 						<el-menu-item index="suggest">家长反馈</el-menu-item>
 						<el-menu-item index="words">教师评语</el-menu-item>
+						<el-menu-item index="avatar_upload">头像上传</el-menu-item>
 					</el-submenu>
 
 					<el-submenu index="4">

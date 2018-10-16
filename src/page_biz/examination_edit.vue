@@ -5,7 +5,7 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">报名类型:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>报名类型:</span>
                 <el-select v-model="type" placeholder="类型">
                     <el-option
                             v-for="item in blocks"
@@ -17,7 +17,7 @@
             </div>
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">考试类型:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>考试类型:</span>
                 <el-select v-model="form_type" placeholder="类型">
                     <el-option
                             v-for="item in blocks_form_type"
@@ -29,13 +29,13 @@
             </div>
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">支付金额(元):</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>支付金额(元):</span>
                 <el-input clearable placeholder="请输入金额" v-model="pay_sum" style="width: 250px"></el-input>
                 <span style="font-size: 12px;color: red">不填则表示无需支付</span>
             </div>
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">考试标题:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>考试标题:</span>
                 <el-input clearable placeholder="请输入标题" v-model="title" style="width: 250px">
                 </el-input>
             </div>
@@ -52,7 +52,7 @@
 
 
             <div class="block search_item">
-                <span class="pre_info" style="font-size: 14px;">报名截止:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>报名截止:</span>
                 <el-date-picker
                         v-model="sign_end_time"
                         type="datetime"
@@ -62,14 +62,14 @@
             </div>
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;vertical-align: top">考试内容:</span>
+                <span class="pre_info" style="font-size: 14px;vertical-align: top"><i style="color:red;">*</i>考试内容:</span>
                 <el-input style="width: 300px" placeholder="内容..." v-model="content" type="textarea" :rows="2" >
 
                 </el-input>
             </div>
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;vertical-align: top">考试可见范围:</span>
+                <span class="pre_info" style="font-size: 14px;vertical-align: top"><i style="color:red;">*</i>考试可见范围:</span>
                 <el-checkbox v-model="all_visible">全部可见</el-checkbox>
 
             </div>

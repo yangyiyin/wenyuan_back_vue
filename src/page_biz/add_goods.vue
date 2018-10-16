@@ -5,52 +5,111 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
-                <el-input clearable placeholder="请输入标题" v-model="title" style="width: 350px">
-                    <template slot="prepend">标题</template>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>主图:</span>
+                <el-upload
+                        style="display: inline-block;vertical-align: middle"
+
+                        class="avatar-uploader"
+                        :action="upload_url"
+                        :show-file-list="false"
+                        :on-success="(res,file)=>{return handleAvatarSuccess(res,file, data)}"
+                        :before-upload="beforeAvatarUpload">
+                    <img v-if="data.img" :src="data.img" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+            </div>
+
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>标题:</span>
+                <el-input clearable placeholder="请输入标题" v-model="data.title" style="width: 350px">
                 </el-input>
             </div>
 
             <div class="search_item">
-
-                <el-input clearable placeholder="请输入链接地址" v-model="link" style="width: 350px">
-                    <template slot="prepend">链接地址</template>
-                </el-input>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>价格(元):</span>
+                <el-input clearable placeholder="请输入价格" v-model="data.price" type="number" style="width: 150px"></el-input>
             </div>
 
-            <p class="search_item" style="font-size: 12px">上传图片:</p>
-            <el-upload
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>图文详情:</span>
+                <div style="display: inline-block;vertical-align: top;border: 1px dashed #eee;padding: 5px;width: 500px;">
+                    <template v-if="data.content.img_text">
 
-                    class="avatar-uploader"
-                    :action="upload_url"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
-                <img v-if="img" :src="img" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-            <div v-if="!link">
-                <p class="search_item" style="font-size: 12px">内容编辑:<a href="javascript:;" v-if="editor == 1" @click="editor=2">< 使用代码编辑 > </a><a href="javascript:;" v-if="editor == 2" @click="editor=1">[使用可视化编辑]</a></p>
-                <div class="search_item" v-if="editor == 1">
+                        <div style="margin-bottom: 3px;" v-for="(sub, index)  in data.content.img_text">
 
-                    <quill-editor ref="myQuillEditor" :content="content" :options = "editorOption" @change="onEditorChange($event)"></quill-editor>
+                            <template v-if="sub.type=='img'">
+                                <el-upload
+                                        style="display: inline-block;vertical-align: middle"
+                                        class="avatar-uploader"
+                                        :action="upload_url"
+                                        :show-file-list="false"
+                                        :on-success="(res,file)=>{return handleAvatarSuccess(res,file, sub)}"
+                                        :before-upload="beforeAvatarUpload">
+                                    <img v-if="sub.val" :src="sub.val" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+                            </template>
 
-                    <el-upload style="display: none"
-                               class="avatar-uploader"
-                               ref="upload"
-                               :action="upload_url"
-                               :show-file-list="false"
-                               :on-success="handleImgSuccess"
-                               :before-upload="beforeAvatarUpload">
-                        <el-button id="imgInput"  v-loading.fullscreen.lock="fullscreenLoading"
-                                   element-loading-text="插入中,请稍候"></el-button>
-                    </el-upload>
+                            <el-input v-if="sub.type == 'text'" style="width: 200px" placeholder="内容..." v-model="sub.val" type="textarea" :rows="4" ></el-input>
+                            <el-button type="danger" @click="del_img_text(index)" round size="mini">删除</el-button>
 
-                </div>
-                <div class="search_item" v-if="editor == 2">
+                        </div>
+                    </template>
 
-                    <mavon-editor :toolbars="toolbars" v-model="content"/>
+                    <el-button @click="add_img_text('img')" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加图片</el-button>
+                    <el-button @click="add_img_text('text')" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加文字</el-button>
                 </div>
             </div>
+
+
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>授课老师:</span>
+
+                <template style="border">
+                    <div style="display: inline-block">
+                        头像:
+                        <el-upload
+                                style="display: inline-block;vertical-align: middle"
+                                class="avatar-uploader avatar-uploader-round"
+                                :action="upload_url"
+                                :show-file-list="false"
+                                :on-success="(res,file)=>{return handleAvatarSuccess(res,file, data.content.teacher.info)}"
+                                :before-upload="beforeAvatarUpload">
+                            <img v-if="data.content.teacher.info.img" :src="data.content.teacher.info.img" class="avatar" style="width: 80px;height: 80px;border-radius: 80px;">
+                            <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 80px;height: 80px;border-radius: 80px;line-height: 80px;"></i>
+                        </el-upload>
+                    </div>
+                    <div style="margin-left:120px;vertical-align: top;border: 1px dashed #eee;padding: 5px;width: 500px;">
+                        <template v-if="data.content.img_text">
+
+                            <div style="margin-bottom: 3px;" v-for="(sub, index)  in data.content.img_text">
+
+                                <template v-if="sub.type=='img'">
+                                    <el-upload
+                                            style="display: inline-block;vertical-align: middle"
+                                            class="avatar-uploader"
+                                            :action="upload_url"
+                                            :show-file-list="false"
+                                            :on-success="(res,file)=>{return handleAvatarSuccess(res,file, sub)}"
+                                            :before-upload="beforeAvatarUpload">
+                                        <img v-if="sub.val" :src="sub.val" class="avatar">
+                                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    </el-upload>
+                                </template>
+
+                                <el-input v-if="sub.type == 'text'" style="width: 200px" placeholder="内容..." v-model="sub.val" type="textarea" :rows="4" ></el-input>
+                                <el-button type="danger" @click="del_img_text(index)" round size="mini">删除</el-button>
+
+                            </div>
+                        </template>
+
+                        <el-button @click="add_img_text('img')" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加图片</el-button>
+                        <el-button @click="add_img_text('text')" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加文字</el-button>
+                    </div>
+                </template>
+
+            </div>
+
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">发布</el-button>
 
 
@@ -68,8 +127,7 @@
             return {
                 id:0,
                 loading:false,
-                title:'',
-                img:'',
+                data:{img:'',content:{img_text:[],teacher:{info:{img:'',name:'',desc:''},img_text:[]},options:[]}},
                 content:'',
                 link:'',
                 upload_url:this.$store.state.constant.upload_url,
@@ -79,8 +137,7 @@
 
         },
         components: {
-            headTop,
-            quillEditor
+            headTop
         },
         created(){
 
@@ -102,19 +159,14 @@
         },
         methods: {
 
-            // 点击图片ICON触发事件
-            imgHandler(state) {
-                this.addRange = this.$refs.myQuillEditor.quill.getSelection()
-                if (state) {
-                    let fileInput = document.getElementById('imgInput')
-                    fileInput.click() // 加一个触发事件
-                }
-                this.uploadType = 'image'
-            },
 
-            handleAvatarSuccess(res, file) {
-                this.fullscreenLoading = false
-                this.img = res.data[0];
+            handleAvatarSuccess(res, file, obj) {
+
+                this.fullscreenLoading = false;
+                if (obj) {
+                    obj.val = res.data[0];
+                    obj.img = res.data[0];
+                }
             },
 
             beforeAvatarUpload(file) {
@@ -135,18 +187,13 @@
 
             init() {
                 this.loading = false;
-                this.title = '';
-                this.link = '';
-                this.img = '';
-                this.content='';
+                this.data = {img:'',content:{img_text:[],teacher:{info:{img:'',name:'',desc:''},img_text:[]},options:[]}};
             },
             get_info() {
                 goods_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
-                        this.title = res.data.title;
-                        this.link = res.data.link;
-                        this.content = res.data.content;
-                        this.img = res.data.img;
+                        this.data = res.data;
+
                     } else {
                         this.$message({
                             message: res.msg,
@@ -158,13 +205,13 @@
             },
             submit: function () {
 
-                if (!this.title) {
+                if (!this.data.title) {
                     var error_msg = '请填写标题';
                 }
-                if (!this.img) {
+                if (!this.data.img) {
                     var error_msg = '请上传图片';
                 }
-                if (!this.content && !this.link) {
+                if (!this.data.content) {
                     var error_msg = '请填写内容';
                 }
                 if (error_msg) {
@@ -181,7 +228,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    goods_edit({id:this.id,title:this.title,link:this.link,img:this.img,content:this.content}).then(function (res) {
+                    goods_edit(this.data).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
@@ -203,7 +250,19 @@
                     this.loading = false;
                 }.bind(this));
 
-            }
+            },
+            add_img_text(type) {
+                var item = {
+                    type:type,
+                    val:''
+                };
+
+                this.data.content.img_text.push(item);
+//                console.log(this.data);
+            },
+            del_img_text(index) {
+                this.data.content.img_text.splice(index,1);
+            },
 
         }
     }
@@ -224,23 +283,37 @@
         position: relative;
         overflow: hidden;
     }
+
+    .avatar-uploader-round .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 100px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
     .avatar-uploader .el-upload:hover {
         border-color: #409EFF;
     }
+
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;
         width: 200px;
-        height: 100px;
-        line-height: 100px;
+        height: 120px;
+        line-height: 120px;
         text-align: center;
     }
     .avatar {
         width: 200px;
-        height: 100px;
+        height: 120px;
         display: block;
     }
     .ql-editor{
         min-height: 300px;
+    }
+    .pre_info{
+        display:inline-block ;
+        width: 120px;
     }
 </style>
