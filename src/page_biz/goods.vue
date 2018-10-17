@@ -17,6 +17,26 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="时间-地点:" >
+                                <div style="border: 1px dashed #ddd;margin: 5px; padding: 5px" v-for="(option, index) in props.row.detail.options">
+                                    <p>{{ option.time }}-{{option.place}}</p>
+                                    <p>可预订总数:<span style="color: red">{{ option.stock }}</span>;已预订数:<span style="color: red">{{option.sale_num}}</span></p>
+                                    <p> <el-button size="mini" @click="show_orders(option,props.row.title)" type="primary">查看报名情况</el-button></p>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="授课老师:" >
+                                <img :src="props.row.detail.teacher.info.img" style="width: 50px;height: 50px;border-radius: 50px;">
+                                <div>{{ props.row.detail.teacher.info.name }}</div>
+                                <div>{{ props.row.detail.teacher.info.desc }}</div>
+                            </el-form-item>
+
+                        </el-form>
+                    </template>
+                </el-table-column>
+
                 <el-table-column label="图片">
                     <template slot-scope="scope">
                         <img :src="scope.row.img" width="60" height="30"/>
@@ -24,6 +44,7 @@
                 </el-table-column>
 
                 <el-table-column label="标题" prop="title"></el-table-column>
+                <el-table-column label="价格" prop="price"></el-table-column>
                 <el-table-column label="排序">
                     <template slot-scope="scope">
                         {{scope.row.sort}}
@@ -31,6 +52,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
+
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="goto_edit_goods(scope.row.id)">编辑</el-button>
@@ -62,12 +84,106 @@
                 <el-button type="primary" @click="sort">确 定</el-button>
             </div>
         </el-dialog>
+
+
+        <el-dialog :title="current_option.title+'('+current_option.time+')报名情况'" :visible.sync="dialog_order_visible" width="80%">
+
+            <div class="table_container">
+
+                <!--<div style="margin-bottom: 10px">-->
+                    <!--<el-date-picker-->
+                            <!--v-model="order_dialog.start_time"-->
+                            <!--type="datetime"-->
+                            <!--value-format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--placeholder="开始时间">-->
+                    <!--</el-date-picker>-->
+
+                    <!--<el-date-picker-->
+                            <!--v-model="order_dialog.end_time"-->
+                            <!--type="datetime"-->
+                            <!--value-format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--placeholder="结束时间">-->
+                    <!--</el-date-picker>-->
+                <!--</div>-->
+                <!--<el-input-->
+                        <!--style="display: inline-block;width: 250px;"-->
+                        <!--placeholder="订单编号"-->
+                        <!--v-model="order_dialog.order_no"-->
+                        <!--clearable>-->
+                <!--</el-input>-->
+
+                <!--<el-input-->
+                        <!--style="display: inline-block;width: 250px;"-->
+                        <!--placeholder="手机号"-->
+                        <!--v-model="order_dialog.tel"-->
+                        <!--clearable>-->
+                <!--</el-input>-->
+                <el-select v-model="order_dialog.status" placeholder="状态">
+                    <el-option
+                            v-for="item in order_dialog.status_options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-button type="primary" icon="el-icon-search" @click="search_order">搜索</el-button>
+
+            </div>
+            <div class="table_container">
+                <el-table
+                        :data="order_dialog.tableData"
+                        style="width: 100%">
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <el-form label-position="left" inline class="demo-table-expand">
+                                <el-form-item label="时间-地点:" >
+                                    <p>{{ props.row.order_sub.goods.option.time }}-{{props.row.order_sub.goods.option.place}}</p>
+                                </el-form-item>
+                                <el-form-item label="授课老师:" >
+                                    <img :src="props.row.order_sub.goods.img" style="width: 50px;height: 50px;border-radius: 50px;">
+                                    <div>{{ props.row.order_sub.goods.teacher }}</div>
+                                </el-form-item>
+
+                            </el-form>
+                        </template>
+                    </el-table-column>
+
+
+                    <el-table-column label="订单编号" prop="order_no"></el-table-column>
+                    <el-table-column label="手机号" prop="tel"></el-table-column>
+                    <el-table-column label="价格" prop="price"></el-table-column>
+                    <el-table-column label="状态" prop="status_desc"></el-table-column>
+
+                    <el-table-column label="创建日期" prop="create_time"></el-table-column>
+
+                    <el-table-column label="操作" width="300">
+                        <template slot-scope="scope">
+
+                            <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" @click="cancel_force(scope)" :loading="order_dialog.loadingBtn == scope.$index">取消订单</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="Pagination" style="text-align: left;margin-top: 10px;">
+                    <el-pagination
+                            @current-change="handleCurrentChange_order"
+                            :current-page="order_dialog.currentPage"
+                            :page-size="limit"
+                            layout="total, prev, pager, next"
+                            :total="order_dialog.count"
+                            background>
+                    </el-pagination>
+                </div>
+            </div>
+
+        </el-dialog>
+
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {goods_list,goods_del,goods_verify,goods_sort} from '@/api/getDataEarth'
+    import {goods_list,goods_del,goods_verify,goods_sort,order_list,cancel_order_force} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -81,7 +197,43 @@
 //                choose_categories:[],
 //                categories:[],
                 title:'',
-                loadingBtn:-1
+                loadingBtn:-1,
+                dialog_order_visible:false,
+                current_option:{},
+
+
+                tableData: [],
+                limit: 10,
+                count: 0,
+                currentPage: 1,
+                dialogFormVisible:false,
+                current:{},
+//                remark:'',
+//                choose_categories:[],
+//                categories:[],
+                order_dialog:{
+                    tableData: [],
+                    limit: 10,
+                    count: 0,
+                    currentPage: 1,
+                    dialogFormVisible:false,
+                    current:{},
+                    tel:'',
+                    order_no:'',
+                    status:-1,
+                    start_time:'',
+                    end_time:'',
+                    status_options:[
+                        {label:'全部',value:-1},
+                        {label:'待付款',value:1},
+                        {label:'已付款,待签到',value:2},
+                        {label:'已完成,待评价',value:3},
+                        {label:'已完成',value:4},
+                        {label:'已关闭',value:9}
+                    ],
+                    loadingBtn:-1
+                }
+
             }
         },
         components: {
@@ -128,6 +280,9 @@
             },
             goto_edit_goods(id) {
                 this.$router.push({path:'add_goods',query:{id:id}});
+            },
+            goto_order(id) {
+                this.$router.push({path:'order',query:{id:id}});
             },
             verify(scope, status) {
 
@@ -188,6 +343,12 @@
                 this.dialogFormVisible = true;
                 this.current = row;
             },
+            show_orders(option,title){
+                option.title = title;
+                this.dialog_order_visible= true;
+                this.current_option = option;
+                this.list_order();
+            },
             sort() {
                 goods_sort({
                     id:this.current.id,
@@ -209,7 +370,57 @@
                     }
                 }.bind(this));
                 this.dialogFormVisible = false;
-            }
+            },
+
+            list_order() {
+                order_list({goods_stock_id:this.current_option.id,page:this.order_dialog.currentPage,page_size:this.order_dialog.limit,tel:this.order_dialog.tel,order_no:this.order_dialog.order_no,status:this.order_dialog.status,start_time:this.order_dialog.start_time,end_time:this.order_dialog.end_time}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.order_dialog.tableData = res.data.list;
+                        this.order_dialog.count = parseInt(res.data.count);
+                    }
+                }.bind(this));
+
+            },
+            handleCurrentChange_order(val){
+                this.order_dialog.currentPage = val;
+                this.list_order();
+            },
+
+            search_order() {
+                this.order_dialog.currentPage = 1;
+                this.list_order();
+            },
+            cancel_force(scope) {
+
+                this.$confirm('确认此操作?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    var item = scope.row;
+                    this.order_dialog.loadingBtn = scope.$index;
+                    cancel_order_force({id:item.id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            item.status = 9;
+                            item.status_desc = '已关闭';
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this)).finally(function(){
+                        this.loadingBtn = -1;
+                    }.bind(this));
+                }.bind(this));
+
+
+
+            },
         },
     }
 </script>

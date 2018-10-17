@@ -21,6 +21,7 @@ const words = r => require.ensure([], () => r(require('@/page_biz/words')), 'wor
 const words_content = r => require.ensure([], () => r(require('@/page_biz/words_content')), 'words_content');
 const words_edit = r => require.ensure([], () => r(require('@/page_biz/words_edit')), 'words_edit');
 const goods = r => require.ensure([], () => r(require('@/page_biz/goods')), 'goods');
+const order = r => require.ensure([], () => r(require('@/page_biz/order')), 'order');
 const add_goods = r => require.ensure([], () => r(require('@/page_biz/add_goods')), 'add_goods');
 const avatar_upload = r => require.ensure([], () => r(require('@/page_biz/avatar_upload')), 'avatar_upload');
 
@@ -125,7 +126,12 @@ const routes = [
 				path: '/avatar_upload',
 				component: avatar_upload,
 				meta: ['学校管理', '头像上传'],
-			}
+			},
+			{
+				path: '/order',
+				component: order,
+				meta: ['精品课程', '订单'],
+			},
 		],
 	}
 ]

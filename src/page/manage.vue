@@ -21,11 +21,12 @@
 						<el-menu-item index="avatar_upload">头像上传</el-menu-item>
 					</el-submenu>
 
-					<!--<el-submenu index="4">-->
-						<!--<template slot="title"><i class="el-icon-view"></i>精品课程</template>-->
+					<el-submenu index="4">
+						<template slot="title"><i class="el-icon-view"></i>精品课程</template>
 
-						<!--<el-menu-item index="goods">精品课管理</el-menu-item>-->
-					<!--</el-submenu>-->
+						<el-menu-item index="goods">精品课管理</el-menu-item>
+						<el-menu-item index="order">精品课订单</el-menu-item>
+					</el-submenu>
 
 					<el-submenu index="5">
 						<template slot="title"><i class="el-icon-setting"></i>系统设置</template>
