@@ -74,6 +74,7 @@
 
                             <el-form-item label="数据信息:">
                                 <span>{{ props.row.sign_data }}</span>
+                                <el-button size="mini"  type="warning" @click="dialogFormVisibleData=true;current_data=props.row">修改</el-button>
                             </el-form-item>
                         </el-form>
                     </template>
@@ -111,12 +112,28 @@
                 <el-button type="primary" @click="genticket" :loading="loadingBtn == 'ticket'">开始生成</el-button>
             </div>
         </el-dialog>
+
+
+        <el-dialog v-if="current_data.content" :title="'修改信息:'+current_data.student_name" :visible.sync="dialogFormVisibleData" width="50%">
+
+            <div>
+                <span>头像:</span>
+                <el-input clearable placeholder="" v-model="current_data.content.avatar_origin" style="width: 80%;display: inline-block"></el-input>
+            </div>
+
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleData = false">取 消</el-button>
+                <el-button type="primary" @click="change_data()" :loading="loadingBtn == 'data'">修改</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_signs_list,examination_gen_ticket,setCanEditAvatar,examination_sign_del} from '@/api/getDataEarth'
+    import {examination_signs_list,examination_gen_ticket,setCanEditAvatar,examination_sign_del,examination_signs_change_data} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -131,6 +148,8 @@
                 dialogFormVisibleDaochu:false,
                 dialogFormVisibleTicket:false,
                 current:{},
+                current_data:{},
+                dialogFormVisibleData:false,
 //                remark:'',
 //                choose_categories:[],
 //                categories:[],
@@ -252,6 +271,30 @@
                 }.bind(this))
 
             },
+            change_data(){
+                this.loadingBtn = 'data';
+                examination_signs_change_data({
+                    id:this.current_data.id,
+                    avatar_origin:this.current_data.content.avatar_origin,
+                }).then(function(res){
+                    this.loadingBtn = '-1';
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.list();
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功'
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                    this.dialogFormVisibleData = false;
+                }.bind(this));
+            }
         },
     }
 </script>

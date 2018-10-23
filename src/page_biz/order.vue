@@ -49,8 +49,10 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="时间-地点:" >
-                                <p>{{ props.row.order_sub.goods.option.time }}-{{props.row.order_sub.goods.option.place}}</p>
+                            <el-form-item label="属性:" >
+                                <p>
+                                    <span v-for="(item, index) in props.row.order_sub.goods.option.list">[{{item.name ? item.name : item.time+'('+item.place+')'}}]</span>
+                                </p>
                             </el-form-item>
                             <el-form-item label="授课老师:" >
                                 <img :src="props.row.order_sub.goods.img" style="width: 50px;height: 50px;border-radius: 50px;">
@@ -65,6 +67,7 @@
                 <el-table-column label="订单编号" prop="order_no"></el-table-column>
                 <el-table-column label="手机号" prop="tel"></el-table-column>
                 <el-table-column label="价格" prop="price"></el-table-column>
+                <el-table-column label="已付金额" prop="payed_money"></el-table-column>
                 <el-table-column label="状态" prop="status_desc"></el-table-column>
 
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
@@ -73,6 +76,7 @@
                     <template slot-scope="scope">
 
                         <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" @click="cancel_force(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
+                        <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && scope.row.payed_money < scope.row.price" size="mini" @click="pay_left_money(scope)" :loading="loadingBtn == scope.$index">补缴余款</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -103,7 +107,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {order_list,cancel_order_force} from '@/api/getDataEarth'
+    import {order_list,cancel_order_force,pay_left_money} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -193,6 +197,37 @@
                         if (res.code == this.$store.state.constant.status_success) {
                             item.status = 9;
                             item.status_desc = '已关闭';
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this)).finally(function(){
+                        this.loadingBtn = -1;
+                    }.bind(this));
+                }.bind(this));
+
+
+
+            },
+            pay_left_money(scope) {
+
+                this.$confirm('补缴余款金额:¥'+(scope.row.price - scope.row.payed_money)+',确认此操作?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    var item = scope.row;
+                    this.loadingBtn = scope.$index;
+                    pay_left_money({id:item.id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+
+                            this.list();
                             this.$message({
                                 type: 'success',
                                 message: '操作成功'

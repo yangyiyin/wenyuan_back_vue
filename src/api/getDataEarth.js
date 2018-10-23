@@ -36,6 +36,7 @@ export const examination_sign_options = data => fetch('/wenyuanjiaoyu/examinatio
 export const examination_sort = data => fetch('/wenyuanjiaoyu/examination/sort', data, 'POST').then(check_login);
 export const examination_excel_out = data => fetch('/wenyuanjiaoyu/examination_signs/excel_out', data, 'POST').then(check_login);
 export const examination_gen_ticket = data => fetch('/wenyuanjiaoyu/examination_signs/gen_ticket', data, 'POST').then(check_login);
+export const examination_signs_change_data = data => fetch('/wenyuanjiaoyu/examination_signs/change_data', data, 'POST').then(check_login);
 export const examination_send_mail = data => fetch('/wenyuanjiaoyu/examination_signs/send_mail', data, 'POST').then(check_login);
 export const examination_signs_list = data => fetch('/wenyuanjiaoyu/examination_signs/index', data, 'POST').then(check_login);
 export const examination_sign_del = data => fetch('/wenyuanjiaoyu/examination_signs/del', data, 'POST').then(check_login);
@@ -62,7 +63,9 @@ export const goods_verify = data => fetch('/wenyuanjiaoyu/goods/verify', data, '
 export const goods_del = data => fetch('/wenyuanjiaoyu/goods/del', data, 'POST').then(check_login);
 export const goods_edit = data => fetch('/wenyuanjiaoyu/goods/edit', data, 'POST').then(check_login);
 export const goods_sort = data => fetch('/wenyuanjiaoyu/goods/sort', data, 'POST').then(check_login);
+export const get_all_properties = data => fetch('/wenyuanjiaoyu/goods/get_all_properties', data, 'POST').then(check_login);
 export const order_list = data => fetch('/wenyuanjiaoyu/order/index', data, 'POST').then(check_login);
 export const cancel_order_force = data => fetch('/wenyuanjiaoyu/order/cancel_order_force', data, 'POST').then(check_login);
+export const pay_left_money = data => fetch('/wenyuanjiaoyu/order/pay_left_money', data, 'POST').then(check_login);
 export const upload_avatar = data => fetch('/wenyuanjiaoyu/examination_signs/upload_avatar', data, 'POST').then(check_login);
 

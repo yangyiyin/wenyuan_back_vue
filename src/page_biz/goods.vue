@@ -20,17 +20,21 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="时间-地点:" >
-                                <div style="border: 1px dashed #ddd;margin: 5px; padding: 5px" v-for="(option, index) in props.row.detail.options">
-                                    <p>{{ option.time }}-{{option.place}}</p>
+                            <el-form-item label="" >
+                                <div style="border: 1px dashed #ddd;margin: 5px; padding: 5px" v-for="(option, index) in props.row.detail.all_options">
+                                    <p>
+                                        <span v-for="(item, index2) in option.list">[{{item.name ? item.name : item.time+'('+item.place+')'}}]</span>
+                                    </p>
                                     <p>可预订总数:<span style="color: red">{{ option.stock }}</span>;已预订数:<span style="color: red">{{option.sale_num}}</span></p>
                                     <p> <el-button size="mini" @click="show_orders(option,props.row.title)" type="primary">查看报名情况</el-button></p>
                                 </div>
                             </el-form-item>
                             <el-form-item label="授课老师:" >
-                                <img :src="props.row.detail.teacher.info.img" style="width: 50px;height: 50px;border-radius: 50px;">
-                                <div>{{ props.row.detail.teacher.info.name }}</div>
-                                <div>{{ props.row.detail.teacher.info.desc }}</div>
+                                <template v-for="(item, index) in props.row.detail.teacher.infos">
+                                    <img :src="item.img" style="width: 50px;height: 50px;border-radius: 50px;">
+                                    <div>{{ item.name }}</div>
+                                    <div>{{ item.desc }}</div>
+                                </template>
                             </el-form-item>
 
                         </el-form>
@@ -86,7 +90,7 @@
         </el-dialog>
 
 
-        <el-dialog :title="current_option.title+'('+current_option.time+')报名情况'" :visible.sync="dialog_order_visible" width="80%">
+        <el-dialog :title="current_option.title+'('+(current_option.sub_title)+')报名情况'" :visible.sync="dialog_order_visible" width="80%">
 
             <div class="table_container">
 
@@ -136,13 +140,15 @@
                     <el-table-column type="expand">
                         <template slot-scope="props">
                             <el-form label-position="left" inline class="demo-table-expand">
-                                <el-form-item label="时间-地点:" >
-                                    <p>{{ props.row.order_sub.goods.option.time }}-{{props.row.order_sub.goods.option.place}}</p>
+                                <el-form-item label="属性:" >
+                                    <p>
+                                        <span v-for="(item, index) in props.row.order_sub.goods.option.list">[{{item.name ? item.name : item.time+'('+item.place+')'}}]</span>
+                                    </p>
                                 </el-form-item>
-                                <el-form-item label="授课老师:" >
-                                    <img :src="props.row.order_sub.goods.img" style="width: 50px;height: 50px;border-radius: 50px;">
-                                    <div>{{ props.row.order_sub.goods.teacher }}</div>
-                                </el-form-item>
+                                <!--<el-form-item label="授课老师:" >-->
+                                    <!--<img :src="props.row.order_sub.goods.img" style="width: 50px;height: 50px;border-radius: 50px;">-->
+                                    <!--<div>{{ props.row.order_sub.goods.teacher }}</div>-->
+                                <!--</el-form-item>-->
 
                             </el-form>
                         </template>
@@ -152,6 +158,7 @@
                     <el-table-column label="订单编号" prop="order_no"></el-table-column>
                     <el-table-column label="手机号" prop="tel"></el-table-column>
                     <el-table-column label="价格" prop="price"></el-table-column>
+                    <el-table-column label="已付金额" prop="payed_money"></el-table-column>
                     <el-table-column label="状态" prop="status_desc"></el-table-column>
 
                     <el-table-column label="创建日期" prop="create_time"></el-table-column>
@@ -160,6 +167,8 @@
                         <template slot-scope="scope">
 
                             <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" @click="cancel_force(scope)" :loading="order_dialog.loadingBtn == scope.$index">取消订单</el-button>
+                            <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && scope.row.payed_money < scope.row.price" size="mini" @click="pay_left_money(scope)" :loading="order_dialog.loadingBtn == scope.$index">补缴余款</el-button>
+
                         </template>
                     </el-table-column>
                 </el-table>
@@ -183,7 +192,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {goods_list,goods_del,goods_verify,goods_sort,order_list,cancel_order_force} from '@/api/getDataEarth'
+    import {goods_list,goods_del,goods_verify,goods_sort,order_list,cancel_order_force,pay_left_money} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -345,6 +354,16 @@
             },
             show_orders(option,title){
                 option.title = title;
+                option.sub_title = '';
+                option.list.forEach(function(val){
+                    if (val.name) {
+                        option.sub_title += '['+val.name+']';
+                    } else if(val.time && val.place){
+                        option.sub_title += '['+val.time+'('+val.place+')]';
+                    } else {
+                        option.sub_title += '[未知]';
+                    }
+                });
                 this.dialog_order_visible= true;
                 this.current_option = option;
                 this.list_order();
@@ -414,13 +433,46 @@
                             });
                         }
                     }.bind(this)).finally(function(){
-                        this.loadingBtn = -1;
+                        this.order_dialog.loadingBtn = -1;
                     }.bind(this));
                 }.bind(this));
 
 
 
             },
+
+            pay_left_money(scope) {
+
+                this.$confirm('补缴余款金额:¥'+(scope.row.price - scope.row.payed_money)+',确认此操作?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    var item = scope.row;
+                    this.order_dialog.loadingBtn = scope.$index;
+                    pay_left_money({id:item.id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+
+                            this.list_order();
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this)).finally(function(){
+                        this.order_dialog.loadingBtn = -1;
+                    }.bind(this));
+                }.bind(this));
+
+
+
+            },
+
         },
     }
 </script>
