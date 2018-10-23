@@ -553,7 +553,7 @@
                     if (this.data.content.options.length) {
                         this.data.content.options.forEach(function(val3, i){
                             val3.index = i+1;
-                             this.data.content.all_options.push({info:{},list:[val3]});
+                             this.data.content.all_options.push({info:{},price_type:1,price:'',deposit:'',stock:'',list:[val3]});
                         }.bind(this));
                     }
                 }
