@@ -399,7 +399,7 @@
                     }
                 }.bind(this));
 
-                if (this.data.content.options) {
+                if (this.data.content.options.length) {
                     var item = {name:'时间地点',children:[]};
                     this.data.content.options.forEach(function(val){
                         item.children.push(val);
