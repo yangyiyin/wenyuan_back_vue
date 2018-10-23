@@ -167,7 +167,7 @@
                         <template slot-scope="scope">
 
                             <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" @click="cancel_force(scope)" :loading="order_dialog.loadingBtn == scope.$index">取消订单</el-button>
-                            <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && scope.row.payed_money < scope.row.price" size="mini" @click="pay_left_money(scope)" :loading="order_dialog.loadingBtn == scope.$index">补缴余款</el-button>
+                            <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && parseInt(scope.row.payed_money) < parseInt(scope.row.price)" size="mini" @click="pay_left_money(scope)" :loading="order_dialog.loadingBtn == scope.$index">补缴余款</el-button>
 
                         </template>
                     </el-table-column>
