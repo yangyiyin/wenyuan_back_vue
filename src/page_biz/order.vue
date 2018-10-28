@@ -56,7 +56,7 @@
                             </el-form-item>
                             <el-form-item label="授课老师:" >
                                 <img :src="props.row.order_sub.goods.img" style="width: 50px;height: 50px;border-radius: 50px;">
-                                <div>{{ props.row.order_sub.goods.teacher }}</div>
+                                <span>{{ props.row.order_sub.goods.teacher }}</span>
                             </el-form-item>
                             <el-form-item label="学生信息:" >
                                 <p>照片:  <img :src="props.row.extra_data.avatar" style="width: 50px;height: 50px;border-radius: 50px;"></p>
@@ -77,7 +77,15 @@
                 <el-table-column label="手机号" prop="tel"></el-table-column>
                 <el-table-column label="价格" prop="price"></el-table-column>
                 <el-table-column label="已付金额" prop="payed_money"></el-table-column>
-                <el-table-column label="状态" prop="status_desc"></el-table-column>
+                <el-table-column label="状态" width="140">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.status==1" >{{scope.row.status_desc}}</el-tag>
+                        <el-tag v-else-if="scope.row.status==2">{{scope.row.status_desc}}</el-tag>
+                        <el-tag v-else-if="scope.row.status==3" >{{scope.row.status_desc}}</el-tag>
+                        <el-tag v-else-if="scope.row.status==4" type="success">{{scope.row.status_desc}}</el-tag>
+                        <el-tag v-else="scope.row.status==9" type="danger">{{scope.row.status_desc}}</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="学生姓名" prop="extra_data.name"></el-table-column>
                 <el-table-column label="备注" prop="remark_less"></el-table-column>
 
