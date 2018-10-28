@@ -20,22 +20,22 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="" >
+                            <el-form-item label="" style="width: 100%">
                                 <div style="border: 1px dashed #ddd;margin: 5px; padding: 5px" v-for="(option, index) in props.row.detail.all_options">
-                                    <p>
+                                    <span>
                                         <span v-for="(item, index2) in option.list">[{{item.name ? item.name : item.time+'('+item.place+')'}}]</span>
-                                    </p>
-                                    <p>可预订总数:<span style="color: red">{{ option.stock }}</span>;已预订数:<span style="color: red">{{option.sale_num}}</span></p>
-                                    <p> <el-button size="mini" @click="show_orders(option,props.row.title)" type="primary">查看报名情况</el-button></p>
+                                    </span>
+                                    <span>可预订总数:<span style="color: red">{{ option.stock }}</span>;已预订数:<span style="color: red">{{option.sale_num}}</span></span>
+                                    <span> <el-button size="mini" @click="show_orders(option,props.row.title)" type="primary">查看报名情况</el-button></span>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="授课老师:" >
-                                <template v-for="(item, index) in props.row.detail.teacher.infos">
-                                    <img :src="item.img" style="width: 50px;height: 50px;border-radius: 50px;">
-                                    <div>{{ item.name }}</div>
-                                    <div>{{ item.desc }}</div>
-                                </template>
-                            </el-form-item>
+                            <!--<el-form-item label="授课老师:" >-->
+                                <!--<template v-for="(item, index) in props.row.detail.teacher.infos">-->
+                                    <!--<img :src="item.img" style="width: 50px;height: 50px;border-radius: 50px;">-->
+                                    <!--<div>{{ item.name }}</div>-->
+                                    <!--<div>{{ item.desc }}</div>-->
+                                <!--</template>-->
+                            <!--</el-form-item>-->
 
                         </el-form>
                     </template>
