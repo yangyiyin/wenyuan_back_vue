@@ -174,8 +174,8 @@
                                     <template slot="prepend"><i style="color:red;">*</i>姓名</template>
                                 </el-input>
                                 <br/>
-                                <el-input maxlength="20" clearable placeholder="请输入一句话描述" v-model="info.desc" style="width: 450px">
-                                    <template slot="prepend">一句话描述(1-20字)</template>
+                                <el-input maxlength="200" clearable placeholder="请输入一句话描述" v-model="info.desc" style="width: 450px">
+                                    <template slot="prepend">一句话描述(1-200字)</template>
                                 </el-input>
 
 

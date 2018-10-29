@@ -59,10 +59,12 @@
                                 <span>{{ props.row.order_sub.goods.teacher }}</span>
                             </el-form-item>
                             <el-form-item label="学生信息:" >
-                                <p>照片:  <img :src="props.row.extra_data.avatar" style="width: 50px;height: 50px;border-radius: 50px;"></p>
-                                <p>姓名:{{ props.row.extra_data.name }}</p>
-                                <p>学校:{{ props.row.extra_data.school }}</p>
-                                <p>年级:{{ props.row.extra_data.grade }}</p>
+                                <template v-if="props.row.extra_data">
+                                    <p>照片:  <img :src="props.row.extra_data.avatar" style="width: 50px;height: 50px;border-radius: 50px;"></p>
+                                    <p>姓名:{{ props.row.extra_data.name }}</p>
+                                    <p>学校:{{ props.row.extra_data.school }}</p>
+                                    <p>年级:{{ props.row.extra_data.grade }}</p>
+                                </template>
                             </el-form-item>
                             <el-form-item label="备注:" >
 
@@ -89,7 +91,7 @@
                 <el-table-column label="学生姓名" prop="extra_data.name"></el-table-column>
                 <el-table-column label="备注" prop="remark_less"></el-table-column>
 
-                <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                <el-table-column label="创建日期" prop="create_time" width="180"></el-table-column>
 
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
