@@ -45,7 +45,7 @@
 
                 <div class="search_item" v-if="examination.form_type == 1">
                     <span class="pre_info" style="font-size: 14px;">需要培训课程:</span>
-                    <el-select multiple v-model="data.content.lession" placeholder="类型">
+                    <el-select multiple v-model="data.content.lession_arr" placeholder="类型">
                         <el-option
                                 v-for="item in lessions"
                                 :key="item.id"
@@ -148,6 +148,7 @@
                         prise_before:'',
                         grade:'',
                         lession:'',
+                        lession_arr:[],
                         address:'',
                         father_tel:'',
                         mother_tel:'',
@@ -228,7 +229,7 @@
                     if ((this.examination.form_type == 1 || this.examination.form_type == 2) && !this.data.content.grade) {
                         var error_msg = '请选择下学期年级';
                     }
-                    if ((this.examination.form_type == 1) &&(!this.data.content.lession || !this.data.content.lession.length)) {
+                    if ((this.examination.form_type == 1) &&(!this.data.content.lession_arr || !this.data.content.lession_arr.length)) {
                         var error_msg = '请选择培训课程';
                     }
                     if ((this.examination.form_type == 1 || this.examination.form_type == 2) &&!this.data.content.address) {
@@ -254,7 +255,7 @@
                     });
                     return;
                 }
-                this.data.content.lession = this.data.content.lession.join(';');
+                this.data.content.lession = this.data.content.lession_arr.join(';');
 
                 this.data.student_name = this.data.content.name;
                 this.data.user_tel = this.data.content.father_tel;
