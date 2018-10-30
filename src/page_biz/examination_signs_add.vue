@@ -45,7 +45,7 @@
 
                 <div class="search_item" v-if="examination.form_type == 1">
                     <span class="pre_info" style="font-size: 14px;">需要培训课程:</span>
-                    <el-select v-model="data.content.lession" placeholder="类型">
+                    <el-select multiple v-model="data.content.lession" placeholder="类型">
                         <el-option
                                 v-for="item in lessions"
                                 :key="item.id"
@@ -97,9 +97,14 @@
                         :before-upload="beforeAvatarUpload">
                     <img v-if="data.content.avatar" :src="data.content.avatar" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload></el-input><span style="color: red">*</span>
+                </el-upload></el-input>
+                <!--<span style="color: red">*</span>-->
             </div>
 
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;">备注:</span>
+                <el-input clearable placeholder="请输入备注信息" v-model="data.content.remark" style="width: 250px"></el-input>
+            </div>
 
 
 
@@ -135,6 +140,7 @@
                     out_id:'',
                     student_name:'',
                     email:'',
+
                     content:{
                         name:'',
                         school:'',
@@ -145,7 +151,8 @@
                         address:'',
                         father_tel:'',
                         mother_tel:'',
-                        avatar:''
+                        avatar:'',
+                        remark:''
                     }
                 }
             }
@@ -221,14 +228,14 @@
                     if ((this.examination.form_type == 1 || this.examination.form_type == 2) && !this.data.content.grade) {
                         var error_msg = '请选择下学期年级';
                     }
-                    if ((this.examination.form_type == 1) &&!this.data.content.lession) {
+                    if ((this.examination.form_type == 1) &&(!this.data.content.lession || !this.data.content.lession.length)) {
                         var error_msg = '请选择培训课程';
                     }
                     if ((this.examination.form_type == 1 || this.examination.form_type == 2) &&!this.data.content.address) {
                         var error_msg = '请选择培训地点';
                     }
                     if (!this.data.content.mother_tel) {
-                        var error_msg = '请填写母亲电话';
+                        var error_msg = '请填写备用电话';
                     }
 
                 }
@@ -236,10 +243,10 @@
                 if (!this.data.content.father_tel) {
                     var error_msg = '请填写主要联系手机';
                 }
-
-                if (!this.data.content.avatar) {
-                    var error_msg = '请上传头像';
-                }
+//                if (!this.data.content.avatar) {
+//                    var error_msg = '请上传头像';
+//                }
+                //console.log(this.data.content);
                 if (error_msg) {
                     this.$message({
                         type: 'warning',
@@ -247,6 +254,8 @@
                     });
                     return;
                 }
+                this.data.content.lession = this.data.content.lession.join(';');
+
                 this.data.student_name = this.data.content.name;
                 this.data.user_tel = this.data.content.father_tel;
 
