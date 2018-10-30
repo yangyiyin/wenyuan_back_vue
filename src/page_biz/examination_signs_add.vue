@@ -103,7 +103,7 @@
 
             <div class="search_item">
                 <span class="pre_info" style="font-size: 14px;">备注:</span>
-                <el-input clearable placeholder="请输入备注信息" v-model="data.content.remark" style="width: 250px"></el-input>
+                <el-input clearable placeholder="请输入备注信息" v-model="data.content.remark_admin" style="width: 250px"></el-input>
             </div>
 
 
@@ -153,7 +153,7 @@
                         father_tel:'',
                         mother_tel:'',
                         avatar:'',
-                        remark:''
+                        remark_admin:''
                     }
                 }
             }
