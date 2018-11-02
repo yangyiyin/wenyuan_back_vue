@@ -26,6 +26,7 @@
 
 						<el-menu-item index="goods">精品课管理</el-menu-item>
 						<el-menu-item index="order">精品课订单</el-menu-item>
+						<el-menu-item index="order_pay_left_log">余款收账记录</el-menu-item>
 					</el-submenu>
 
 					<el-submenu index="5">

@@ -17,6 +17,12 @@
                         value-format="yyyy-MM-dd HH:mm:ss"
                         placeholder="结束时间">
                 </el-date-picker>
+                <el-input
+                        style="display: inline-block;width: 250px;"
+                        placeholder="课程名[属性]"
+                        v-model="goods_title"
+                        clearable>
+                </el-input>
             </div>
             <el-input
                     style="display: inline-block;width: 250px;"
@@ -40,7 +46,7 @@
                 </el-option>
             </el-select>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-
+            <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
         </div>
         <div class="table_container">
             <el-table
@@ -49,13 +55,10 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="属性:" >
-                                <p>
-                                    <span v-for="(item, index) in props.row.order_sub.goods.option.list">[{{item.name ? item.name : item.time+'('+item.place+')'}}]</span>
-                                </p>
+                            <el-form-item label="课程:" >
+                                <span>{{ props.row.goods_title }}</span>
                             </el-form-item>
                             <el-form-item label="授课老师:" >
-                                <img :src="props.row.order_sub.goods.img" style="width: 50px;height: 50px;border-radius: 50px;">
                                 <span>{{ props.row.order_sub.goods.teacher }}</span>
                             </el-form-item>
                             <el-form-item label="学生信息:" >
@@ -76,6 +79,7 @@
 
 
                 <el-table-column label="订单编号" prop="order_no"></el-table-column>
+                <el-table-column label="课程" prop="goods_title_short"></el-table-column>
                 <el-table-column label="手机号" prop="tel"></el-table-column>
                 <el-table-column label="价格" prop="price"></el-table-column>
                 <el-table-column label="已付金额" prop="payed_money"></el-table-column>
@@ -123,12 +127,27 @@
                 <!--<el-button type="primary" @click="sort">确 定</el-button>-->
             <!--</div>-->
         <!--</el-dialog>-->
+
+        <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
+            <p>
+                您即将导出订单数据,条件为:[时间:{{start_time?start_time:'无限制'}}至{{end_time?end_time:'无限制'}}][课程:{{goods_title?goods_title:'无限制'}}][订单编号:{{order_no?order_no:'无限制'}}][手机号:{{tel?tel:'无限制'}}][状态:{{status}}]。
+            </p>
+            <p>
+                特别说明:如果报名数据比较多,则导出速度会相应的慢一些哦~
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleDaochu = false">取 消</el-button>
+                <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
     import {order_list,cancel_order_force,pay_left_money} from '@/api/getDataEarth'
+    import {getStore} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -137,12 +156,14 @@
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
+                dialogFormVisibleDaochu:false,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
 //                categories:[],
                 tel:'',
                 order_no:'',
+                goods_title:'',
                 status:-1,
                 start_time:'',
                 end_time:'',
@@ -174,7 +195,7 @@
         },
         methods: {
             list() {
-                order_list({page:this.currentPage,page_size:this.limit,tel:this.tel,order_no:this.order_no,status:this.status,start_time:this.start_time,end_time:this.end_time}).then(function(res){
+                order_list({page:this.currentPage,page_size:this.limit,tel:this.tel,order_no:this.order_no,goods_title:this.goods_title,status:this.status,start_time:this.start_time,end_time:this.end_time}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -266,6 +287,9 @@
 
 
 
+            },
+            daochu() {
+                window.open(this.$store.state.constant.order_excel_out + '?tel='+this.tel+'&order_no=' + this.order_no+'&goods_title=' + this.goods_title+'&status=' + this.status+'&start_time=' + this.start_time+'&end_time=' + this.end_time+'&token=' + (getStore('token') ? getStore('token') : ''));
             },
 //            del(item, index) {
 //

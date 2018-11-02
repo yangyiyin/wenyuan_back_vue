@@ -68,4 +68,6 @@ export const order_list = data => fetch('/wenyuanjiaoyu/order/index', data, 'POS
 export const cancel_order_force = data => fetch('/wenyuanjiaoyu/order/cancel_order_force', data, 'POST').then(check_login);
 export const pay_left_money = data => fetch('/wenyuanjiaoyu/order/pay_left_money', data, 'POST').then(check_login);
 export const upload_avatar = data => fetch('/wenyuanjiaoyu/examination_signs/upload_avatar', data, 'POST').then(check_login);
+export const order_excel_out = data => fetch('/wenyuanjiaoyu/order/excel_out', data, 'POST').then(check_login);
+export const order_pay_left_log_list = data => fetch('/wenyuanjiaoyu/order_pay_left_log/index', data, 'POST').then(check_login);
 

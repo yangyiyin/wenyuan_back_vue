@@ -24,6 +24,7 @@ const goods = r => require.ensure([], () => r(require('@/page_biz/goods')), 'goo
 const order = r => require.ensure([], () => r(require('@/page_biz/order')), 'order');
 const add_goods = r => require.ensure([], () => r(require('@/page_biz/add_goods')), 'add_goods');
 const avatar_upload = r => require.ensure([], () => r(require('@/page_biz/avatar_upload')), 'avatar_upload');
+const order_pay_left_log = r => require.ensure([], () => r(require('@/page_biz/order_pay_left_log')), 'order_pay_left_log');
 
 
 const routes = [
@@ -131,6 +132,11 @@ const routes = [
 				path: '/order',
 				component: order,
 				meta: ['精品课程', '订单'],
+			},
+			{
+				path: '/order_pay_left_log',
+				component: order_pay_left_log,
+				meta: ['精品课程', '余款收账记录'],
 			},
 		],
 	}

@@ -131,7 +131,7 @@
                     </el-option>
                 </el-select>
                 <el-button type="primary" icon="el-icon-search" @click="search_order">搜索</el-button>
-
+                <el-button  @click="order_dialog.dialogFormVisibleDaochu = true;">导出</el-button>
             </div>
             <div class="table_container">
                 <el-table
@@ -146,7 +146,6 @@
                                     </p>
                                 </el-form-item>
                                 <!--<el-form-item label="授课老师:" >-->
-                                    <!--<img :src="props.row.order_sub.goods.img" style="width: 50px;height: 50px;border-radius: 50px;">-->
                                     <!--<span>{{ props.row.order_sub.goods.teacher }}</span>-->
                                 <!--</el-form-item>-->
                                 <el-form-item label="学生信息:" >
@@ -200,6 +199,18 @@
 
         </el-dialog>
 
+        <el-dialog title="导出" :visible.sync="order_dialog.dialogFormVisibleDaochu" width="30%">
+            <p>
+                您即将导出订单数据:{{current_option.title+'('+(current_option.sub_title)+')'}}
+            </p>
+            <p>
+                特别说明:如果报名数据比较多,则导出速度会相应的慢一些哦~
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="order_dialog.dialogFormVisibleDaochu = false">取 消</el-button>
+                <el-button type="primary" @click="order_daochu" :loading="order_dialog.loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
 
     </div>
 </template>
@@ -207,6 +218,7 @@
 <script>
     import headTop from '../components/headTop'
     import {goods_list,goods_del,goods_verify,goods_sort,order_list,cancel_order_force,pay_left_money} from '@/api/getDataEarth'
+    import {getStore} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -240,6 +252,7 @@
                     count: 0,
                     currentPage: 1,
                     dialogFormVisible:false,
+                    dialogFormVisibleDaochu:false,
                     current:{},
                     tel:'',
                     order_no:'',
@@ -485,6 +498,10 @@
 
 
 
+            },
+
+            order_daochu() {
+                window.open(this.$store.state.constant.order_excel_out + '?status=' + this.order_dialog.status+'&goods_stock_id=' + this.current_option.id+'&token=' + (getStore('token') ? getStore('token') : ''));
             },
 
         },
