@@ -25,6 +25,13 @@ const order = r => require.ensure([], () => r(require('@/page_biz/order')), 'ord
 const add_goods = r => require.ensure([], () => r(require('@/page_biz/add_goods')), 'add_goods');
 const avatar_upload = r => require.ensure([], () => r(require('@/page_biz/avatar_upload')), 'avatar_upload');
 const order_pay_left_log = r => require.ensure([], () => r(require('@/page_biz/order_pay_left_log')), 'order_pay_left_log');
+const admin_user = r => require.ensure([], () => r(require('@/page_biz/admin_user')), 'admin_user');
+const add_admin_user = r => require.ensure([], () => r(require('@/page_biz/add_admin_user')), 'add_admin_user');
+const admin_group = r => require.ensure([], () => r(require('@/page_biz/admin_group')), 'admin_group');
+const add_admin_group = r => require.ensure([], () => r(require('@/page_biz/add_admin_group')), 'add_admin_group');
+const admin_purview = r => require.ensure([], () => r(require('@/page_biz/admin_purview')), 'admin_purview');
+const add_admin_purview = r => require.ensure([], () => r(require('@/page_biz/add_admin_purview')), 'add_admin_purview');
+const group_purview = r => require.ensure([], () => r(require('@/page_biz/group_purview')), 'group_purview');
 
 
 const routes = [
@@ -137,6 +144,41 @@ const routes = [
 				path: '/order_pay_left_log',
 				component: order_pay_left_log,
 				meta: ['精品课程', '余款收账记录'],
+			},
+			{
+				path: '/admin_user',
+				component: admin_user,
+				meta: ['后台管理', '用户管理'],
+			},
+			{
+				path: '/add_admin_user',
+				component: add_admin_user,
+				meta: ['后台管理', '添加用户'],
+			},
+			{
+				path: '/admin_group',
+				component: admin_group,
+				meta: ['后台管理', '组管理'],
+			},
+			{
+				path: '/add_admin_group',
+				component: add_admin_group,
+				meta: ['后台管理', '添加组'],
+			},
+			{
+				path: '/admin_purview',
+				component: admin_purview,
+				meta: ['系统', '权限管理'],
+			},
+			{
+				path: '/add_admin_purview',
+				component: add_admin_purview,
+				meta: ['系统', '添加权限'],
+			},
+			{
+				path: '/group_purview',
+				component: group_purview,
+				meta: ['后台管理', '权限组权限'],
 			},
 		],
 	}

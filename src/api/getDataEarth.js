@@ -71,3 +71,25 @@ export const upload_avatar = data => fetch('/wenyuanjiaoyu/examination_signs/upl
 export const order_excel_out = data => fetch('/wenyuanjiaoyu/order/excel_out', data, 'POST').then(check_login);
 export const order_pay_left_log_list = data => fetch('/wenyuanjiaoyu/order_pay_left_log/index', data, 'POST').then(check_login);
 
+export const admin_user_list = data => fetch('/wenyuanjiaoyu/admin_user/index', data, 'POST').then(check_login);
+export const admin_user_edit = data => fetch('/wenyuanjiaoyu/admin_user/edit', data, 'POST').then(check_login);
+export const admin_user_verify = data => fetch('/wenyuanjiaoyu/admin_user/verify', data, 'POST').then(check_login);
+export const admin_user_del = data => fetch('/wenyuanjiaoyu/admin_user/del', data, 'POST').then(check_login);
+export const admin_user_info = data => fetch('/wenyuanjiaoyu/admin_user/info', data, 'POST').then(check_login);
+export const admin_group_list = data => fetch('/wenyuanjiaoyu/admin_group/index', data, 'POST').then(check_login);
+export const admin_group_all_list = data => fetch('/wenyuanjiaoyu/admin_group/all_list', data, 'POST').then(check_login);
+export const admin_group_edit = data => fetch('/wenyuanjiaoyu/admin_group/edit', data, 'POST').then(check_login);
+export const admin_group_verify = data => fetch('/wenyuanjiaoyu/admin_group/verify', data, 'POST').then(check_login);
+export const admin_group_del = data => fetch('/wenyuanjiaoyu/admin_group/del', data, 'POST').then(check_login);
+export const admin_group_info = data => fetch('/wenyuanjiaoyu/admin_group/info', data, 'POST').then(check_login);
+export const admin_group_sort = data => fetch('/wenyuanjiaoyu/admin_group/sort', data, 'POST').then(check_login);
+export const admin_purview_tree = data => fetch('/wenyuanjiaoyu/admin_purview/tree', data, 'POST').then(check_login);
+export const admin_purview_all_list = data => fetch('/wenyuanjiaoyu/admin_purview/all_list', data, 'POST').then(check_login);
+export const admin_purview_edit = data => fetch('/wenyuanjiaoyu/admin_purview/edit', data, 'POST').then(check_login);
+export const admin_purview_verify = data => fetch('/wenyuanjiaoyu/admin_purview/verify', data, 'POST').then(check_login);
+export const admin_purview_del = data => fetch('/wenyuanjiaoyu/admin_purview/del', data, 'POST').then(check_login);
+export const admin_purview_info = data => fetch('/wenyuanjiaoyu/admin_purview/info', data, 'POST').then(check_login);
+export const admin_purview_sort = data => fetch('/wenyuanjiaoyu/admin_purview/sort', data, 'POST').then(check_login);
+export const get_menu = data => fetch('/wenyuanjiaoyu/admin_purview/get_menu', data, 'POST').then(check_login);
+
+

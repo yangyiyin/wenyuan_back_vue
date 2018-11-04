@@ -2,52 +2,63 @@
 	<div class="manage_page fillcontain">
 
 		<el-row style="height: 100%;">
-	  		<el-col :span="4"  style="height: 100%; ">
+			<el-col :span="4"  style="height: 100%; ">
 				<el-menu :default-active="defaultActive" style="min-height: 100%;"   background-color="#545c64"  text-color="#fff" active-text-color="#ffd04b" router>
-					<el-menu-item index="manage"><i class="el-icon-menu"></i>首页</el-menu-item>
-					<!--<el-submenu index="2">-->
-					<!--<template slot="title"><i class="el-icon-news"></i>新闻管理</template>-->
-					<!--<el-menu-item index="news">新闻管理</el-menu-item>-->
-					<!--</el-submenu>-->
+					<div style="background: rgb(255, 208, 75);height: 5px;"></div>
 
-					<el-submenu index="3">
-						<template slot="title"><i class="el-icon-goods"></i>学校管理</template>
-						<el-menu-item index="news">新闻管理</el-menu-item>
-						<!--<el-menu-item index="sign">课程报名管理</el-menu-item>-->
-						<el-menu-item index="examination">考试管理</el-menu-item>
-						<el-menu-item index="users">微信小程序用户管理</el-menu-item>
-						<el-menu-item index="suggest">家长反馈</el-menu-item>
-						<el-menu-item index="words">教师评语</el-menu-item>
-						<el-menu-item index="avatar_upload">头像上传</el-menu-item>
+
+					<el-submenu  v-for="(item, index) in menu" :index="item.uri" :key="item.id">
+						<template slot="title"><i class="iconfont el-icon-cc" v-html="item.ico"></i>{{item.name}}</template>
+						<template v-if="item.children">
+							<el-menu-item v-for="item in item.children" :index="item.uri" :key="item.id">{{item.name}}</el-menu-item>
+						</template>
+
 					</el-submenu>
 
-					<el-submenu index="4">
-						<template slot="title"><i class="el-icon-view"></i>精品课程</template>
 
-						<el-menu-item index="goods">精品课管理</el-menu-item>
-						<el-menu-item index="order">精品课订单</el-menu-item>
-						<el-menu-item index="order_pay_left_log">余款收账记录</el-menu-item>
-					</el-submenu>
-
-					<el-submenu index="5">
-						<template slot="title"><i class="el-icon-setting"></i>系统设置</template>
-
-						<el-menu-item index="config">参数配置</el-menu-item>
-					</el-submenu>
 				</el-menu>
 			</el-col>
 			<el-col :span="20" style="height: 100%;overflow: auto;">
 				<keep-alive>
-				    <router-view></router-view>
+					<router-view></router-view>
 				</keep-alive>
 			</el-col>
 		</el-row>
-  	</div>
+	</div>
 </template>
 
 <script>
-    export default {
+	import {get_menu} from '@/api/getDataEarth'
+	export default {
+		data(){
+			return {
+				menu:[]
+			}
 
+		},
+		created(){
+			this.get_menu();
+		},
+		methods: {
+			get_menu(){
+				get_menu().then(function (res) {
+					if (res.code == this.$store.state.constant.status_success) {
+						res.data.forEach(function(ele){
+							ele.children.forEach(function(e){
+								e.uri = e.uri.replace('menu_', '');
+							})
+						})
+						this.menu = res.data;
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'warning'
+						});
+					}
+
+				}.bind(this));
+			},
+		},
 		computed: {
 			defaultActive: function(){
 				var index = this.$route.path.replace('/', '');
@@ -55,13 +66,17 @@
 				return index;
 			}
 		},
-    }
+	}
 </script>
 
 
 <style lang="less" scoped>
 	@import '../style/mixin';
-	.manage_page{
-		
+	.iconfont{
+		vertical-align: middle;
+		margin-right: 5px;
+		width: 24px;
+		text-align: center;
+		font-size: 18px;
 	}
 </style>
