@@ -87,9 +87,9 @@
 //                console.log(vm.id )
             if (vm.id && vm.id > 0) {
                 vm.get_all_group_list();
-                vm.get_all_orgnize_list().then(vm.get_info);
+                vm.get_info();
             } else {
-                vm.get_all_group_list().then(vm.get_all_orgnize_list).then(vm.init);
+                vm.get_all_group_list().then(vm.init);
 
             }
 
