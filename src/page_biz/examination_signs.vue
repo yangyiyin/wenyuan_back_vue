@@ -83,6 +83,7 @@
                 <el-table-column label="家长手机号" prop="parent_tel"></el-table-column>
                 <el-table-column label="来源" prop="from"></el-table-column>
                 <el-table-column label="报名时间" prop="create_time"></el-table-column>
+                <el-table-column label="支付单号" prop="pay_no"></el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
 
