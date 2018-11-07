@@ -2,12 +2,26 @@
     <div class="fillcontain">
         <head-top></head-top>
 
+
         <div class="table_container" style="padding:20px">
             <el-alert
-                    title="温馨提示:主图尺寸建议750*428;图文详情尺寸建议750*高(任意);每张图片大小建议不要超过200kb,否则小程序端加载页面会比较慢;"
+                    title="温馨提示:主图尺寸建议750*428;图文详情尺寸建议750*高(任意);每张图片大小建议不要超过200kb,否则小程序端加载页面会比较慢。专项课是指单节的，多时间地点选择项，无试听课；小课是指一次课程多期上，可安排试听课和正式上课规律。"
                     type="warning"
                     close-text="X">
             </el-alert>
+
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>课程类型:</span>
+                <el-select v-model="data.type" placeholder="类型">
+                    <el-option
+                            v-for="item in types"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
+
             <div class="search_item">
                 <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>主图:</span>
                 <el-upload
@@ -237,13 +251,14 @@
             return {
                 id:0,
                 loading:false,
-                data:{img:'',content:{img_text:[],teacher:{infos:[{img:'',name:'',desc:''}],img_text:[]},options:[],all_options:[],checked_options:[],properties:[]}},
+                data:{ type:'1',img:'',content:{img_text:[],teacher:{infos:[{img:'',name:'',desc:''}],img_text:[]},options:[],all_options:[],checked_options:[],properties:[]}},
                 content:'',
                 link:'',
                 upload_url:this.$store.state.constant.upload_url,
                 editor:1,
                 fullscreenLoading:false,
-                properties:[{'name':'','children':[]}]
+                properties:[{'name':'','children':[]}],
+                types:[{id:'1',name:'专项课'},{id:'2',name:'小课'}]
             }
 
         },

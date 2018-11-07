@@ -73,6 +73,24 @@
 
                                 {{ props.row.remark }}
                             </el-form-item>
+
+                            <el-form-item v-if="props.row.course_arrange_test" style="width: 100%" label="试听课:" >
+
+                                上课时间：{{ props.row.course_arrange_test.time }}；上课地点：{{ props.row.course_arrange_test.place }}；上课老师：{{ props.row.course_arrange_test.teacher }}教学顾问：{{ props.row.course_arrange_test.adviser }}；备注：{{ props.row.course_arrange_test.remark }}
+
+                                <el-button type="warning" size="mini" @click="dialogFormVisibleCourseArrangeTest=true;current=props.row;course_arrange_info.test=props.row.course_arrange_test">编辑</el-button>
+                                <el-button type="warning" size="mini" @click="del_arrange(props.row.course_arrange_test.id,1,props.row)">删除</el-button>
+                            </el-form-item>
+                            <el-form-item  v-if="props.row.course_arrange_official" style="width: 100%"label="正式上课:" >
+
+                                上课地点：{{ props.row.course_arrange_official.place }}；上课规律：{{ props.row.course_arrange_official.arrange }}；预期结束：{{ props.row.course_arrange_official.end_time }}；上课老师：{{ props.row.course_arrange_official.teacher }}教学顾问：{{ props.row.course_arrange_official.adviser }}；备注：{{ props.row.course_arrange_official.remark }}
+                                <el-button type="warning" size="mini" @click="dialogFormVisibleCourseArrange=true;current=props.row;course_arrange_info.official=props.row.course_arrange_official">编辑</el-button>
+                                <el-button type="warning" size="mini" @click="del_arrange(props.row.course_arrange_official.id,2,props.row)">删除</el-button>
+
+                            </el-form-item>
+                            <el-button type="warning" v-if="(props.row.status==2||props.row.status==3 ||props.row.status==4) && props.row.order_sub.goods.type==2 && !props.row.course_arrange_test" size="mini" @click="dialogFormVisibleCourseArrangeTest=true;current=props.row;course_arrange_info.test={time:'',place:'',teacher:'',adviser:'',remark:''}">设置试听课</el-button>
+                            <el-button type="warning" v-if="(props.row.status==2||props.row.status==3 ||props.row.status==4) && props.row.order_sub.goods.type==2 && !props.row.course_arrange_official" size="mini" @click="dialogFormVisibleCourseArrange=true;current=props.row;course_arrange_info.official={arrange:'',teacher:'',adviser:'',remark:''}">设置正式上课</el-button>
+
                         </el-form>
                     </template>
                 </el-table-column>
@@ -141,12 +159,98 @@
             </div>
         </el-dialog>
 
+        <el-dialog :title="'试听课-'+current.extra_data.name" :visible.sync="dialogFormVisibleCourseArrangeTest" width="50%">
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="试听课时间" v-model="course_arrange_info.test.time" style="width: 450px">
+                    <template slot="prepend">试听课时间</template>
+                </el-input>
+            </div>
+            <div class="search_item">
+
+                <el-input clearable placeholder="试听课地点" v-model="course_arrange_info.test.place" style="width: 450px">
+                    <template slot="prepend">试听课地点</template>
+                </el-input>
+            </div>
+            <div class="search_item">
+                <el-input clearable placeholder="上课老师" v-model="course_arrange_info.test.teacher" style="width: 450px">
+                    <template slot="prepend">上课老师</template>
+                </el-input>
+            </div>
+            <div class="search_item">
+                <el-input clearable placeholder="教学顾问" v-model="course_arrange_info.test.adviser" style="width: 450px">
+                    <template slot="prepend">教学顾问</template>
+                </el-input>
+            </div>
+            <div class="search_item">
+                <el-input clearable placeholder="备注" v-model="course_arrange_info.test.remark" style="width: 450px">
+                    <template slot="prepend">备注</template>
+                </el-input>
+            </div>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleCourseArrangeTest = false">取 消</el-button>
+                <el-button type="primary" @click="course_arrange_test(current)" :loading="loadingBtn == 'course_arrange_test'">确认</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog :title="'正式上课规律-'+current.extra_data.name" :visible.sync="dialogFormVisibleCourseArrange" width="50%">
+
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="上课地点" v-model="course_arrange_info.official.place" style="width: 450px">
+                    <template slot="prepend">上课地点</template>
+                </el-input>
+            </div>
+            <div class="search_item">
+
+                <el-input clearable placeholder="上课规律" v-model="course_arrange_info.official.arrange" style="width: 450px">
+                    <template slot="prepend">上课规律</template>
+                </el-input>
+
+            </div>
+            <div class="search_item">
+
+                <el-input clearable placeholder="预期结束时间" v-model="course_arrange_info.official.end_time" style="width: 450px">
+                    <template slot="prepend">预期结束时间</template>
+                </el-input>
+            </div>
+            <div class="search_item">
+
+                <el-input clearable placeholder="上课老师" v-model="course_arrange_info.official.teacher" style="width: 450px">
+                    <template slot="prepend">上课老师</template>
+                </el-input>
+
+            </div>
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="教学顾问" v-model="course_arrange_info.official.adviser" style="width: 450px">
+                    <template slot="prepend">教学顾问</template>
+                </el-input>
+
+            </div>
+            <div class="search_item">
+
+                <el-input clearable placeholder="备注" v-model="course_arrange_info.official.remark" style="width: 450px">
+                    <template slot="prepend">备注</template>
+                </el-input>
+
+            </div>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleCourseArrange = false">取 消</el-button>
+                <el-button type="primary" @click="course_arrange(current)" :loading="loadingBtn == 'course_arrange'">确认</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {order_list,cancel_order_force,pay_left_money} from '@/api/getDataEarth'
+    import {order_list,cancel_order_force,pay_left_money,course_arrange,course_arrange_del} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -157,7 +261,9 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 dialogFormVisibleDaochu:false,
-                current:{},
+                dialogFormVisibleCourseArrangeTest:false,
+                dialogFormVisibleCourseArrange:false,
+                current:{extra_data:{}},
 //                remark:'',
 //                choose_categories:[],
 //                categories:[],
@@ -175,6 +281,21 @@
                     {label:'已完成',value:4},
                     {label:'已关闭',value:9}
                 ],
+                course_arrange_info:{
+                    test:{
+                        time:'',
+                        place:'',
+                        teacher:'',
+                        adviser:'',
+                        remark:'',
+                    },
+                    official:{
+                        arrange:'',
+                        teacher:'',
+                        adviser:'',
+                        remark:'',
+                    }
+                },
                 loadingBtn:-1
             }
         },
@@ -320,28 +441,82 @@
 //                this.dialogFormVisible = true;
 //                this.current = row;
 //            },
-//            sort() {
-//                goods_sort({
-//                    id:this.current.id,
-//                    sort:this.current.sort
-//
-//                }).then(function(res){
-//                    if (res.code == this.$store.state.constant.status_success) {
-//                        this.dialogFormVisible = false;
-//                        this.$message({
-//                            type: 'success',
-//                            message: '操作成功'
-//                        });
-//                    } else {
-//                        this.$message({
-//                            showClose: true,
-//                            message: res.msg,
-//                            type: 'warning'
-//                        });
-//                    }
-//                }.bind(this));
-//                this.dialogFormVisible = false;
-//            }
+            course_arrange_test(row) {
+                course_arrange({
+                    order_id:this.current.id,
+                    type:1,
+                   data:this.course_arrange_info.test
+
+               }).then(function(res){
+                   if (res.code == this.$store.state.constant.status_success) {
+                       this.dialogFormVisibleCourseArrangeTest = false;
+                       row.course_arrange_test = this.course_arrange_info.test;
+                       this.$message({
+                           type: 'success',
+                           message: '操作成功'
+                       });
+                   } else {
+                       this.$message({
+                           showClose: true,
+                           message: res.msg,
+                           type: 'warning'
+                       });
+                   }
+               }.bind(this));
+               this.dialogFormVisibleCourseArrangeTest = false;
+           },
+            course_arrange(row) {
+                course_arrange({
+                    order_id:this.current.id,
+                    type:2,
+                    data:this.course_arrange_info.official
+
+                }).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogFormVisibleCourseArrange = false;
+                        row.course_arrange_official = this.course_arrange_info.official;
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+                this.dialogFormVisibleCourseArrange = false;
+            },
+            del_arrange(id,type,row){
+                this.$confirm('确认删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    if (type == 1) {
+                        row.course_arrange_test = '';
+                    } else if (type == 2) {
+                        row.course_arrange_official = '';
+                    }
+                    course_arrange_del({id:id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                }.bind(this));
+
+            }
         },
     }
 </script>
@@ -362,5 +537,10 @@
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;
+    }
+    .search_item{
+
+        margin-top: 10px;
+
     }
 </style>
