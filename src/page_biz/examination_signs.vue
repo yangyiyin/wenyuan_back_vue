@@ -122,6 +122,11 @@
                 <el-input clearable placeholder="" v-model="current_data.content.avatar_origin" style="width: 80%;display: inline-block"></el-input>
             </div>
 
+            <div>
+                <span>年级:</span>
+                <el-input clearable placeholder="" v-model="current_data.content.grade" style="width: 80%;display: inline-block"></el-input>
+            </div>
+
 
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleData = false">取 消</el-button>
@@ -277,6 +282,7 @@
                 examination_signs_change_data({
                     id:this.current_data.id,
                     avatar_origin:this.current_data.content.avatar_origin,
+                    grade:this.current_data.content.grade,
                 }).then(function(res){
                     this.loadingBtn = '-1';
                     if (res.code == this.$store.state.constant.status_success) {

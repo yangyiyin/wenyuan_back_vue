@@ -32,6 +32,8 @@ const add_admin_group = r => require.ensure([], () => r(require('@/page_biz/add_
 const admin_purview = r => require.ensure([], () => r(require('@/page_biz/admin_purview')), 'admin_purview');
 const add_admin_purview = r => require.ensure([], () => r(require('@/page_biz/add_admin_purview')), 'add_admin_purview');
 const group_purview = r => require.ensure([], () => r(require('@/page_biz/group_purview')), 'group_purview');
+const sign_class_edit = r => require.ensure([], () => r(require('@/page_biz/sign_class_edit')), 'sign_class_edit');
+const sign_class = r => require.ensure([], () => r(require('@/page_biz/sign_class')), 'sign_class');
 
 
 const routes = [
@@ -145,6 +147,18 @@ const routes = [
 				component: order_pay_left_log,
 				meta: ['精品课程', '余款收账记录'],
 			},
+
+            {
+                path: '/sign_class',
+                component: sign_class,
+                meta: ['快捷报班', '快捷报班'],
+            },
+            {
+                path: '/sign_class_edit',
+                component: sign_class_edit,
+                meta: ['快捷报班', '编辑快捷报班'],
+            },
+
 			{
 				path: '/admin_user',
 				component: admin_user,
