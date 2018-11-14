@@ -101,6 +101,7 @@
                 <el-table-column label="手机号" prop="tel"></el-table-column>
                 <el-table-column label="价格" prop="price"></el-table-column>
                 <el-table-column label="已付金额" prop="payed_money"></el-table-column>
+                <el-table-column label="支付单号" prop="pay_no"></el-table-column>
                 <el-table-column label="状态" width="140">
                     <template slot-scope="scope">
                         <el-tag v-if="scope.row.status==1" >{{scope.row.status_desc}}</el-tag>
