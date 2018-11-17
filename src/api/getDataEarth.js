@@ -28,6 +28,7 @@ export const sign_signs_del = data => fetch('/wenyuanjiaoyu/sign_signs/del', dat
 export const sign_signs_areas = data => fetch('/wenyuanjiaoyu/sign_signs/areas', data, 'POST').then(check_login);
 export const check_bind_student = data => fetch('/wenyuanjiaoyu/student/check_bind_student', data, 'POST').then(check_login);
 export const examination_list = data => fetch('/wenyuanjiaoyu/examination/index', data, 'POST').then(check_login);
+export const examination_all_list = data => fetch('/wenyuanjiaoyu/examination/all_list', data, 'POST').then(check_login);
 export const examination_info = data => fetch('/wenyuanjiaoyu/examination/info', data, 'POST').then(check_login);
 export const examination_verify = data => fetch('/wenyuanjiaoyu/examination/verify', data, 'POST').then(check_login);
 export const examination_del = data => fetch('/wenyuanjiaoyu/examination/del', data, 'POST').then(check_login);
@@ -72,6 +73,12 @@ export const order_excel_out = data => fetch('/wenyuanjiaoyu/order/excel_out', d
 export const course_arrange = data => fetch('/wenyuanjiaoyu/order/course_arrange', data, 'POST').then(check_login);
 export const course_arrange_del = data => fetch('/wenyuanjiaoyu/order/course_arrange_del', data, 'POST').then(check_login);
 export const order_pay_left_log_list = data => fetch('/wenyuanjiaoyu/order_pay_left_log/index', data, 'POST').then(check_login);
+export const sign_course_list = data => fetch('/wenyuanjiaoyu/sign_course/index', data, 'POST').then(check_login);
+export const sign_course_info = data => fetch('/wenyuanjiaoyu/sign_course/info', data, 'POST').then(check_login);
+export const sign_course_verify = data => fetch('/wenyuanjiaoyu/sign_course/verify', data, 'POST').then(check_login);
+export const sign_course_del = data => fetch('/wenyuanjiaoyu/sign_course/del', data, 'POST').then(check_login);
+export const sign_course_edit = data => fetch('/wenyuanjiaoyu/sign_course/edit', data, 'POST').then(check_login);
+export const get_class_list = data => fetch('/wenyuanjiaoyu/sign_course/get_class_list', data, 'POST').then(check_login);
 
 export const admin_user_list = data => fetch('/wenyuanjiaoyu/admin_user/index', data, 'POST').then(check_login);
 export const admin_user_edit = data => fetch('/wenyuanjiaoyu/admin_user/edit', data, 'POST').then(check_login);

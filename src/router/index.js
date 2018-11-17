@@ -32,8 +32,8 @@ const add_admin_group = r => require.ensure([], () => r(require('@/page_biz/add_
 const admin_purview = r => require.ensure([], () => r(require('@/page_biz/admin_purview')), 'admin_purview');
 const add_admin_purview = r => require.ensure([], () => r(require('@/page_biz/add_admin_purview')), 'add_admin_purview');
 const group_purview = r => require.ensure([], () => r(require('@/page_biz/group_purview')), 'group_purview');
-const sign_class_edit = r => require.ensure([], () => r(require('@/page_biz/sign_class_edit')), 'sign_class_edit');
-const sign_class = r => require.ensure([], () => r(require('@/page_biz/sign_class')), 'sign_class');
+const sign_course_edit = r => require.ensure([], () => r(require('@/page_biz/sign_course_edit')), 'sign_course_edit');
+const sign_course = r => require.ensure([], () => r(require('@/page_biz/sign_course')), 'sign_course');
 
 
 const routes = [
@@ -149,13 +149,13 @@ const routes = [
 			},
 
             {
-                path: '/sign_class',
-                component: sign_class,
-                meta: ['快捷报班', '快捷报班'],
+                path: '/sign_course',
+                component: sign_course,
+                meta: ['快捷报班', '列表'],
             },
             {
-                path: '/sign_class_edit',
-                component: sign_class_edit,
+                path: '/sign_course_edit',
+                component: sign_course_edit,
                 meta: ['快捷报班', '编辑快捷报班'],
             },
 
