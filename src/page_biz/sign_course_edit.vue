@@ -7,7 +7,7 @@
 
             <div class="search_item">
                 <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">选择课程:</span>
-                <div  style="border-bottom: 1px solid #999;">
+                <div v-loading="loading_course" style="border-bottom: 1px solid #999;">
                     <el-checkbox v-model="checkList" @change="change_courses" style="margin-left: 30px;margin-bottom: 10px;" v-for="item in courselist" :disabled="item.disabled" :label="item.courseid">{{item.coursename}}</el-checkbox>
 
                 </div>
@@ -132,6 +132,7 @@
             return {
                 id:0,
                 loading:false,
+                loading_course:false,
                 checkList:[],
                 courselist:[],
                 class_list:[],
@@ -204,7 +205,9 @@
             get_course_list(vm, checklist) {
                 return new Promise(function(resolve,reject){
                     this.courselist = [];
+                    this.loading_course = true;
                     get_course_list({}).then(function (res) {
+                        this.loading_course = false;
                         if (res.code == this.$store.state.constant.status_success) {
                             if (this.checkList && this.checkList.length) {
                                 // this.courselist = this.set_checked_course(res.data);
