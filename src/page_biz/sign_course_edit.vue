@@ -14,7 +14,7 @@
 
             </div>
 
-            <div v-for="item in courses_data" :key="item.courseid" style="border: 1px dashed #999;margin: 10px;">
+            <div v-for="item in courses_data" :key="item.courseid" style="border: 1px dashed #999;margin: 10px;padding-bottom: 10px;">
                 <el-tag style="font-size: 18px;">{{item.coursename}}</el-tag>
                 <div class="search_item" style="margin-top: 20px">
                     <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px;">选择班级(已筛选-未报满):</span>
@@ -102,6 +102,11 @@
                                     placeholder="选择日期时间">
                             </el-date-picker>
                         </div>
+                        <div class="search_item">
+                            <span class="pre_info" style="font-size: 14px;">押金<span style="font-size: 12px;">（全额{{item.unitprice}}元）</span>:</span>
+                            <el-input clearable placeholder="金额" v-model="item.deposit" type="number" style="width: 150px"></el-input>
+                        </div>
+
                     </div>
                 </div>
             </div>

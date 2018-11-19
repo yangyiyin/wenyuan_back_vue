@@ -356,7 +356,7 @@
             },
             submit: function () {
 
-//                console.log(this.data);return;
+                //console.log(this.data);return;
                 var error_msg = [];
                 if (!this.data.title) {
                     error_msg.push('请填写标题');
@@ -528,7 +528,8 @@
                 this.data.content.teacher.infos.splice(index,1);
             },
             gen_all_options(){
-                 this.data.content.all_options = [];
+                var old_all_options = deepCopy(this.data.content.all_options);
+                this.data.content.all_options = [];
 
                 var is_first = true;
                 this.properties.forEach(function(val1){
@@ -571,6 +572,44 @@
                              this.data.content.all_options.push({info:{},price_type:1,price:'',deposit:'',stock:'',list:[val3]});
                         }.bind(this));
                     }
+                }
+
+                //判断老的选项，保证老数据
+                //console.log(old_all_options);
+                //console.log(this.data.content.all_options);
+                var all_options_new = [];
+                if (this.data.content.all_options.length) {
+                    var has_push = false;
+                    this.data.content.all_options.forEach(function(val1){
+                        var uuid = '';
+                        if (val1.list.length) {
+                            val1.list.forEach(function (val3) {
+                                uuid += val3.index ? val3.index : val3.id;
+                            })
+                        }
+
+                        has_push = false;
+                        old_all_options.forEach(function(val2){
+                            var uuid_old = '';
+                            if (val2.list.length) {
+                                val2.list.forEach(function (val4) {
+                                    uuid_old += val4.index ? val4.index : val4.id;
+                                })
+                            }
+                            //console.log(uuid_old)
+                            if (uuid && uuid == uuid_old) {
+                                //console.log(val2);
+                                //val1 = val2;
+                                has_push = true;
+                                all_options_new.push(val2);
+                                return;
+                            }
+                        })
+                        if (!has_push) {
+                            all_options_new.push(val1);
+                        }
+                    })
+                    this.data.content.all_options = all_options_new;
                 }
 
                //console.log( this.data.content.all_options);
