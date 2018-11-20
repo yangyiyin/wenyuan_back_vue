@@ -10,39 +10,31 @@
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit(0)">新增报名({{stage_name}})</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit(0)">新增报名</el-button>
 
         </div>
         <div class="table_container">
             <el-table
                     :data="tableData"
                     style="width: 100%">
-                <!--<el-table-column label="图片">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<img :src="scope.row.img" width="60" height="30"/>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
+
                 <!--<el-table-column type="expand">-->
                     <!--<template slot-scope="props">-->
                         <!--<el-form label-position="left" inline class="demo-table-expand">-->
-                            <!--<el-form-item label="考试时间" >-->
-                                <!--<span>{{ props.row.examination_time }}</span>-->
-                            <!--</el-form-item>-->
-                            <!--<el-form-item label="报名截止" >-->
-                                <!--<span>{{ props.row.sign_end_time }}</span>-->
-                            <!--</el-form-item>-->
-                            <!--<el-form-item label="内容描述" >-->
-                                <!--<span>{{ props.row.content }}</span>-->
+                            <!--<el-form-item label="课程" v-for="item in props.row.courses">-->
+                                <!--<span>{{item.title}}</span>-->
                             <!--</el-form-item>-->
 
                         <!--</el-form>-->
                     <!--</template>-->
                 <!--</el-table-column>-->
-                <el-table-column label="课程" prop="title"></el-table-column>
+                <el-table-column label="标题" prop="title"></el-table-column>
                 <!--<el-table-column label="报名类型" prop="type"></el-table-column>-->
-                <el-table-column label="报名开始时间" prop="start_time"></el-table-column>
-                <el-table-column label="老生报名截止时间" prop="end_time_self"></el-table-column>
-                <el-table-column label="所有人报名截止时间" prop="end_time_public"></el-table-column>
+                <el-table-column label="入口图">
+                    <template slot-scope="scope">
+                        <img :src="scope.row.img" width="60" height="30"/>
+                    </template>
+                </el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <!--<el-table-column label="学生报名" width="450">-->
                     <!--<template slot-scope="scope">-->
@@ -52,10 +44,11 @@
                     <!--</template>-->
                 <!--</el-table-column>-->
 
-                <el-table-column label="操作" width="300">
+                <el-table-column label="操作">
                     <template slot-scope="scope">
 
                         <el-button size="mini" @click="goto_edit(scope.row.id)">编辑</el-button>
+                        <el-button size="mini" @click="goto_edit_course(scope.row.id,scope.row.title)">修改课程</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
                         <el-button size="mini"   @click="del(scope.row, scope.$index)">删除</el-button>
@@ -92,13 +85,11 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {sign_course_list,sign_course_del,sign_course_verify} from '@/api/getDataEarth'
+    import {sign_stage_list,sign_stage_del,sign_stage_verify} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
             return {
-                stage_id:0,
-                stage_name:'',
                 tableData: [],
                 limit: 10,
                 count: 0,
@@ -117,7 +108,7 @@
             headTop,
         },
         created(){
-            //this.list();
+            this.list();
         },
         mounted(){
 
@@ -125,15 +116,12 @@
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
-                vm.stage_id = to.query.id ? to.query.id : 0;
-                vm.stage_name = to.query.name ? to.query.name : '';
                 vm.list();
-
         })
         },
         methods: {
             list() {
-                sign_course_list({page:this.currentPage,page_size:this.limit,title:this.title,stage_id:this.stage_id}).then(function(res){
+                sign_stage_list({page:this.currentPage,page_size:this.limit,title:this.title}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -159,9 +147,11 @@
                 this.list();
             },
             goto_edit(id) {
-                this.$router.push({path:'sign_course_edit',query:{id:id,stage_name:this.stage_name,stage_id:this.stage_id}});
+                this.$router.push({path:'sign_stage_edit',query:{id:id}});
             },
-
+            goto_edit_course(id,name) {
+                this.$router.push({path:'sign_course',query:{id:id,name:name}});
+            },
             verify(scope, status) {
 
                 this.$confirm('确认此操作?', '提示', {
@@ -171,7 +161,7 @@
                 }).then(function(){
                     var item = scope.row;
                     this.loadingBtn = scope.$index;
-                    sign_course_verify({id:item.id,status:status}).then(function(res){
+                    sign_stage_verify({id:item.id,status:status}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             item.status = status;
                             this.$message({
@@ -199,7 +189,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
-                    sign_course_del({id:item.id}).then(function(res){
+                    sign_stage_del({id:item.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             this.tableData.splice(index,1);
                             this.count --;

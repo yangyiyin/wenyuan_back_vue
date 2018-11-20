@@ -3,7 +3,10 @@
         <head-top></head-top>
 
         <div class="table_container" style="padding:20px">
+            <div class="search_item">
+                <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">{{stage_name}}</span>
 
+            </div>
 
             <div class="search_item">
                 <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">选择课程:</span>
@@ -17,7 +20,7 @@
             <div v-for="item in courses_data" :key="item.courseid" style="border: 1px dashed #999;margin: 10px;padding-bottom: 10px;">
                 <el-tag style="font-size: 18px;">{{item.coursename}}</el-tag>
                 <div class="search_item" style="margin-top: 20px">
-                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px;">选择班级(已筛选-未报满):</span>
+                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px;">1.选择班级(已筛选-未报满):</span>
                     <div  v-loading="item.loading_class">
                         <template v-if="item.class_list && item.class_list.length">
                             <el-checkbox v-model="item.classes_ids" @change="change_class(item)" style="margin-left: 30px;margin-bottom: 10px;" v-for="item2 in item.class_list" :label="item2.classid">{{item2.classname}}</el-checkbox>
@@ -33,7 +36,7 @@
 
                 </div>
                 <div class="search_item" style="margin-top: 20px">
-                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">选择考试条件:</span>
+                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">2.选择考试条件:</span>
                     <div style="margin-left: 20px;">
                         <el-autocomplete
                                 v-model="item.examine_str"
@@ -73,7 +76,7 @@
 
                 </div>
                 <div class="search_item" style="margin-top: 20px">
-                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">时间设置:</span>
+                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">3.时间设置:</span>
                     <div style="margin-left: 20px;">
                         <div class="block search_item">
                             <span class="pre_info" style="font-size: 14px;">报名开始时间:</span>
@@ -136,6 +139,8 @@
         data(){
             return {
                 id:0,
+                stage_id:0,
+                stage_name:'',
                 loading:false,
                 loading_course:false,
                 checkList:[],
@@ -175,6 +180,8 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
+                vm.stage_id = to.query.stage_id ? to.query.stage_id : 0;
+                vm.stage_name = to.query.stage_name ? to.query.stage_name : '';
                 // vm.get_course_list(vm).then(function(){
                 //     if (vm.id && vm.id > 0) {
                 //         vm.get_info();
@@ -307,6 +314,7 @@
                     this.loading = true;
                     sign_course_edit({
                         id:this.id,
+                        stage_id:this.stage_id,
                         courses_data:this.courses_data
                     }).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
@@ -314,7 +322,7 @@
                                 message: res.msg,
                                 type: 'success'
                             });
-                            this.$router.push({path:'sign_course',query:{}});
+                            this.$router.push({path:'sign_course',query:{id:this.stage_id,name:this.stage_name}});
                         } else {
                             this.$message({
                                 message: res.msg,

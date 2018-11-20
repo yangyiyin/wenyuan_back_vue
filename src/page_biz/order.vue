@@ -69,11 +69,14 @@
                                     <p>年级:{{ props.row.extra_data.grade }}</p>
                                 </template>
                             </el-form-item>
-                            <el-form-item label="备注:" >
+                            <el-form-item label="用户备注:" >
 
                                 {{ props.row.remark }}
                             </el-form-item>
+                            <el-form-item label="后台备注:" >
 
+                                {{ props.row.remark_back }}
+                            </el-form-item>
                             <el-form-item v-if="props.row.course_arrange_test" style="width: 100%" label="试听课:" >
 
                                 上课时间：{{ props.row.course_arrange_test.time }}；上课地点：{{ props.row.course_arrange_test.place }}；上课老师：{{ props.row.course_arrange_test.teacher }}教学顾问：{{ props.row.course_arrange_test.adviser }}；备注：{{ props.row.course_arrange_test.remark }}
@@ -99,7 +102,13 @@
                 <el-table-column label="订单编号" prop="order_no"></el-table-column>
                 <el-table-column label="课程" prop="goods_title_short"></el-table-column>
                 <el-table-column label="手机号" prop="tel"></el-table-column>
-                <el-table-column label="价格" prop="price"></el-table-column>
+                <el-table-column label="价格">
+                    <template slot-scope="scope">
+                        {{scope.row.price}}
+                        <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" type='warning' @click="dialogFormVisibleEditPrice=true;current=scope.row" >修改价格</el-button>
+
+                    </template>
+                </el-table-column>
                 <el-table-column label="已付金额" prop="payed_money"></el-table-column>
                 <el-table-column label="支付单号" prop="pay_no"></el-table-column>
                 <el-table-column label="状态" width="140">
@@ -112,15 +121,15 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="学生姓名" prop="extra_data.name"></el-table-column>
-                <el-table-column label="备注" prop="remark_less"></el-table-column>
+                <el-table-column label="用户备注" prop="remark_less"></el-table-column>
 
                 <el-table-column label="创建日期" prop="create_time" width="180"></el-table-column>
 
-                <el-table-column label="操作" width="300">
+                <el-table-column label="操作" >
                     <template slot-scope="scope">
-
                         <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" @click="cancel_force(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
                         <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && parseInt(scope.row.payed_money) < parseInt(scope.row.price)" size="mini" @click="pay_left_money(scope)" :loading="loadingBtn == scope.$index">补缴余款</el-button>
+                        <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" type='warning' @click="dialogFormVisibleRemark=true;current=scope.row" >备注</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -157,6 +166,42 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleDaochu = false">取 消</el-button>
                 <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog :title="'修改订单价格-'+current.order_no" :visible.sync="dialogFormVisibleEditPrice" width="50%">
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="价格" v-model="current.price" style="width: 450px">
+                    <template slot="prepend">价格</template>
+                </el-input>
+            </div>
+            <div class="search_item">
+
+                <el-input clearable placeholder="备注" v-model="current.remark_back" style="width: 450px">
+                    <template slot="prepend">备注</template>
+                </el-input>
+
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleEditPrice = false">取 消</el-button>
+                <el-button type="primary" @click="edit_info(current)">确认</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog :title="'备注-'+current.order_no" :visible.sync="dialogFormVisibleRemark" width="50%">
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="备注" v-model="current.remark_back" style="width: 450px">
+                    <template slot="prepend">备注</template>
+                </el-input>
+
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleRemark = false">取 消</el-button>
+                <el-button type="primary" @click="edit_info(current)">确认</el-button>
             </div>
         </el-dialog>
 
@@ -251,7 +296,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {order_list,cancel_order_force,pay_left_money,course_arrange,course_arrange_del} from '@/api/getDataEarth'
+    import {order_list,cancel_order_force,pay_left_money,course_arrange,course_arrange_del,order_edit_info} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -264,6 +309,8 @@
                 dialogFormVisibleDaochu:false,
                 dialogFormVisibleCourseArrangeTest:false,
                 dialogFormVisibleCourseArrange:false,
+                dialogFormVisibleEditPrice:false,
+                dialogFormVisibleRemark:false,
                 current:{extra_data:{}},
 //                remark:'',
 //                choose_categories:[],
@@ -517,6 +564,22 @@
                     }.bind(this));
                 }.bind(this));
 
+            },
+            edit_info(current_order){
+                order_edit_info({id:current_order.id,price:current_order.price,remark_back:current_order.remark_back}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.msg
+                        });
+                    }
+                }.bind(this));
             }
         },
     }

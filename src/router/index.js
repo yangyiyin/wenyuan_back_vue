@@ -34,6 +34,8 @@ const add_admin_purview = r => require.ensure([], () => r(require('@/page_biz/ad
 const group_purview = r => require.ensure([], () => r(require('@/page_biz/group_purview')), 'group_purview');
 const sign_course_edit = r => require.ensure([], () => r(require('@/page_biz/sign_course_edit')), 'sign_course_edit');
 const sign_course = r => require.ensure([], () => r(require('@/page_biz/sign_course')), 'sign_course');
+const sign_stage = r => require.ensure([], () => r(require('@/page_biz/sign_stage')), 'sign_stage');
+const sign_stage_edit = r => require.ensure([], () => r(require('@/page_biz/sign_stage_edit')), 'sign_stage_edit');
 
 
 const routes = [
@@ -149,14 +151,25 @@ const routes = [
 			},
 
             {
+                path: '/sign_stage',
+                component: sign_stage,
+                meta: ['快捷报班', '列表'],
+            },
+            {
+                path: '/sign_stage_edit',
+                component: sign_stage_edit,
+                meta: ['快捷报班', '编辑快捷报班'],
+            },
+
+            {
                 path: '/sign_course',
                 component: sign_course,
-                meta: ['快捷报班', '列表'],
+                meta: ['快捷报班-课程', '列表'],
             },
             {
                 path: '/sign_course_edit',
                 component: sign_course_edit,
-                meta: ['快捷报班', '编辑快捷报班'],
+                meta: ['快捷报班-课程', '编辑快捷报班'],
             },
 
 			{
