@@ -4,6 +4,14 @@
         <div class="table_container" style="padding-bottom: 0">
 
             <div style="margin-bottom: 10px">
+                <el-select v-model="type" placeholder="类型">
+                    <el-option
+                            v-for="item in [{label:'全部',value:0},{label:'精品课',value:1},{label:'选班',value:2}]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
                 <el-date-picker
                         v-model="start_time"
                         type="datetime"
@@ -45,6 +53,7 @@
                         :value="item.value">
                 </el-option>
             </el-select>
+
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
         </div>
@@ -318,6 +327,7 @@
                 tel:'',
                 order_no:'',
                 goods_title:'',
+                type:0,
                 status:-1,
                 start_time:'',
                 end_time:'',
@@ -364,7 +374,7 @@
         },
         methods: {
             list() {
-                order_list({page:this.currentPage,page_size:this.limit,tel:this.tel,order_no:this.order_no,goods_title:this.goods_title,status:this.status,start_time:this.start_time,end_time:this.end_time}).then(function(res){
+                order_list({page:this.currentPage,page_size:this.limit,tel:this.tel,order_no:this.order_no,goods_title:this.goods_title,status:this.status,start_time:this.start_time,end_time:this.end_time,type:this.type}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
