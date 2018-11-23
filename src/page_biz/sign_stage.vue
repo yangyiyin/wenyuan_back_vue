@@ -32,7 +32,7 @@
                 <!--<el-table-column label="报名类型" prop="type"></el-table-column>-->
                 <el-table-column label="入口图">
                     <template slot-scope="scope">
-                        <img :src="scope.row.img" width="60" height="30"/>
+                        <img :src="scope.row.img" width="60" height="60"/>
                     </template>
                 </el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>

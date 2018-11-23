@@ -681,9 +681,14 @@
         width: 120px;
         height: 120px;
     }
+   .avatar{
+       width: 120px;
+       height: 120px;
+   }
     .avatar-uploader .el-upload:hover {
         border-color: #409EFF;
     }
+
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;

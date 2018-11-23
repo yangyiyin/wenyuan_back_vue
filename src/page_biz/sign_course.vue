@@ -10,7 +10,7 @@
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit(0)">新增报名({{stage_name}})</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit(0)">新增课程({{stage_name}})</el-button>
 
         </div>
         <div class="table_container">
