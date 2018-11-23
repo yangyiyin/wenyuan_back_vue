@@ -63,7 +63,7 @@
                     style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
-                        <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form v-if="props.row.type==1" label-position="left" inline class="demo-table-expand">
                             <el-form-item label="课程:" >
                                 <span>{{ props.row.goods_title }}</span>
                             </el-form-item>
@@ -104,6 +104,54 @@
                             <el-button type="warning" v-if="(props.row.status==2||props.row.status==3 ||props.row.status==4) && props.row.order_sub.goods.type==2 && !props.row.course_arrange_official" size="mini" @click="dialogFormVisibleCourseArrange=true;current=props.row;course_arrange_info.official={arrange:'',teacher:'',adviser:'',remark:''}">设置正式上课</el-button>
 
                         </el-form>
+                        <el-form v-if="props.row.type==2" label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="课程:" >
+                                <span>{{ props.row.goods_title }}</span>
+                            </el-form-item>
+                            <template v-if="props.row.member_info.is_new == 1">
+                                <el-form-item label="学生:" >
+                                    {{ props.row.member_info.content.student.name }}
+                                </el-form-item>
+                                <el-form-item label="头像:" >
+                                    <img :src="props.row.member_info.content.student.avatar" style="width: 50px;height: 50px;border-radius: 50px;">
+                                </el-form-item>
+                                <el-form-item label="是否新生:" >
+                                    是
+                                </el-form-item>
+                                <el-form-item label="性别:" >
+                                    {{ props.row.member_info.content.student.sex == 1?'男':'女' }}
+                                </el-form-item>
+                                <el-form-item label="备用电话:" >
+                                    {{ props.row.member_info.content.student.tel2 }}
+                                </el-form-item>
+                                <el-form-item label="原学校:" >
+                                    {{ props.row.member_info.content.student.school }}
+                                </el-form-item>
+                                <el-form-item label="原年级:" >
+                                    {{ props.row.member_info.content.student.grade }}
+                                </el-form-item>
+                                <el-form-item label="原班级:" >
+                                    {{ props.row.member_info.content.student.class }}
+                                </el-form-item>
+                                <el-form-item label="备注:" >
+                                    {{ props.row.member_info.content.student.remark }}
+                                </el-form-item>
+                            </template>
+                            <template v-else>
+                                <el-form-item label="学生:" >
+                                    {{ props.row.member_info.content.student.student_info.name }}
+                                </el-form-item>
+                                <el-form-item label="头像:" >
+                                    <img :src="props.row.member_info.content.student.student_info.avatar" style="width: 50px;height: 50px;border-radius: 50px;">
+                                </el-form-item>
+                                <el-form-item label="学号:" >
+                                    {{ props.row.member_info.content.student.student_info.studentid }}
+                                </el-form-item>
+                                <el-form-item label="是否新生:" >
+                                    否
+                                </el-form-item>
+                            </template>
+                        </el-form>
                     </template>
                 </el-table-column>
 
@@ -126,19 +174,28 @@
                         <el-tag v-else-if="scope.row.status==2">{{scope.row.status_desc}}</el-tag>
                         <el-tag v-else-if="scope.row.status==3" >{{scope.row.status_desc}}</el-tag>
                         <el-tag v-else-if="scope.row.status==4" type="success">{{scope.row.status_desc}}</el-tag>
-                        <el-tag v-else="scope.row.status==9" type="danger">{{scope.row.status_desc}}</el-tag>
+                        <el-tag v-else-if="scope.row.status==8" type="success">{{scope.row.status_desc}}</el-tag>
+                        <el-tag v-else-if="scope.row.status==11" type="success">{{scope.row.status_desc}}</el-tag>
+                        <el-tag v-else type="danger">{{scope.row.status_desc}}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="学生姓名" prop="extra_data.name"></el-table-column>
+                <el-table-column label="学生姓名">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.type==1">{{scope.row.extra_data.name}}</span>
+                        <span v-if="scope.row.type==2">{{scope.row.member_info.student_name}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="用户备注" prop="remark_less"></el-table-column>
 
                 <el-table-column label="创建日期" prop="create_time" width="180"></el-table-column>
 
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" @click="cancel_force(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
-                        <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && parseInt(scope.row.payed_money) < parseInt(scope.row.price)" size="mini" @click="pay_left_money(scope)" :loading="loadingBtn == scope.$index">补缴余款</el-button>
+                        <el-button v-if="(scope.row.status==1||scope.row.status==2) && scope.row.type==1" size="mini" @click="cancel_force(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
+                        <el-button v-if="(scope.row.status==1||scope.row.status==2) && scope.row.type==2" size="mini" @click="cancel_force_sign_course(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
+                        <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && scope.row.type==1 && parseInt(scope.row.payed_money) < parseInt(scope.row.price)" size="mini" @click="pay_left_money(scope)" :loading="loadingBtn == scope.$index">补缴余款</el-button>
                         <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" type='warning' @click="dialogFormVisibleRemark=true;current=scope.row" >备注</el-button>
+                        <el-button v-if="(scope.row.status!=8&&scope.row.status!=11)&&scope.row.type==2" size="mini" type='warning' @click="complete_order(scope)" >人工处理完成</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -305,7 +362,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {order_list,cancel_order_force,pay_left_money,course_arrange,course_arrange_del,order_edit_info} from '@/api/getDataEarth'
+    import {order_list,cancel_order_force,cancel_order_force_sign_course,complete_order,pay_left_money,course_arrange,course_arrange_del,order_edit_info} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -337,7 +394,12 @@
                     {label:'已付款,待签到',value:2},
                     {label:'已完成,待评价',value:3},
                     {label:'已完成',value:4},
-                    {label:'已关闭',value:9}
+                    {label:'已关闭',value:9},
+                    {label:'新生报名失败',value:5},
+                    {label:'新生报名成功,但报班失败',value:6},
+                    {label:'报班失败',value:7},
+                    {label:'报班成功',value:8},
+                    {label:'报班成功（人工）',value:11},
                 ],
                 course_arrange_info:{
                     test:{
@@ -405,6 +467,37 @@
 //            goto_order(id) {
 //                this.$router.push({path:'order',query:{id:id}});
 //            },
+            complete_order(scope) {
+
+                this.$confirm('确认此操作?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    var item = scope.row;
+                    this.loadingBtn = scope.$index;
+                    complete_order({id:item.id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            item.status = 11;
+                            item.status_desc = '报班成功（人工）';
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this)).finally(function(){
+                        this.loadingBtn = -1;
+                    }.bind(this));
+                }.bind(this));
+
+
+
+            },
             cancel_force(scope) {
 
                 this.$confirm('确认此操作?', '提示', {
@@ -436,6 +529,35 @@
 
 
             },
+            cancel_force_sign_course(scope) {
+
+                this.$confirm('确认此操作?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    var item = scope.row;
+                    this.loadingBtn = scope.$index;
+                    cancel_order_force_sign_course({id:item.id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            item.status = 9;
+                            item.status_desc = '已关闭';
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this)).finally(function(){
+                        this.loadingBtn = -1;
+                    }.bind(this));
+                }.bind(this));
+            },
+
             pay_left_money(scope) {
 
                 this.$confirm('补缴余款金额:¥'+(scope.row.price - scope.row.payed_money)+',确认此操作?', '提示', {
