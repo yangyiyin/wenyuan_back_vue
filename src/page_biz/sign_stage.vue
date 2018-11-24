@@ -28,6 +28,7 @@
                         <!--</el-form>-->
                     <!--</template>-->
                 <!--</el-table-column>-->
+                <el-table-column label="id" prop="id" width="40"></el-table-column>
                 <el-table-column label="标题" prop="title"></el-table-column>
                 <!--<el-table-column label="报名类型" prop="type"></el-table-column>-->
                 <el-table-column label="入口图">

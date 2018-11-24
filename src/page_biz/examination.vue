@@ -38,6 +38,7 @@
                         </el-form>
                     </template>
                 </el-table-column>
+                <el-table-column width="40" label="id" prop="id"></el-table-column>
                 <el-table-column label="标题" prop="title"></el-table-column>
                 <el-table-column label="报名类型" prop="type"></el-table-column>
                 <el-table-column label="排序">

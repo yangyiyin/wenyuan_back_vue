@@ -40,7 +40,7 @@
                         </el-form>
                     </template>
                 </el-table-column>
-
+                <el-table-column label="id" prop="id" width="40"></el-table-column>
                 <el-table-column label="图片">
                     <template slot-scope="scope">
                         <img :src="scope.row.img" width="60" height="30"/>
