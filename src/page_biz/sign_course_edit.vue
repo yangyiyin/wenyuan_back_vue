@@ -48,11 +48,13 @@
                         ></el-autocomplete>
                         <el-button type="warning" style="margin-bottom: 10px;" v-on:click="add_examine(item)" :loading="loading"><i class="iconfont el-icon-cc">&#xe658;</i></el-button>
                         <div v-for="(item2,index2) in item.examine_rules">
+
+                            <el-tag style="margin-right: 10px;">id{{item2.examine_id}}_{{item2.index}}</el-tag>
                             <el-tag type="warning" style="width: 400px;margin-right: 10px;">{{item2.name}}</el-tag>
                             <span style="font-size: 14px;">条件:</span>
-                            <el-select v-model="item2.field" placeholder="字段" style="width: 80px;">
+                            <el-select v-model="item2.field" placeholder="字段" style="width: 180px;">
                                 <el-option
-                                        v-for="item in [{value:'score',label:'总分'}]"
+                                        v-for="item in [{value:'A1_score',label:'一试总分'},{value:'A2_score',label:'二试总分'},{value:'A12_score',label:'合计分'},{value:'B_english_score',label:'英语达人赛综合分'},{value:'B_maths_score',label:'数学晋级考总分'},{value:'C_score',label:'新生入学测试总分'},{value:'remark_luqu',label:'录取班级'},{value:'remark',label:'考试结果备注'}]"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
@@ -70,8 +72,11 @@
                             <el-button type="danger" style="margin-bottom: 10px;" v-on:click="del_examine(item,index2)" :loading="loading"><i class="iconfont el-icon-cc">&#xe603;</i></el-button>
 
                         </div>
+                       <div>
+                           <el-tag >逻辑描述</el-tag>
+                           <el-input clearable placeholder="如：(id1 or id4) or (id2 and id3) ..." v-model="item.logic_text"  style="width: 450px"></el-input>
 
-
+                       </div>
                     </div>
 
                 </div>
@@ -465,18 +470,38 @@
                 var rule = {
                     examine_id:this.examination_select.id,
                     name:this.examination_select.title,
-                    field:'score',
+                    field:'A1_score',
                     logic:'gt',
-                    value:0,
+                    value:0
 
                 }
 
                 item.examine_rules.push(rule);
+                this.gen_default_logic_text(item);
 
             },
             del_examine(item,index){
                 item.examine_rules.splice(index,1);
+                this.gen_default_logic_text(item);
             },
+            gen_default_logic_text(item){
+
+                var logic_text_arr = [];
+                var logic_id_arr = [];
+                item.examine_rules.forEach(function(val){
+                    var index = 0;
+                    logic_id_arr.forEach(function(val2){
+                        if (val.examine_id == val2) {
+                            index++;
+
+                        }
+                    })
+                    val.index = index;
+                    logic_text_arr.push('id'+val.examine_id+'_'+index);
+                    logic_id_arr.push(val.examine_id);
+                })
+                item.logic_text = logic_text_arr.join(' and ');
+            }
             // set_checked_course(courselist) {
             //
             //     courselist.forEach(function (v) {

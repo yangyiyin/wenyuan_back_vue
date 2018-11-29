@@ -59,13 +59,14 @@
                                 <!--<el-input clearable placeholder="请输入时间" v-model="sub.time" style="width: 350px"></el-input>-->
 
                                 <el-date-picker
+                                        @change="gen_all_options"
                                         v-model="sub.time"
                                         type="datetime"
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
 
-                                <el-input clearable placeholder="请输入地点" v-model="sub.place" style="width: 350px"></el-input>
+                                <el-input @change="gen_all_options" clearable placeholder="请输入地点" v-model="sub.place" style="width: 350px"></el-input>
                                 <!--<el-input clearable placeholder="可预订数" v-model="sub.sum" style="width: 120px" type="number"></el-input>-->
                                 <el-button type="danger" @click="del_option(index)" round size="mini">删除</el-button>
 
@@ -601,6 +602,9 @@
                                 //console.log(val2);
                                 //val1 = val2;
                                 has_push = true;
+
+                                val2.list = deepCopy(val1.list);
+
                                 all_options_new.push(val2);
                                 return;
                             }

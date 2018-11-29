@@ -397,9 +397,9 @@
                     {label:'已关闭',value:9},
                     {label:'新生报名失败',value:5},
                     {label:'新生报名成功,但报班失败',value:6},
-                    {label:'报班失败',value:7},
-                    {label:'报班成功',value:8},
-                    {label:'报班成功（人工）',value:11},
+                    {label:'预报班失败',value:7},
+                    {label:'预报班成功',value:8},
+                    {label:'预报班成功（人工）',value:11},
                 ],
                 course_arrange_info:{
                     test:{
