@@ -1,5 +1,6 @@
 <template>
     <div class="fillcontain">
+        <el-scrollbar style="height: 100%;">
         <head-top></head-top>
 
         <div class="table_container" style="padding:20px">
@@ -67,7 +68,7 @@
                 </div>
 
                 <div class="search_item" style="border-top: 1px solid #999;padding: 10px;">
-                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;">选择课程:</span>
+                    <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;">选择课程: <el-checkbox @change="handleCheckAllChange">全选</el-checkbox></span>
                     <div v-loading="loading_course" >
                         <el-checkbox v-model="checkList" @change="change_courses" style="margin-left: 30px;margin-bottom: 10px;" v-for="item in courselist" :disabled="item.disabled" :label="item.courseid">{{item.coursename}}</el-checkbox>
 
@@ -193,6 +194,7 @@
 
 
         </div>
+        </el-scrollbar>
     </div>
 
 </template>
@@ -284,9 +286,14 @@
                 this.deposit = '';
                 this.checkList=[];
                 this.courselist=[];
+                this.all_course_items=[];
                 this.class_list=[];
                 this.courses_data=[];
 
+            },
+            handleCheckAllChange(val){
+                this.checkList = val ? this.all_course_items : [];
+                this.change_courses();
             },
             handleAvatarSuccess(res, file) {
                 this.fullscreenLoading = false
@@ -317,7 +324,10 @@
                             } else {
                                 this.courselist = res.data
                             }
-
+                            this.all_course_items = [];
+                            this.courselist.forEach(function(val){
+                                this.all_course_items.push(val.courseid);
+                            }.bind(this));
                             if (this.id && this.id>0) {
                                 this.courselist.forEach(function(v){
                                     v.disabled = true;
@@ -443,6 +453,12 @@
                 examination_all_list({title:queryString}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                        results = res.data;
+                       results.unshift({
+                           id: "0",
+                           title: "没参加以上考试的",
+                           type: "1",
+                           value: "没参加以上考试的"
+                       })
                         cb(results);
                     } else {
                         this.$message({

@@ -350,6 +350,12 @@
                 examination_all_list({title:queryString}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                        results = res.data;
+                        results.unshift({
+                            id: "0",
+                            title: "没参加以上考试的",
+                            type: "1",
+                            value: "没参加以上考试的"
+                        })
                         cb(results);
                     } else {
                         this.$message({
