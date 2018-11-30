@@ -10,7 +10,7 @@
 					<el-submenu  v-for="(item, index) in menu" :index="item.uri" :key="item.id">
 						<template slot="title"><i class="iconfont el-icon-cc" v-html="item.ico"></i>{{item.name}}</template>
 						<template v-if="item.children">
-							<el-menu-item v-for="item in item.children" :index="item.uri" :key="item.id">{{item.name}}</el-menu-item>
+							<el-menu-item style="padding-left: 60px;" v-for="item in item.children" :index="item.uri" :key="item.id">{{item.name}}</el-menu-item>
 						</template>
 
 					</el-submenu>
@@ -70,7 +70,7 @@
 </script>
 
 
-<style lang="less" scoped>
+<style lang="less" >
 	@import '../style/mixin';
 	.iconfont{
 		vertical-align: middle;
@@ -78,5 +78,14 @@
 		width: 24px;
 		text-align: center;
 		font-size: 18px;
+	}
+	.el-menu-item{
+		background-color: rgb(67, 74, 80)!important;
+	}
+	.el-menu-item:hover{
+		background-color: rgb(60, 70, 80)!important;
+	}
+	.el-menu-item.is-active{
+		background-color: rgb(60, 70, 70)!important;
 	}
 </style>
