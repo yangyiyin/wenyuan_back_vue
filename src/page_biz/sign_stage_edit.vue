@@ -30,7 +30,7 @@
             </template>
             <template v-if="!id||id==0">
                 <div class="block search_item">
-                    <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置报名开始时间:</span>
+                    <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置原班报名开始时间:</span>
                     <el-date-picker
                             @change="set_time_batch('start_time')"
                             v-model="start_time"
@@ -40,10 +40,20 @@
                     </el-date-picker>
                 </div>
                 <div class="block search_item">
-                    <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置老生报名截止时间:</span>
+                    <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置所有老生报名开始时间:</span>
                     <el-date-picker
                             @change="set_time_batch('end_time_self')"
                             v-model="end_time_self"
+                            type="datetime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            placeholder="选择日期时间">
+                    </el-date-picker>
+                </div>
+                <div class="block search_item">
+                    <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置新生报名开始时间:</span>
+                    <el-date-picker
+                            @change="set_time_batch('end_time_old')"
+                            v-model="end_time_old"
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             placeholder="选择日期时间">
@@ -110,9 +120,9 @@
                                 <el-tag style="margin-right: 10px;">id{{item2.examine_id}}_{{item2.index}}</el-tag>
                                 <el-tag type="warning" style="width: 400px;margin-right: 10px;">{{item2.name}}</el-tag>
                                 <span style="font-size: 14px;">条件:</span>
-                                <el-select v-model="item2.field" placeholder="字段" style="width: 80px;">
+                                <el-select v-model="item2.field" placeholder="字段" style="width: 180px;">
                                     <el-option
-                                            v-for="item in [{value:'A1_score',label:'一试总分'},{value:'A2_score',label:'二试总分'},{value:'A12_score',label:'合计分'},{value:'B_english_score',label:'英语达人赛综合分'},{value:'B_maths_score',label:'数学晋级考总分'},{value:'C_score',label:'新生入学测试总分'},{value:'remark_luqu',label:'录取班级'},{value:'remark',label:'考试结果备注'}]"
+                                            v-for="item in [{value:'A1_score',label:'一试总分'},{value:'A2_score',label:'二试总分'},{value:'A12_score',label:'合计分'},{value:'B_english_score',label:'英语达人赛综合分'},{value:'B_maths_score',label:'数学晋级考总分'},{value:'C_score',label:'新生入学测试总分'},{value:'remark_luqu',label:'录取班级'},{value:'remark_luqu2',label:'录取班级2'},{value:'remark_luqu3',label:'录取班级3'},{value:'remark',label:'考试结果备注'}]"
                                             :key="item.value"
                                             :label="item.label"
                                             :value="item.value">
@@ -143,7 +153,7 @@
                         <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">3.时间设置:</span>
                         <div style="margin-left: 20px;">
                             <div class="block search_item">
-                                <span class="pre_info" style="font-size: 14px;">报名开始时间:</span>
+                                <span class="pre_info" style="font-size: 14px;">原班老生报名开始时间:</span>
                                 <el-date-picker
                                         v-model="item.start_time"
                                         type="datetime"
@@ -152,7 +162,7 @@
                                 </el-date-picker>
                             </div>
                             <div class="block search_item">
-                                <span class="pre_info" style="font-size: 14px;">老生报名截止时间:</span>
+                                <span class="pre_info" style="font-size: 14px;">所有老生报名开始时间:</span>
                                 <el-date-picker
                                         v-model="item.end_time_self"
                                         type="datetime"
@@ -161,7 +171,16 @@
                                 </el-date-picker>
                             </div>
                             <div class="block search_item">
-                                <span class="pre_info" style="font-size: 14px;">所有人可报名截止时间:</span>
+                                <span class="pre_info" style="font-size: 14px;">新生报名开始时间:</span>
+                                <el-date-picker
+                                        v-model="item.end_time_old"
+                                        type="datetime"
+                                        value-format="yyyy-MM-dd HH:mm:ss"
+                                        placeholder="选择日期时间">
+                                </el-date-picker>
+                            </div>
+                            <div class="block search_item">
+                                <span class="pre_info" style="font-size: 14px;">所有人报名截止时间:</span>
                                 <el-date-picker
                                         v-model="item.end_time_public"
                                         type="datetime"
@@ -174,6 +193,10 @@
                                 <el-input clearable placeholder="金额" v-model="item.deposit" type="number" style="width: 150px"></el-input>
                             </div>
 
+                            <div class="search_item">
+                                <el-checkbox v-model="item.is_only_old_sign" style="margin-left: 30px;margin-bottom: 10px;" :label="item.courseid">只限老生报名</el-checkbox>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -210,6 +233,7 @@
                 img:'',
                 start_time:'',
                 end_time_self:'',
+                end_time_old:'',
                 end_time_public:'',
                 deposit:'',
                 upload_url:this.$store.state.constant.upload_url,
@@ -282,6 +306,7 @@
                 this.img = '';
                 this.start_time = '';
                 this.end_time_self = '';
+                this.end_time_old = '';
                 this.end_time_public = '';
                 this.deposit = '';
                 this.checkList=[];
@@ -392,10 +417,13 @@
                         })
                     }
                     if (!course.start_time) {
-                        error_msg.push('请检查课程“'+course.coursename+'”的报名开始时间是否填写');
+                        error_msg.push('请检查课程“'+course.coursename+'”的原班老生报名开始时间是否填写');
                     }
                     if (!course.end_time_self) {
-                        error_msg.push('请检查课程“'+course.coursename+'”的老生报名截止时间是否填写');
+                        error_msg.push('请检查课程“'+course.coursename+'”的所有老生报名开始时间是否填写');
+                    }
+                    if (!course.end_time_old) {
+                        error_msg.push('请检查课程“'+course.coursename+'”的新生报名开始时间是否填写');
                     }
                     if (!course.end_time_public) {
                         error_msg.push('请检查课程“'+course.coursename+'”的所有人可报名截止时间是否填写');
