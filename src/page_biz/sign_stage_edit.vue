@@ -487,6 +487,12 @@
                            type: "1",
                            value: "没参加以上考试的"
                        })
+                        results.unshift({
+                            id: "-1",
+                            title: "没参加以上考试的(老生)",
+                            type: "1",
+                            value: "没参加以上考试的(老生)"
+                        })
                         cb(results);
                     } else {
                         this.$message({
