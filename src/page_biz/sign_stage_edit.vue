@@ -642,7 +642,7 @@
                     logic_text_arr.push('id'+val.examine_id+'_'+index);
                     logic_id_arr.push(val.examine_id);
                 })
-                item.logic_text = logic_text_arr.join(' and ');
+                item.logic_text = logic_text_arr.join(' or ');
             },
             // set_checked_course(courselist) {
             //

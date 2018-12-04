@@ -126,6 +126,10 @@
                 <span>年级:</span>
                 <el-input clearable placeholder="" v-model="current_data.content.grade" style="width: 80%;display: inline-block"></el-input>
             </div>
+            <div>
+                <span>录取班级:</span>
+                <el-input clearable placeholder="" v-model="current_data.content.remark_luqu" style="width: 80%;display: inline-block"></el-input>
+            </div>
 
 
             <div slot="footer" class="dialog-footer">
@@ -283,6 +287,7 @@
                     id:this.current_data.id,
                     avatar_origin:this.current_data.content.avatar_origin,
                     grade:this.current_data.content.grade,
+                    remark_luqu:this.current_data.content.remark_luqu,
                 }).then(function(res){
                     this.loadingBtn = '-1';
                     if (res.code == this.$store.state.constant.status_success) {
