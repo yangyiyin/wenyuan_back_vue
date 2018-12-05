@@ -14,9 +14,55 @@
                     <el-checkbox v-model="checkList" @change="change_courses" style="margin-left: 30px;margin-bottom: 10px;" v-for="item in courselist" :disabled="item.disabled" :label="item.courseid">{{item.coursename}}</el-checkbox>
 
                 </div>
-
             </div>
 
+            <div class="block search_item">
+                <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置原班报名开始时间:</span>
+                <el-date-picker
+                        @change="set_time_batch('start_time')"
+                        v-model="start_time"
+                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="选择日期时间">
+                </el-date-picker>
+            </div>
+            <div class="block search_item">
+                <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置所有老生报名开始时间:</span>
+                <el-date-picker
+                        @change="set_time_batch('end_time_self')"
+                        v-model="end_time_self"
+                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="选择日期时间">
+                </el-date-picker>
+            </div>
+            <div class="block search_item">
+                <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置新生报名开始时间:</span>
+                <el-date-picker
+                        @change="set_time_batch('end_time_old')"
+                        v-model="end_time_old"
+                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="选择日期时间">
+                </el-date-picker>
+            </div>
+            <div class="block search_item">
+                <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置所有人可报名截止时间:</span>
+                <el-date-picker
+                        @change="set_time_batch('end_time_public')"
+                        v-model="end_time_public"
+                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="选择日期时间">
+                </el-date-picker>
+            </div>
+
+            <div class="search_item" style="margin-bottom: 20px;">
+                <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;">批量设置押金</span>
+                <el-input @change="set_time_batch('deposit')" clearable placeholder="金额" type="number" v-model="deposit" style="width: 150px">
+
+                </el-input>
+            </div>
             <div v-for="item in courses_data" :key="item.courseid" style="border: 1px dashed #999;margin: 10px;padding-bottom: 10px;">
                 <el-tag style="font-size: 18px;">{{item.coursename}}</el-tag>
                 <div class="search_item" style="margin-top: 20px">
@@ -159,6 +205,11 @@
                 stage_id:0,
                 stage_name:'',
                 loading:false,
+                start_time:'',
+                end_time_self:'',
+                end_time_old:'',
+                end_time_public:'',
+                deposit:'',
                 loading_course:false,
                 checkList:[],
                 courselist:[],
@@ -229,6 +280,12 @@
                 this.courselist=[];
                 this.class_list=[];
                 this.courses_data=[];
+
+                this.start_time = '';
+                this.end_time_self = '';
+                this.end_time_old = '';
+                this.end_time_public = '';
+                this.deposit = '';
 
             },
             get_course_list(vm, checklist) {
@@ -528,7 +585,7 @@
                     logic_id_arr.push(val.examine_id);
                 })
                 item.logic_text = logic_text_arr.join(' or ');
-            }
+            },
             // set_checked_course(courselist) {
             //
             //     courselist.forEach(function (v) {
@@ -558,6 +615,14 @@
             // change_classes(item) {
             //     console.log(item);
             // }
+            set_time_batch(name){
+                setTimeout(function(){
+                    this.courses_data.forEach(function(val){
+                        this.$set(val, name, this[name]);
+                    }.bind(this))
+                }.bind(this))
+
+            },
         }
     }
 </script>
