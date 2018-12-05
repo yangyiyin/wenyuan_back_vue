@@ -68,7 +68,7 @@
                                         :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-input clearable placeholder="值" v-model="item2.value" style="width: 80px"></el-input>
+                            <el-input clearable placeholder="值" v-model="item2.value" style="width: 180px"></el-input>
                             <el-button type="danger" style="margin-bottom: 10px;" v-on:click="del_examine(item,index2)" :loading="loading"><i class="iconfont el-icon-cc">&#xe603;</i></el-button>
 
                         </div>
@@ -373,9 +373,9 @@
                         })
                         results.unshift({
                             id: "-1",
-                            title: "没参加以上考试的(老生)",
+                            title: "没参加以上考试的(原班级老生)",
                             type: "1",
-                            value: "没参加以上考试的(老生)"
+                            value: "没参加以上考试的(原班级老生)"
                         })
                         cb(results);
                     } else {
