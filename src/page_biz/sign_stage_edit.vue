@@ -493,6 +493,13 @@
                             type: "1",
                             value: "没参加以上考试的(原班级老生)"
                         })
+
+                        results.unshift({
+                            id: "-2",
+                            title: "原班级老生(有无参加考试均可)",
+                            type: "1",
+                            value: "原班级老生(有无参加考试均可)"
+                        })
                         cb(results);
                     } else {
                         this.$message({
