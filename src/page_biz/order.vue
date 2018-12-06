@@ -192,7 +192,7 @@
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
                         <el-button v-if="(scope.row.status==1||scope.row.status==2) && scope.row.type==1" size="mini" @click="cancel_force(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
-                        <el-button v-if="(scope.row.status==1||scope.row.status==2 || scope.row.status==8) && scope.row.type==2" size="mini" @click="cancel_force_sign_course(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
+                        <el-button v-if="(scope.row.status==1||scope.row.status==2 || scope.row.status==8 || scope.row.status==11) && scope.row.type==2" size="mini" @click="cancel_force_sign_course(scope)" :loading="loadingBtn == scope.$index">取消订单</el-button>
                         <el-button type="warning" v-if="(scope.row.status==2||scope.row.status==3 ||scope.row.status==4) && scope.row.price_type==1 && scope.row.type==1 && parseInt(scope.row.payed_money) < parseInt(scope.row.price)" size="mini" @click="pay_left_money(scope)" :loading="loadingBtn == scope.$index">补缴余款</el-button>
                         <el-button v-if="scope.row.status==1||scope.row.status==2" size="mini" type='warning' @click="dialogFormVisibleRemark=true;current=scope.row" >备注</el-button>
                         <el-button v-if="(scope.row.status!=8&&scope.row.status!=11&&scope.row.status!=9)&&scope.row.type==2" size="mini" type='warning' @click="complete_order(scope)" >人工处理完成</el-button>
