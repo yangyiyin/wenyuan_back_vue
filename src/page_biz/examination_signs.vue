@@ -127,7 +127,7 @@
                 <el-input clearable placeholder="" v-model="current_data.content.grade" style="width: 80%;display: inline-block"></el-input>
             </div>
             <div>
-                <span>录取班级:</span>
+                <span>录取班级:(仅超级管理员可改)</span>
                 <el-input clearable placeholder="" v-model="current_data.content.remark_luqu" style="width: 80%;display: inline-block"></el-input>
             </div>
 
