@@ -127,6 +127,14 @@
                 <el-input clearable placeholder="" v-model="current_data.content.grade" style="width: 80%;display: inline-block"></el-input>
             </div>
             <div>
+                <span>准考证号:</span>
+                <el-input clearable placeholder="" v-model="current_data.content.ticket" style="width: 60%;display: inline-block"></el-input>
+            </div>
+            <div>
+                <span>准考证姓名:</span>
+                <el-input clearable placeholder="" v-model="current_data.content.name" style="width: 60%;display: inline-block"></el-input>
+            </div>
+            <div>
                 <span>是否允许生成准考证:</span>
                 <el-input clearable placeholder="是/否" v-model="current_data.content.can_gen_ticket" style="width: 60%;display: inline-block"></el-input>
             </div>
@@ -301,6 +309,8 @@
                     grade:this.current_data.content.grade,
                     remark_luqu:this.current_data.content.remark_luqu,
                     can_gen_ticket:this.current_data.content.can_gen_ticket,
+                    ticket:this.current_data.content.ticket,
+                    name:this.current_data.content.name,
                     A1_place:this.current_data.content.A1_place,
                     A2_place:this.current_data.content.A2_place,
                 }).then(function(res){
