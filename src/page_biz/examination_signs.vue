@@ -128,7 +128,7 @@
             </div>
             <div>
                 <span>是否允许生成准考证:</span>
-                <el-input clearable placeholder="是/否" v-model="current_data.content.can_gen_ticket" style="width: 80%;display: inline-block"></el-input>
+                <el-input clearable placeholder="是/否" v-model="current_data.content.can_gen_ticket" style="width: 60%;display: inline-block"></el-input>
             </div>
             <div>
                 <span>一试考场:</span>
@@ -140,7 +140,7 @@
             </div>
             <div>
                 <span>录取班级:(仅超级管理员可改)</span>
-                <el-input clearable placeholder="" v-model="current_data.content.remark_luqu" style="width: 80%;display: inline-block"></el-input>
+                <el-input clearable placeholder="" v-model="current_data.content.remark_luqu" style="width: 60%;display: inline-block"></el-input>
             </div>
 
 
