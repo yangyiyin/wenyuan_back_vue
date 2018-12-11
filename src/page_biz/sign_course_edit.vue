@@ -561,7 +561,7 @@
                     examine_id:this.examination_select.id,
                     name:this.examination_select.title,
                     field:'A1_score',
-                    logic:'gt',
+                    logic:'eq',
                     value:0
 
                 }

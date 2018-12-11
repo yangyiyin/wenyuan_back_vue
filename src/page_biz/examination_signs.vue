@@ -127,6 +127,11 @@
                 <el-input clearable placeholder="" v-model="current_data.content.grade" style="width: 80%;display: inline-block"></el-input>
             </div>
             <div>
+                <span>是否允许生成准考证:</span>
+                <el-input clearable placeholder="是/否" v-model="current_data.content.can_gen_ticket" style="width: 80%;display: inline-block"></el-input>
+            </div>
+
+            <div>
                 <span>录取班级:(仅超级管理员可改)</span>
                 <el-input clearable placeholder="" v-model="current_data.content.remark_luqu" style="width: 80%;display: inline-block"></el-input>
             </div>
@@ -288,6 +293,7 @@
                     avatar_origin:this.current_data.content.avatar_origin,
                     grade:this.current_data.content.grade,
                     remark_luqu:this.current_data.content.remark_luqu,
+                    can_gen_ticket:this.current_data.content.can_gen_ticket,
                 }).then(function(res){
                     this.loadingBtn = '-1';
                     if (res.code == this.$store.state.constant.status_success) {
