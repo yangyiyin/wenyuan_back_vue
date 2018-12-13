@@ -147,6 +147,14 @@
                 <el-input clearable placeholder="" v-model="current_data.content.A2_place" style="width: 80%;display: inline-block"></el-input>
             </div>
             <div>
+                <span>考场地址:</span>
+                <el-input clearable placeholder="" v-model="current_data.content.place" style="width: 80%;display: inline-block"></el-input>
+            </div>
+            <div>
+                <span>考试一试时间:</span>
+                <el-input clearable placeholder="" v-model="current_data.content.time1" style="width: 80%;display: inline-block"></el-input>
+            </div>
+            <div>
                 <span>录取班级:(仅超级管理员可改)</span>
                 <el-input clearable placeholder="" v-model="current_data.content.remark_luqu" style="width: 60%;display: inline-block"></el-input>
             </div>
@@ -313,6 +321,8 @@
                     name:this.current_data.content.name,
                     A1_place:this.current_data.content.A1_place,
                     A2_place:this.current_data.content.A2_place,
+                    place:this.current_data.content.place,
+                    time1:this.current_data.content.time1,
                 }).then(function(res){
                     this.loadingBtn = '-1';
                     if (res.code == this.$store.state.constant.status_success) {
