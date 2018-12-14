@@ -273,6 +273,8 @@
                         }).then(function(res){
                             if (res.code == this.$store.state.constant.status_success) {
                                 this.data.studentid = res.data.studentid ? res.data.studentid : '';
+                                this.data.sex = res.data.sex ? res.data.sex : 0;
+                                this.data.face = res.data.sex ? res.data.face : '';
                                 return examination_signs_edit(this.data);
                             } else {
                                 this.$message({
