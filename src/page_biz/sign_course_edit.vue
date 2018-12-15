@@ -383,7 +383,7 @@
                     return;
                 }
 
-                console.log(this.courses_data);return;
+                //console.log(this.courses_data);return;
                 this.$confirm('共计'+this.courses_data.length+'个课程报名信息即将发布, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
