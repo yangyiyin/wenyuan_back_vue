@@ -198,6 +198,7 @@
 <script>
     import headTop from '../components/headTop'
     import {sign_course_info,get_course_list,sign_course_edit,get_class_list,examination_all_list} from '@/api/getDataEarth'
+    import {deepCopy} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -382,7 +383,7 @@
                     return;
                 }
 
-                //console.log(this.courses_data);return;
+                console.log(this.courses_data);return;
                 this.$confirm('共计'+this.courses_data.length+'个课程报名信息即将发布, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -468,23 +469,24 @@
                 var _class = {};
                 item.class_list.forEach(function (v) {
                     if (v.classid == classid ) {
-                        item.classes.forEach(function(v2){
+                        item.classes_origin.forEach(function(v2){
                             if(v2.classid == v.classid && v2.id) {
                                 v.id = v2.id;
                                 return;
                             }
                         }.bind(this))
-                        _class = v;
+                        _class = deepCopy(v);
                         return;
                     }
                 });
                 return _class;
             },
             change_class(item){
+
                 var classes = [];
                 item.classes_ids.forEach(function(v){
                     classes.push(this.get_class_by_id(v,item));
-                }.bind(this))
+                }.bind(this));
                 item.classes = classes;
             },
             change_courses(){
