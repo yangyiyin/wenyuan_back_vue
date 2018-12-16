@@ -482,7 +482,9 @@
                 return _class;
             },
             change_class(item){
-
+                if (!item.classes_origin) {
+                    item.classes_origin = deepCopy(item.classes);
+                }
                 var classes = [];
                 item.classes_ids.forEach(function(v){
                     classes.push(this.get_class_by_id(v,item));
