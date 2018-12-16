@@ -97,24 +97,27 @@
 
                             <el-tag style="margin-right: 10px;">id{{item2.examine_id}}_{{item2.index}}</el-tag>
                             <el-tag type="warning" style="width: 400px;margin-right: 10px;">{{item2.name}}</el-tag>
-                            <span style="font-size: 14px;">条件:</span>
-                            <el-select v-model="item2.field" placeholder="字段" style="width: 180px;">
-                                <el-option
-                                        v-for="item in [{value:'A1_score',label:'一试总分'},{value:'A2_score',label:'二试总分'},{value:'A12_score',label:'合计分'},{value:'B_english_score',label:'英语达人赛综合分'},{value:'B_maths_score',label:'数学晋级考总分'},{value:'C_score',label:'新生入学测试总分'},{value:'remark_luqu',label:'录取班级'},{value:'remark_luqu2',label:'录取班级2'},{value:'remark_luqu3',label:'录取班级3'},{value:'remark',label:'考试结果备注'}]"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-select v-model="item2.logic" placeholder="逻辑" style="width: 80px;">
-                                <el-option
-                                        v-for="item in [{value:'gt',label:'大于'},{value:'eq',label:'等于'},{value:'lt',label:'小于'}]"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-input clearable placeholder="值" v-model="item2.value" style="width: 180px"></el-input>
+                            <template v-if="item2.examine_id >0">
+                                <span style="font-size: 14px;">条件:</span>
+                                <el-select v-model="item2.field" placeholder="字段" style="width: 180px;">
+                                    <el-option
+                                            v-for="item in [{value:'A1_score',label:'一试总分'},{value:'A2_score',label:'二试总分'},{value:'A12_score',label:'合计分'},{value:'B_english_score',label:'英语达人赛综合分'},{value:'B_maths_score',label:'数学晋级考总分'},{value:'C_score',label:'新生入学测试总分'},{value:'remark_luqu',label:'录取班级'},{value:'remark_luqu2',label:'录取班级2'},{value:'remark_luqu3',label:'录取班级3'},{value:'remark',label:'考试结果备注'}]"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-select v-model="item2.logic" placeholder="逻辑" style="width: 80px;">
+                                    <el-option
+                                            v-for="item in [{value:'gt',label:'大于'},{value:'eq',label:'等于'},{value:'lt',label:'小于'}]"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-input clearable placeholder="值" v-model="item2.value" style="width: 180px"></el-input>
+                            </template>
+
                             <el-button type="danger" style="margin-bottom: 10px;" v-on:click="del_examine(item,index2)" :loading="loading"><i class="iconfont el-icon-cc">&#xe603;</i></el-button>
 
                         </div>
