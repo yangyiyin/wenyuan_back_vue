@@ -158,7 +158,14 @@
                 <span>录取班级:(仅超级管理员可改)</span>
                 <el-input clearable placeholder="" v-model="current_data.content.remark_luqu" style="width: 60%;display: inline-block"></el-input>
             </div>
-
+            <div>
+                <span>录取班级2:(仅超级管理员可改)</span>
+                <el-input clearable placeholder="" v-model="current_data.content.remark_luqu2" style="width: 60%;display: inline-block"></el-input>
+            </div>
+            <div>
+                <span>录取班级3:(仅超级管理员可改)</span>
+                <el-input clearable placeholder="" v-model="current_data.content.remark_luqu3" style="width: 60%;display: inline-block"></el-input>
+            </div>
 
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleData = false">取 消</el-button>
@@ -316,6 +323,8 @@
                     avatar_origin:this.current_data.content.avatar_origin,
                     grade:this.current_data.content.grade,
                     remark_luqu:this.current_data.content.remark_luqu,
+                    remark_luqu2:this.current_data.content.remark_luqu2,
+                    remark_luqu3:this.current_data.content.remark_luqu3,
                     can_gen_ticket:this.current_data.content.can_gen_ticket,
                     ticket:this.current_data.content.ticket,
                     name:this.current_data.content.name,
