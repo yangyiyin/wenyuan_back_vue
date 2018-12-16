@@ -467,6 +467,9 @@
             },
             get_class_by_id(classid,item){
                 var _class = {};
+                if (!item.classes_origin) {
+                    item.classes_origin = [];
+                }
                 item.class_list.forEach(function (v) {
                     if (v.classid == classid ) {
                         item.classes_origin.forEach(function(v2){
@@ -482,9 +485,6 @@
                 return _class;
             },
             change_class(item){
-                if (!item.classes_origin) {
-                    item.classes_origin = deepCopy(item.classes);
-                }
                 var classes = [];
                 item.classes_ids.forEach(function(v){
                     classes.push(this.get_class_by_id(v,item));
