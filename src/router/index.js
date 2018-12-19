@@ -36,6 +36,7 @@ const sign_course_edit = r => require.ensure([], () => r(require('@/page_biz/sig
 const sign_course = r => require.ensure([], () => r(require('@/page_biz/sign_course')), 'sign_course');
 const sign_stage = r => require.ensure([], () => r(require('@/page_biz/sign_stage')), 'sign_stage');
 const sign_stage_edit = r => require.ensure([], () => r(require('@/page_biz/sign_stage_edit')), 'sign_stage_edit');
+const sign_course_statistics = r => require.ensure([], () => r(require('@/page_biz/sign_course_statistics')), 'sign_course_statistics');
 
 
 const routes = [
@@ -207,6 +208,11 @@ const routes = [
 				component: group_purview,
 				meta: ['后台管理', '权限组权限'],
 			},
+            {
+                path: '/sign_course_statistics',
+                component: sign_course_statistics,
+                meta: ['统计', '报班统计图'],
+            },
 		],
 	}
 ]
