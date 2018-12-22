@@ -40,9 +40,9 @@
                 <!--</el-table-column>-->
                 <el-table-column label="课程" prop="title"></el-table-column>
                 <!--<el-table-column label="报名类型" prop="type"></el-table-column>-->
-                <el-table-column label="报名开始时间" prop="start_time"></el-table-column>
-                <el-table-column label="原班老生报名开始时间" prop="end_time_self"></el-table-column>
-                <el-table-column label="所有老生报名开始时间" prop="end_time_old"></el-table-column>
+                <el-table-column label="原班老生报名开始时间" prop="start_time"></el-table-column>
+                <el-table-column label="所有老生报名开始时间" prop="end_time_self"></el-table-column>
+                <el-table-column label="新生报名开始时间" prop="end_time_old"></el-table-column>
                 <el-table-column label="所有人报名截止时间" prop="end_time_public"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <!--<el-table-column label="学生报名" width="450">-->
