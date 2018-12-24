@@ -58,6 +58,7 @@ export const words_content_list = data => fetch('/wenyuanjiaoyu/words_content/in
 export const words_content_edit = data => fetch('/wenyuanjiaoyu/words_content/edit', data, 'POST').then(check_login);
 export const words_content_excel_out = data => fetch('/wenyuanjiaoyu/words_content/excel_out', data, 'POST').then(check_login);
 export const suggest_excel_out = data => fetch('/wenyuanjiaoyu/suggest/excel_out', data, 'POST').then(check_login);
+export const suggest_edit_info = data => fetch('/wenyuanjiaoyu/suggest/edit_info', data, 'POST').then(check_login);
 export const goods_list = data => fetch('/wenyuanjiaoyu/goods/index', data, 'POST').then(check_login);
 export const goods_info = data => fetch('/wenyuanjiaoyu/goods/info', data, 'POST').then(check_login);
 export const goods_verify = data => fetch('/wenyuanjiaoyu/goods/verify', data, 'POST').then(check_login);

@@ -41,6 +41,12 @@
                 <el-table-column label="内容" prop="content_pre"></el-table-column>
                 <el-table-column label="反馈时间" prop="create_time"></el-table-column>
                 <el-table-column label="学员" prop="bind_students"></el-table-column>
+                <el-table-column label="备注">
+                    <template slot-scope="scope">
+                    <span>{{scope.row.remark}}</span>
+                        <el-button  size="mini" type='warning' @click="dialogFormVisibleRemark=true;current=scope.row" >备注</el-button>
+                    </template>
+                </el-table-column>
 
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -66,12 +72,27 @@
                 <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog :title="'反馈备注-'+current.bind_students" :visible.sync="dialogFormVisibleRemark" width="50%">
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="备注" v-model="current.remark" style="width: 450px">
+                    <template slot="prepend">备注</template>
+                </el-input>
+
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleRemark = false">取 消</el-button>
+                <el-button type="primary" @click="remark(current)">确认</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {suggest_list,suggest_excel_out} from '@/api/getDataEarth'
+    import {suggest_list,suggest_excel_out,suggest_edit_info} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -83,6 +104,7 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 dialogFormVisibleDaochu:false,
+                dialogFormVisibleRemark:false,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
@@ -149,6 +171,22 @@
                     this.dialogFormVisibleDaochu = false;
                 }.bind(this));
             },
+            remark(current){
+                suggest_edit_info({id:current.id,remark:current.remark}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogFormVisibleRemark = false;
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.msg
+                        });
+                    }
+                }.bind(this));
+            }
         },
     }
 </script>
