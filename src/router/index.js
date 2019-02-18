@@ -36,7 +36,10 @@ const sign_course_edit = r => require.ensure([], () => r(require('@/page_biz/sig
 const sign_course = r => require.ensure([], () => r(require('@/page_biz/sign_course')), 'sign_course');
 const sign_stage = r => require.ensure([], () => r(require('@/page_biz/sign_stage')), 'sign_stage');
 const sign_stage_edit = r => require.ensure([], () => r(require('@/page_biz/sign_stage_edit')), 'sign_stage_edit');
+const question = r => require.ensure([], () => r(require('@/page_biz/question')), 'question');
+const question_edit = r => require.ensure([], () => r(require('@/page_biz/question_edit')), 'question_edit');
 
+//{#replace1#}
 
 const routes = [
 	{
@@ -207,6 +210,19 @@ const routes = [
 				component: group_purview,
 				meta: ['后台管理', '权限组权限'],
 			},
+
+			{
+				path: '/question',
+				component: question,
+				meta: ['题库', '试题列表'],
+			},
+			{
+				path: '/question_edit',
+				component: question_edit,
+				meta: ['题库', '编辑试题'],
+			},
+
+			//{#replace2#}
 		],
 	}
 ]

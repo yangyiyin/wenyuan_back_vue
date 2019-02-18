@@ -88,6 +88,11 @@ export const sign_stage_info = data => fetch('/wenyuanjiaoyu/sign_stage/info', d
 export const sign_stage_verify = data => fetch('/wenyuanjiaoyu/sign_stage/verify', data, 'POST').then(check_login);
 export const sign_stage_del = data => fetch('/wenyuanjiaoyu/sign_stage/del', data, 'POST').then(check_login);
 export const sign_stage_edit = data => fetch('/wenyuanjiaoyu/sign_stage/edit', data, 'POST').then(check_login);
+export const question_list = data => fetch('/wenyuanjiaoyu/question/index', data, 'POST').then(check_login);
+export const question_info = data => fetch('/wenyuanjiaoyu/question/info', data, 'POST').then(check_login);
+export const question_verify = data => fetch('/wenyuanjiaoyu/question/verify', data, 'POST').then(check_login);
+export const question_del = data => fetch('/wenyuanjiaoyu/question/del', data, 'POST').then(check_login);
+export const question_edit = data => fetch('/wenyuanjiaoyu/question/edit', data, 'POST').then(check_login);
 
 export const admin_user_list = data => fetch('/wenyuanjiaoyu/admin_user/index', data, 'POST').then(check_login);
 export const admin_user_edit = data => fetch('/wenyuanjiaoyu/admin_user/edit', data, 'POST').then(check_login);

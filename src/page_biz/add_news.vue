@@ -85,7 +85,7 @@
                                 border: 'none',
                                 color: 'white'
                             },
-                            modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+                            modules: [ 'Resize']
                         }
                     }
                 },
