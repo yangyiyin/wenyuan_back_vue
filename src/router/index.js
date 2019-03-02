@@ -39,6 +39,14 @@ const sign_stage_edit = r => require.ensure([], () => r(require('@/page_biz/sign
 const question = r => require.ensure([], () => r(require('@/page_biz/question')), 'question');
 const question_edit = r => require.ensure([], () => r(require('@/page_biz/question_edit')), 'question_edit');
 
+const label = r => require.ensure([], () => r(require('@/page_biz/label')), 'label');
+const add_label = r => require.ensure([], () => r(require('@/page_biz/add_label')), 'add_label');
+const knowledge_point = r => require.ensure([], () => r(require('@/page_biz/knowledge_point')), 'knowledge_point');
+const add_knowledge_point = r => require.ensure([], () => r(require('@/page_biz/add_knowledge_point')), 'add_knowledge_point');
+const homework = r => require.ensure([], () => r(require('@/page_biz/homework')), 'homework');
+const add_homework = r => require.ensure([], () => r(require('@/page_biz/add_homework')), 'add_homework');
+const student_homework_result = r => require.ensure([], () => r(require('@/page_biz/student_homework_result')), 'student_homework_result');
+const show_img = r => require.ensure([], () => r(require('@/page_biz/show_img')), 'show_img');
 //{#replace1#}
 
 const routes = [
@@ -222,7 +230,15 @@ const routes = [
 				meta: ['题库', '编辑试题'],
 			},
 
-			//{#replace2#}
+			{path: '/label',component: label,meta: ['题库', '标签'],},
+{path: '/add_label',component: add_label,meta: ['题库', '设置标签'],},
+{path: '/knowledge_point',component: knowledge_point,meta: ['题库', '知识点'],},
+{path: '/add_knowledge_point',component: add_knowledge_point,meta: ['题库', '设置知识点'],},
+{path: '/homework',component: homework,meta: ['题库', '家庭作业'],},
+{path: '/add_homework',component: add_homework,meta: ['题库', '设置家庭作业'],},
+{path: '/student_homework_result',component: student_homework_result,meta: ['题库', '批改作业'],},
+{path: '/show_img',component: show_img,meta: ['题库', '作业图'],},
+//{#replace2#}
 		],
 	}
 ]

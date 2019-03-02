@@ -2,7 +2,16 @@
     <div class="fillcontain">
         <head-top></head-top>
 
-        <div class="table_container" style="padding:20px">
+        <div class="table_container" style="padding:20px" v-loading="loading_info">
+
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder"><i style="color:red;">*</i>科目:</span>
+                <el-radio-group v-model="question.entity" size="small">
+                    <el-radio label="1" border>语文</el-radio>
+                    <el-radio label="2" border >数学</el-radio>
+                    <el-radio label="3" border >英语</el-radio>
+                </el-radio-group>
+            </div>
 
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder"><i style="color:red;">*</i>题型:</span>
@@ -16,16 +25,49 @@
 
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>题干:</span>
-                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor" :content="question.content" :options = "editorOption" @change="onEditorChange($event)"></quill-editor>
+                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor1" :content="question.content" :options = "editorOption" @change="onEditorChange($event,'content')"></quill-editor>
+                <el-upload style="display: none"
+                           class="avatar-uploader"
+                           ref="upload"
+                           :action="upload_url"
+                           :show-file-list="false"
+                           :on-success="handleImgSuccess"
+                           :before-upload="beforeAvatarUpload">
+                    <el-button id="imgInput"  v-loading.fullscreen.lock="fullscreenLoading"
+                               element-loading-text="插入中,请稍候"></el-button>
+                </el-upload>
             </div>
 
 
             <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>分值:</span>
+
+                <el-slider style="display: inline-block;width: 300px;vertical-align: middle"
+                           v-model="question.score"
+                           :step="1"
+                           :max="50"
+                           show-input
+                >
+                </el-slider>
+            </div>
+
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder"><i style="color:red;">*</i>绝密等级:</span>
+                <el-checkbox-group v-model="question.useway" size="mini" style="display: inline-block">
+                    <el-checkbox label="1" border>等级一</el-checkbox>
+                    <el-checkbox label="2" border>等级二</el-checkbox>
+                    <el-checkbox label="3" border>等级三</el-checkbox>
+                    <el-checkbox label="4" border>等级四</el-checkbox>
+                </el-checkbox-group>
+            </div>
+
+            <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>知识点:</span>
 
-                <el-checkbox-group v-model="question.label" size="mini" style="display: inline-block">
-                    <el-checkbox label="A" border>1</el-checkbox>
-                    <el-checkbox label="B" border>2</el-checkbox>
+                <el-checkbox-group v-model="question.knowledge_point" size="mini" style="display: inline-block">
+                    <template v-for="(item, index) in knowledge_points">
+                        <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
+                    </template>
                 </el-checkbox-group>
             </div>
 
@@ -33,8 +75,9 @@
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;">标签:</span>
 
                 <el-checkbox-group v-model="question.label" size="mini" style="display: inline-block">
-                    <el-checkbox label="A" border>1</el-checkbox>
-                    <el-checkbox label="B" border>2</el-checkbox>
+                    <template v-for="(item, index) in labels">
+                        <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
+                    </template>
                 </el-checkbox-group>
             </div>
 
@@ -45,7 +88,6 @@
                         v-model="question.hard_level"
                         :step="1"
                            :max="10"
-                        show-stops
                            show-input
                 >
                 </el-slider>
@@ -79,7 +121,7 @@
 
                 <div style="display: inline-block;vertical-align: top">
 
-                    <el-radio-group v-model="question.answer" size="small">
+                    <el-radio-group v-model="question.answer_option" size="small">
                         <template v-for="(item,index) in question.answer_options">
                             <p class="option"><el-radio :label="item.label" > {{item.label}}:<el-input placeholder="选项内容" style="width: 100px" v-model="item.text" ></el-input></el-radio><el-tag v-if="item.label==question.answer" type="success">正解</el-tag><el-button type="danger" size="mini" style="margin-left: 10px;" v-on:click="del_option(index)" >x</el-button></p>
 
@@ -98,7 +140,7 @@
 
                 <div style="display: inline-block;vertical-align: top">
 
-                    <el-radio-group v-model="question.answer" size="small">
+                    <el-radio-group v-model="question.answer_option" size="small">
                         <template v-for="(item,index) in question.answer_options_2">
                             <p class="option"><el-radio :label="item.label" > <el-input placeholder="判断内容" style="width: 100px" v-model="item.text" ></el-input></el-radio><el-tag v-if="item.label==question.answer" type="success">正解</el-tag></p>
 
@@ -113,23 +155,45 @@
 
             <div v-if="question.type==3" class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>答案:</span>
-                <el-input style="width: 300px" placeholder="答案" v-model="question.answer" ></el-input>
+
+                共<el-select v-model="question.fill_num" placeholder="填空数量" @change="change_fill_num">
+                    <el-option
+                            v-for="item in [{label:'1处',value:'1'},{label:'2处',value:'2'},{label:'3处',value:'3'},{label:'4处',value:'4'},{label:'5处',value:'5'},{label:'6处',value:'6'},{label:'7处',value:'7'},{label:'8处',value:'8'},{label:'9处',value:'9'},{label:'10处',value:'10'}]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>填空
+                <div style="display: inline-block;vertical-align: top">
+                    <template v-for="(item, index) in question.answer_obj">
+                        <div style="margin-left: 20px;margin-bottom: 5px;">第{{index+1}}处答案:<el-input  style="width: 300px" placeholder="答案" v-model="item.text" ></el-input></div>
+                    </template>
+                </div>
+
+
             </div>
 
-            <div v-if="question.type==4" class="search_item">
+            <div v-show="question.type==4" class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>答案:</span>
-                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor" :content="question.answer" :options = "editorOption" @change="onEditorChange($event)"></quill-editor>
+                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor2" :content="question.answer" :options = "editorOption" @change="onEditorChange($event,'answer')"></quill-editor>
             </div>
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;">答案解析:</span>
-                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor" :content="question.answer_parse" :options = "editorOption" @change="onEditorChange($event)"></quill-editor>
-            </div>
-            <!--<div class="search_item">-->
-                <!--<span class="pre_info" style="font-size: 14px;vertical-align: top">描述:</span>-->
-                <!--<el-input style="width: 300px" placeholder="内容..." v-model="content" type="textarea" :rows="2" >-->
+                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor3" :content="question.answer_parse" :options = "editorOption" @change="onEditorChange($event,'answer_parse')"></quill-editor>
 
-                <!--</el-input>-->
-            <!--</div>-->
+
+            </div>
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>录题者:</span>
+                <el-select v-model="question.author" value-key="id" placeholder="请选择">
+                    <el-option
+                            v-for="item in authors"
+                            :key="item.id"
+                            :label="item.show_name"
+                            :value="item">
+                    </el-option>
+                </el-select>
+            </div>
 
 
 
@@ -143,7 +207,9 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {question_edit,question_info} from '@/api/getDataEarth'
+    import {question_edit,question_info,admin_user_all_list} from '@/api/getDataEarth'
+    import {knowledge_point_all_list} from '@/api/getDataknowledge_point'
+    import {label_all_list} from '@/api/getDatalabel'
     import  { quillEditor,Quill } from 'vue-quill-editor'
     import { ImageDrop } from 'quill-image-drop-module'
     import ImageResize from 'quill-image-resize-module'
@@ -153,21 +219,33 @@
         data(){
             return {
                 id:0,
+                loading_info:false,
                 question:{
+                    entity:"1",
+                    score:1,
+                    useway:[],
                     type:"1",
                     title:"",
                     content:"",
-                    answer:"A",
+                    answer:"",
+                    answer_option:"A",
+                    answer_obj:[{text:''}],
                     answer_parse:"",
                     answer_options:[{label:'A',text:''},{label:'B',text:''},{label:'C',text:''}],
-                    answer_options_2:[{label:'A',text:''},{label:'B',text:''}],
+                    answer_options_2:[{label:'A',text:'是'},{label:'B',text:'否'}],
                     label:[],
+                    knowledge_point:[],
                     hard_level:1,
                     year:'2018',
-                    grade:'2'
+                    grade:'1',
+                    author:{},
+                    fill_num:'1'
 
 
                 },
+                knowledge_points:[],
+                labels:[],
+                authors:[],
                 years:[],
                 loading:false,
                 editorOption:{
@@ -187,10 +265,11 @@
                                 ]
                     }
                 },
-                upload_url:this.$store.state.constant.upload_url,
+                upload_url:this.$store.state.constant.upload_url_local,
                 editor:1,
                 toolbars:{subfield: true},
-                fullscreenLoading:false
+                fullscreenLoading:false,
+                myQuillEditor_index:1
             }
 
         },
@@ -202,32 +281,88 @@
 
         },
         mounted(){
-
+            if (this.$refs.myQuillEditor1)  this.$refs.myQuillEditor1.quill.getModule('toolbar').addHandler('image', this.imgHandler1)
+            if (this.$refs.myQuillEditor2)  this.$refs.myQuillEditor2.quill.getModule('toolbar').addHandler('image', this.imgHandler2)
+            if (this.$refs.myQuillEditor3)  this.$refs.myQuillEditor3.quill.getModule('toolbar').addHandler('image', this.imgHandler3)
         },
 
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
+                vm.init_options().then(function () {
+                    if (vm.id && vm.id > 0) {
+                        vm.get_info();
+                    } else {
 
-                if (vm.id && vm.id > 0) {
-                    vm.get_info();
-                } else {
-                    vm.init();
-                }
+                        vm.init();
+                    }
+                })
+
 
             })
         },
         methods: {
+            init_options(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    knowledge_point_all_list({}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.knowledge_points = res.data;
+                            label_all_list({}).then(function (res) {
+                                if (res.code == this.$store.state.constant.status_success) {
+                                    this.labels = res.data;
 
+                                    admin_user_all_list({'is_question_author':1}).then(function (res) {
+                                        if (res.code == this.$store.state.constant.status_success) {
+                                            this.authors = res.data;
+
+                                        } else {
+                                            this.$message({
+                                                message: res.msg,
+                                                type: 'warning'
+                                            });
+                                        }
+                                        this.loading_info = false;
+                                        resolve();
+                                    }.bind(this));
+
+                                } else {
+                                    this.$message({
+                                        message: res.msg,
+                                        type: 'warning'
+                                    });
+                                }
+
+                            }.bind(this));
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                    }.bind(this));
+                }.bind(this))
+            },
             // 点击图片ICON触发事件
-            imgHandler(state) {
-                this.addRange = this.$refs.myQuillEditor.quill.getSelection()
+            imgHandler1(state){
+                this.imgHandler(state, 1);
+            },
+            imgHandler2(state){
+                this.imgHandler(state, 2);
+            },
+            imgHandler3(state){
+                this.imgHandler(state, 3);
+            },
+
+            imgHandler(state, index) {
+                this.addRange = this.$refs['myQuillEditor'+index].quill.getSelection()
                 if (state) {
                     let fileInput = document.getElementById('imgInput')
                     fileInput.click() // 加一个触发事件
                 }
                 this.uploadType = 'image'
+                this.myQuillEditor_index = index;
             },
 
             handleAvatarSuccess(res, file) {
@@ -248,9 +383,9 @@
                     // API: https://segmentfault.com/q/1010000008951906
                     // this.$refs.myTextEditor.quillEditor.getSelection();
                     // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
-                    vm.addRange = vm.$refs.myQuillEditor.quill.getSelection()
+                    vm.addRange = vm.$refs['myQuillEditor'+vm.myQuillEditor_index].quill.getSelection()
                     value = value.indexOf('http') !== -1 ? value : 'http:' + value
-                    vm.$refs.myQuillEditor.quill.insertEmbed(vm.addRange !== null ? vm.addRange.index : 0, vm.uploadType, value, Quill.sources.USER) // 调用编辑器的 insertEmbed 方法，插入URL
+                    vm.$refs['myQuillEditor'+vm.myQuillEditor_index].quill.insertEmbed(vm.addRange !== null ? vm.addRange.index : 0, vm.uploadType, value, Quill.sources.USER) // 调用编辑器的 insertEmbed 方法，插入URL
                 } else {
                     this.$message.error(`${vm.uploadType}插入失败`)
                 }
@@ -259,38 +394,34 @@
             beforeAvatarUpload(file) {
                 this.fullscreenLoading = true
                 const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
-                const isLt2M = file.size / 1024 / 1024 < 1;
+                const isLt2M = file.size / 1024  < 200;
 
-//                if (!isJPG) {
-//                    this.fullscreenLoading = false
-//                    this.$message.error('图片格式只支持jpg和png!');
-//                }
+                if (!isJPG) {
+                    this.fullscreenLoading = false
+                    this.$message.error('图片格式只支持jpg和png!');
+                }
                 if (!isLt2M) {
                     this.fullscreenLoading = false
-                    this.$message.error('图片大小不能超过 1MB!');
+                    this.$message.error('图片大小不能超过 200k!');
                 }
-                return  isLt2M;
+                return  isLt2M && isJPG;
             },
 
-            onEditorChange({ editor, html, text }) {//富文本编辑器  文本改变时 设置字段值
-                this.content = html
+            onEditorChange({ editor, html, text },field) {//富文本编辑器  文本改变时 设置字段值
+                this.question[field] = html
+                if (field == 'content') {
+                    this.question.title = text
+                }
             },
-
             init() {
                 this.loading = false;
-
-                this.title = '';
-
-                this.content='';
-
             },
 
             get_info() {
                 question_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
 
-                        this.title = res.data.title;
-                        this.content = res.data.content;
+                        this.question = res.data.question_data;
 
                     } else {
                         this.$message({
@@ -298,21 +429,15 @@
                             type: 'warning'
                         });
                     }
-
+                    this.loading_info = false;
                 }.bind(this));
             },
             submit: function () {
 
-//                if (!this.title) {
-//                    var error_msg = '请填写标题';
-//                }
-//console.log(this.question);return;
-
                 this.loading = true;
                 question_edit({
                     id:this.id,
-                    title:this.title,
-                    desc:this.content
+                    question:this.question
                 }).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.$message({
@@ -326,7 +451,7 @@
                             type: 'warning'
                         });
                     }
-
+                    this.loading = false;
                 }.bind(this));
 
             },
@@ -350,14 +475,14 @@
                 this.gen_options();
             },
             del_option(index){
-                if (this.question.answer_options.length<1) {
-                    if (option_labels.length < (this.question.answer_options.length+1)) {
-                        this.$message({
-                            message: '对不起,至少含有一个选项',
-                            type: 'warning'
-                        });
-                        return ;
-                    }
+                if (this.question.answer_options.length<=1) {
+
+                    this.$message({
+                        message: '对不起,至少含有一个选项',
+                        type: 'warning'
+                    });
+                    return ;
+
                 }
                 this.question.answer_options.splice(index,1);
                 this.gen_options();
@@ -380,10 +505,23 @@
             },
             change_type(){
                 if (this.question.type==1 || this.question.type==2) {
-                    this.question.answer = 'A';
+                    this.question.answer_option = 'A';
                 } else {
-                    this.question.answer = '';
+                    this.question.answer_option = '';
                 }
+            },
+            change_fill_num(num){
+                var arr = [];
+                for(var i=0;i<10;i++) {
+                    if (i<num) {
+                        if (this.question.answer_obj[i]) {
+                            arr.push({text:this.question.answer_obj[i].text});
+                        } else {
+                            arr.push({text:''});
+                        }
+                    }
+                }
+                this.question.answer_obj = arr;
             }
 
         }

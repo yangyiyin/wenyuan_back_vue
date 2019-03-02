@@ -1,7 +1,17 @@
 <template>
+
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
+
+            <el-select v-model="entity" placeholder="科目">
+                <el-option
+                        v-for="item in [{label:'全部',value:0},{label:'语文',value:1},{label:'数学',value:2},{label:'英语',value:3}]"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
 
             <el-select v-model="type" placeholder="类型">
                 <el-option
@@ -19,12 +29,12 @@
                     clearable>
             </el-input>
 
-            <el-input
-                    style="display: inline-block;width: 250px;"
-                    placeholder="标签"
-                    v-model="tag"
-                    clearable>
-            </el-input>
+            <!--<el-input-->
+                    <!--style="display: inline-block;width: 250px;"-->
+                    <!--placeholder="标签"-->
+                    <!--v-model="tag"-->
+                    <!--clearable>-->
+            <!--</el-input>-->
 
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit(0)">新增试题</el-button>
@@ -41,17 +51,76 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="题干" >
+                            <el-form-item label="题干" style="width: 100%">
                                 <span>{{ props.row.title}}</span>
                             </el-form-item>
-                            <!--<el-form-item label="描述" >-->
-                                <!--<span>{{ props.row.desc}}</span>-->
-                            <!--</el-form-item>-->
+                        </el-form>
+                        <el-form v-if="props.row.type==1" label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="答案选项" style="width: 100%">
+                                <template v-for="(item, index) in props.row.question_answer.answer_options">
+                                    <p style="display: inline-block;margin-left: 20px;"><el-tag size="mini">{{item.label}}:</el-tag>{{item.text}}</p>
+                                </template>
+
+                            </el-form-item>
+                        </el-form>
+                        <el-form v-if="props.row.type==2" label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="答案选项" style="width: 100%">
+                                <template v-for="(item, index) in props.row.question_answer.answer_options">
+                                    <p style="display: inline-block;margin-left: 20px;"><el-tag size="mini">{{item.label}}:</el-tag>{{item.text}}</p>
+                                </template>
+                            </el-form-item>
+                        </el-form>
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="答案" v-if="props.row.type != 3">
+                                <p >{{ props.row.question_answer.answer}}</p>
+                            </el-form-item>
+                            <el-form-item label="答案" v-if="props.row.type == 3">
+                                <template v-for="(item, index) in props.row.question_answer.answer">
+                                    <p style="display: inline-block;margin-left: 20px;"><el-tag size="mini">{{index+1}}处:</el-tag>{{item.text}}</p>
+                                </template>
+                            </el-form-item>
+                            <el-form-item label="答案解析" >
+                                <span v-html="props.row.question_answer.answer_parse">{{ props.row.question_answer.answer_parse}}</span>
+                            </el-form-item>
+                        </el-form>
+
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="分值" >
+                                <span>{{ props.row.score}}</span>
+                            </el-form-item>
+                            <el-form-item label="难度" >
+                                <span>{{ props.row.hard_level}}</span>
+                            </el-form-item>
+                        </el-form>
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="绝密性" >
+                                <el-tag size="mini" v-for="name in props.row.question_useway_names">{{ name}}</el-tag>
+                            </el-form-item>
+                            <el-form-item label="年级" >
+                                <span>{{ props.row.grade}}</span>
+                            </el-form-item>
+                        </el-form>
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="知识点" >
+                                <el-tag size="mini" v-for="name in props.row.question_knowledge_point_names">{{ name}}</el-tag>
+                            </el-form-item>
+                            <el-form-item label="标签" >
+                                <el-tag size="mini" v-for="name in props.row.question_label_names">{{ name}}</el-tag>
+                            </el-form-item>
+                        </el-form>
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="录入者" >
+                                <span>{{ props.row.inputer}}</span>
+                            </el-form-item>
+                            <el-form-item label="年份" >
+                                <span>{{ props.row.year}}</span>
+                            </el-form-item>
                         </el-form>
                     </template>
                 </el-table-column>
-
-                <el-table-column label="类型" prop="tag"></el-table-column>
+                <el-table-column label="题目id" prop="id"></el-table-column>
+                <el-table-column label="科目" prop="entity_desc"></el-table-column>
+                <el-table-column label="类型" prop="type_desc"></el-table-column>
                 <el-table-column label="题干" prop="title_short"></el-table-column>
                 <!--<el-table-column label="简介" prop="desc_pre"></el-table-column>-->
                 <el-table-column label="创建时间" prop="create_time"></el-table-column>
@@ -135,6 +204,7 @@
                 limit: 10,
                 count: 0,
                 currentPage: 1,
+                entity:0,
                 type:0,
                 tag:'',
                 title:'',
@@ -214,7 +284,7 @@
 //                return extension || extension2 && isLt2M;
 //            },
             list() {
-                question_list({id:this.id,page:this.currentPage,page_size:this.limit,title:this.title,type:this.type,tag:this.tag}).then(function(res){
+                question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,type:this.type,tag:this.tag}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);

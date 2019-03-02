@@ -94,11 +94,17 @@ export const question_verify = data => fetch('/wenyuanjiaoyu/question/verify', d
 export const question_del = data => fetch('/wenyuanjiaoyu/question/del', data, 'POST').then(check_login);
 export const question_edit = data => fetch('/wenyuanjiaoyu/question/edit', data, 'POST').then(check_login);
 
+export const course_list = data => fetch('/wenyuanjiaoyu/common/course_list', data, 'POST').then(check_login);
+export const class_list = data => fetch('/wenyuanjiaoyu/common/class_list', data, 'POST').then(check_login);
+
+
 export const admin_user_list = data => fetch('/wenyuanjiaoyu/admin_user/index', data, 'POST').then(check_login);
+export const admin_user_all_list = data => fetch('/wenyuanjiaoyu/admin_user/get_all', data, 'POST').then(check_login);
 export const admin_user_edit = data => fetch('/wenyuanjiaoyu/admin_user/edit', data, 'POST').then(check_login);
 export const admin_user_verify = data => fetch('/wenyuanjiaoyu/admin_user/verify', data, 'POST').then(check_login);
 export const admin_user_del = data => fetch('/wenyuanjiaoyu/admin_user/del', data, 'POST').then(check_login);
 export const admin_user_info = data => fetch('/wenyuanjiaoyu/admin_user/info', data, 'POST').then(check_login);
+export const admin_user_set_author = data => fetch('/wenyuanjiaoyu/admin_user/set_author', data, 'POST').then(check_login);
 export const admin_group_list = data => fetch('/wenyuanjiaoyu/admin_group/index', data, 'POST').then(check_login);
 export const admin_group_all_list = data => fetch('/wenyuanjiaoyu/admin_group/all_list', data, 'POST').then(check_login);
 export const admin_group_edit = data => fetch('/wenyuanjiaoyu/admin_group/edit', data, 'POST').then(check_login);

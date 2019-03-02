@@ -5,30 +5,35 @@
 
             <el-input
                     style="display: inline-block;width: 250px;"
-                    placeholder="用户名"
-                    v-model="user_name"
+                    placeholder="名称"
+                    v-model="name"
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit_admin_user(0)">新增用户</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit_homework(0)">新增家庭作业</el-button>
 
         </div>
         <div class="table_container">
             <el-table
                     :data="tableData"
                     style="width: 100%">
-                <el-table-column label="用户名" prop="user_name"></el-table-column>
-                <el-table-column label="显示名" prop="show_name"></el-table-column>
-                <el-table-column label="权限组" prop="group_name"></el-table-column>
-                <el-table-column label="创建日期" prop="create_time"></el-table-column>
-                <el-table-column label="操作" width="400">
+                <el-table-column label="作业标题" prop="name"></el-table-column>
+                <el-table-column label="作业形式" prop="response_type_desc"></el-table-column>
+                <el-table-column label="附件" >
                     <template slot-scope="scope">
-                        <el-button size="mini" @click="goto_edit_admin_user(scope.row.id)">编辑</el-button>
-                        <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>
-                        <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>
+                        <p v-for="(item) in scope.row.other_downloads">
+                            {{item.name}}
+                        </p>
+                    </template>
+                </el-table-column>
+                <el-table-column label="布置老师" prop="teacher_name"></el-table-column>
+
+                <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                <el-table-column label="操作" width="300">
+                    <template slot-scope="scope">
+                        <el-button v-if="scope.row.response_type == 2" size="mini" @click="show_img(scope.row)">预览作业</el-button>
+                        <el-button size="mini" @click="goto_edit_homework(scope.row.id)">编辑</el-button>
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
-                        <el-button v-if="scope.row.is_question_author != 1" type="info" size="mini" @click="set_author(scope,1)" plain :loading="loadingBtn == scope.$index">非出题老师</el-button>
-                        <el-button v-if="scope.row.is_question_author == 1" type="success" size="mini" @click="set_author(scope,0)" :loading="loadingBtn == scope.$index">出题老师</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -43,12 +48,23 @@
                 </el-pagination>
             </div>
         </div>
+        <el-dialog title="修改排序" :visible.sync="dialogFormVisible" width="30%">
+            <el-form :model="current">
+                <el-form-item label="排序值(越大越靠前)">
+                    <el-input v-model="current.sort" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sort">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort,admin_user_set_author,del_app_login_token} from '@/api/getDataEarth'
+    import {homework_list,homework_del,homework_verify,homework_sort} from '@/api/getDatahomework'
     export default {
         data(){
             return {
@@ -58,7 +74,10 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 current:{},
-                user_name:'',
+//                remark:'',
+//                choose_categories:[],
+//                categories:[],
+                name:'',
                 loadingBtn:-1
             }
         },
@@ -66,7 +85,7 @@
             headTop,
         },
         created(){
-
+            this.list();
         },
         mounted(){
 
@@ -79,7 +98,7 @@
         },
         methods: {
             list() {
-                admin_user_list({page:this.currentPage,page_size:this.limit,user_name:this.user_name}).then(function(res){
+                homework_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -104,8 +123,11 @@
                 this.currentPage = 1;
                 this.list();
             },
-            goto_edit_admin_user(id) {
-                this.$router.push({path:'add_admin_user',query:{id:id}});
+            show_img(row){
+                this.$router.push({path:'show_img',query:{path:row.homework_downloads}});
+            },
+            goto_edit_homework(id) {
+                this.$router.push({path:'add_homework',query:{id:id}});
             },
             verify(scope, status) {
 
@@ -116,7 +138,7 @@
                 }).then(function(){
                     var item = scope.row;
                     this.loadingBtn = scope.$index;
-                    admin_user_verify({id:item.id,status:status}).then(function(res){
+                    homework_verify({id:item.id,status:status}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             item.status = status;
                             this.$message({
@@ -137,30 +159,6 @@
 
 
             },
-            set_author(scope,status) {
-
-                var item = scope.row;
-                this.loadingBtn = scope.$index;
-                admin_user_set_author({id:item.id,status:status}).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        item.is_question_author = status;
-                        this.$message({
-                            type: 'success',
-                            message: '操作成功'
-                        });
-                    } else {
-                        this.$message({
-                            type: 'warning',
-                            message: res.msg
-                        });
-                    }
-                }.bind(this)).finally(function(){
-                    this.loadingBtn = -1;
-                }.bind(this));
-
-
-            },
-
             del(item, index) {
 
                 this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
@@ -168,7 +166,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
-                    admin_user_del({id:item.id}).then(function(res){
+                    homework_del({id:item.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             this.tableData.splice(index,1);
                             this.count --;
@@ -186,33 +184,37 @@
                 }.bind(this))
 
             },
-            del_app_login_token(row) {
-                this.$confirm('此操作将删除该用户的app登录信息,需重新输入账号密码登录, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(function(){
-                    del_app_login_token({uid:row.id}).then(function(res){
-                        if (res.code == this.$store.state.constant.status_success) {
+            handleSort(row){
+                this.dialogFormVisible = true;
+                this.current = row;
+            },
+            sort() {
+                homework_sort({
+                    id:this.current.id,
+                    sort:this.current.sort
 
-                            this.$message({
-                                type: 'success',
-                                message: res.msg
-                            });
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: res.msg
-                            });
-                        }
-                    }.bind(this));
-                }.bind(this))
+                }).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogFormVisible = false;
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+                this.dialogFormVisible = false;
             }
         },
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     @import '../style/mixin';
     .table_container{
         padding: 20px;
