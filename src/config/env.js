@@ -14,8 +14,8 @@ if (process.env.NODE_ENV == 'development') {
 	baseUrl = '//www.myweb.com/git-res/earth_php/index.php';
     baseImgPath = '/img/';
 }else{
-	baseUrl = '//www.myweb.com/git-res/earth_php/index.php';
-	baseImgPath = '/img/';
+	baseUrl = '//api.yixsu.com/index.php';
+	baseImgPath = '//elm.cangdu.org/img/';
 }
 
 export {
