@@ -29,6 +29,23 @@
             </el-input>
 
 
+            <el-select v-model="grade" placeholder="年级" clearable>
+                <el-option
+                        v-for="item in grades"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item">
+                </el-option>
+            </el-select>
+
+            <el-input
+                    style="display: inline-block;width: 100px;"
+                    type="number"
+                    placeholder="难度"
+                    v-model="hard_level"
+                    clearable>
+            </el-input>
+
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
         </div>
         <div class="table_container">
@@ -146,7 +163,7 @@
 </template>
 
 <script>
-    import {question_list} from '@/api/getDataEarth'
+    import {question_list,get_grades} from '@/api/getDataEarth'
     import {deepCopy} from '@/config/mUtils'
     export default {
         props: ['checked'],
@@ -161,6 +178,9 @@
                 type:0,
                 tag:'',
                 title:'',
+                grade:{},
+                grades:[],
+                hard_level:'',
 
                 dialogFormVisible:false,
                 dialogFormVisibleDaoru:false,
@@ -178,14 +198,34 @@
         },
         created(){
             this.multipleSelectionAll = this.checked;
-            this.list();
+            this.init_grades().then(function(){
+                this.list();
+            }.bind(this))
         },
         mounted(){
 
         },
         methods: {
+            init_grades(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    get_grades({}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.grades = res.data;
+
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                }.bind(this))
+            },
             list() {
-                question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,type:this.type,tag:this.tag}).then(function(res){
+                question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,type:this.type,tag:this.tag,hard_level:this.hard_level,grade:this.grade}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);

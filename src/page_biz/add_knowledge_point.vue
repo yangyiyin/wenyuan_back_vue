@@ -5,8 +5,22 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>分组:</span>
+                <el-select v-model="group" value-key="id" placeholder="请选择">
+                    <el-option
+                            v-for="item in groups"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item">
+                    </el-option>
+                </el-select>
+            </div>
+
+
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>名称:</span>
                 <el-input clearable placeholder="请输入名称" v-model="name" style="width: 350px">
-                    <template slot="prepend">名称</template>
+
                 </el-input>
             </div>
 
@@ -21,13 +35,15 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {knowledge_point_edit,knowledge_point_info} from '@/api/getDataknowledge_point'
+    import {knowledge_point_edit,knowledge_point_info,get_groups} from '@/api/getDataknowledge_point'
     export default {
         data(){
             return {
                 id:0,
                 loading:false,
-                name:''
+                name:'',
+                group:{},
+                groups:[]
             }
 
         },
@@ -46,15 +62,37 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
 //                console.log(vm.id )
-            if (vm.id && vm.id > 0) {
-                vm.get_info();
-            } else {
-                vm.init();
-            }
+            vm.init_options().then(function(){
+                if (vm.id && vm.id > 0) {
+                    vm.get_info();
+                } else {
+                    vm.init();
+                }
+            })
+
 
         })
         },
         methods: {
+
+            init_options(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    get_groups({}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.groups = res.data;
+
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                }.bind(this))
+            },
 
             init() {
                 this.loading = false;
@@ -64,6 +102,10 @@
                 knowledge_point_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.name = res.data.name;
+                        this.group = {
+                            id:parseInt(res.data.group_id),
+                            name:res.data.group_name,
+                        }
                     } else {
                         this.$message({
                             message: res.msg,
@@ -93,7 +135,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    knowledge_point_edit({id:this.id,name:this.name}).then(function (res) {
+                    knowledge_point_edit({id:this.id,name:this.name,group:this.group}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,

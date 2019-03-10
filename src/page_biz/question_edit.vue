@@ -64,6 +64,16 @@
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>知识点:</span>
 
+                <el-select v-model="group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()">
+                    <el-option
+                            v-for="item in groups"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item">
+                    </el-option>
+                </el-select>
+
+
                 <el-checkbox-group v-model="question.knowledge_point" size="mini" style="display: inline-block">
                     <template v-for="(item, index) in knowledge_points">
                         <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
@@ -106,7 +116,7 @@
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>年级:</span>
                 <el-select v-model="question.grade" placeholder="请选择年级">
                     <el-option
-                            v-for="item in [{label:'一年级',value:'1'},{label:'二年级',value:'2'},{label:'三年级',value:'3'},{label:'四年级',value:'4'},{label:'五年级',value:'5'},{label:'六年级',value:'6'},{label:'初一',value:'7'}]"
+                            v-for="item in grades"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -185,7 +195,7 @@
             </div>
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>录题者:</span>
-                <el-select v-model="question.author" value-key="id" placeholder="请选择">
+                <el-select v-model="question.author" multiple value-key="id" placeholder="请选择">
                     <el-option
                             v-for="item in authors"
                             :key="item.id"
@@ -207,8 +217,8 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {question_edit,question_info,admin_user_all_list} from '@/api/getDataEarth'
-    import {knowledge_point_all_list} from '@/api/getDataknowledge_point'
+    import {question_edit,question_info,get_grades,admin_user_all_list} from '@/api/getDataEarth'
+    import {knowledge_point_all_list,get_groups} from '@/api/getDataknowledge_point'
     import {label_all_list} from '@/api/getDatalabel'
     import  { quillEditor,Quill } from 'vue-quill-editor'
     import { ImageDrop } from 'quill-image-drop-module'
@@ -237,8 +247,8 @@
                     knowledge_point:[],
                     hard_level:1,
                     year:'2018',
-                    grade:'1',
-                    author:{},
+                    grade:1,
+                    author:[],
                     fill_num:'1'
 
 
@@ -246,7 +256,10 @@
                 knowledge_points:[],
                 labels:[],
                 authors:[],
+                group:{id:1,name:'一年级'},
+                groups:[],
                 years:[],
+                grades:[],
                 loading:false,
                 editorOption:{
                     modules:{
@@ -291,22 +304,63 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
                 vm.init_options().then(function () {
-                    if (vm.id && vm.id > 0) {
-                        vm.get_info();
-                    } else {
+                    vm.init_groups().then(function(){
+                        vm.init_grades().then(function(){
+                            if (vm.id && vm.id > 0) {
+                                vm.get_info();
+                            } else {
+                                vm.init();
+                            }
+                        })
 
-                        vm.init();
-                    }
+                    })
+
                 })
 
 
             })
         },
         methods: {
+            init_groups(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    get_groups({}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.groups = res.data;
+
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                }.bind(this))
+            },
+            init_grades(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    get_grades({}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.grades = res.data;
+
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                }.bind(this))
+            },
             init_options(){
                 return new Promise(function(resolve,reject){
                     this.loading_info = true;
-                    knowledge_point_all_list({}).then(function (res) {
+                    knowledge_point_all_list({group:this.group}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.knowledge_points = res.data;
                             label_all_list({}).then(function (res) {
@@ -522,6 +576,19 @@
                     }
                 }
                 this.question.answer_obj = arr;
+            },
+            get_knowledge_points() {
+                knowledge_point_all_list({group:this.group}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.question.knowledge_point = [];
+                        this.knowledge_points = res.data;
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
             }
 
         }

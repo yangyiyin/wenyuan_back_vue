@@ -9,6 +9,14 @@
                     v-model="name"
                     clearable>
             </el-input>
+            <el-select v-model="group" value-key="id" placeholder="请选择知识点分组" clearable>
+                <el-option
+                        v-for="item in groups"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item">
+                </el-option>
+            </el-select>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_knowledge_point(0)">新增知识点</el-button>
 
@@ -18,6 +26,7 @@
                     :data="tableData"
                     style="width: 100%">
                 <el-table-column label="名称" prop="name"></el-table-column>
+                <el-table-column label="分组" prop="group_name"></el-table-column>
                 <el-table-column label="排序">
                     <template slot-scope="scope">
                         {{scope.row.sort}}
@@ -61,7 +70,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {knowledge_point_list,knowledge_point_del,knowledge_point_verify,knowledge_point_sort} from '@/api/getDataknowledge_point'
+    import {knowledge_point_list,knowledge_point_del,knowledge_point_verify,knowledge_point_sort,get_groups} from '@/api/getDataknowledge_point'
     export default {
         data(){
             return {
@@ -75,7 +84,9 @@
 //                choose_categories:[],
 //                categories:[],
                 name:'',
-                loadingBtn:-1
+                loadingBtn:-1,
+                group:{},
+                groups:[]
             }
         },
         components: {
@@ -90,12 +101,33 @@
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
-                vm.list();
-        })
+                vm.init_options().then(function () {
+                    vm.list();
+                })
+
+            })
         },
         methods: {
+            init_options(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    get_groups({}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.groups = res.data;
+
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                }.bind(this))
+            },
             list() {
-                knowledge_point_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
+                knowledge_point_list({page:this.currentPage,page_size:this.limit,name:this.name,group:this.group}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);

@@ -75,10 +75,23 @@
                 </p>
             </div>
 
+            <!--<div class="search_item">-->
+                <!--<span class="pre_info" style="font-size: 16px;font-weight: bolder"><i style="color:red;">*</i>布置老师:</span>-->
+                <!--<el-input clearable placeholder="请输入老师姓名" v-model="data.teacher_name" style="width: 250px"></el-input>-->
+            <!--</div>-->
+
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder"><i style="color:red;">*</i>布置老师:</span>
-                <el-input clearable placeholder="请输入老师姓名" v-model="data.teacher_name" style="width: 250px"></el-input>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>布置老师:</span>
+                <el-select v-model="data.author" multiple value-key="id" placeholder="请选择">
+                    <el-option
+                            v-for="item in authors"
+                            :key="item.id"
+                            :label="item.show_name"
+                            :value="item">
+                    </el-option>
+                </el-select>
             </div>
+
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
@@ -108,17 +121,17 @@
 
             </div>
         </el-dialog>
-        <canvas id="myCanvas" width="650" height="900" style="position: absolute;z-index: -1px;top:-999px;"></canvas>
+        <canvas id="myCanvas" width="650" height="900" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
 
         <div ref="questions_paper" class="ql-editor" style="position: absolute;z-index:-1;top:-999999px;height:auto;width:650px;background: #fff">
             <div  style="border-bottom: 1px solid #ddd">
                 <template v-for="(item, index) in data.questions">
                     <template v-if="item.type==1">
 
-                        <div style="height:180px;line-height: 15px;overflow: hidden">
+                        <div style="height:180px;line-height: 15px;overflow: hidden;position: relative">
                             <p style="font-weight: bolder">(单选题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
-                            <p v-html="item.question_content.content"></p>
-                            <p v-for="(option) in item.question_answer.answer_options">
+                            <p v-html="item.question_content.content" ></p>
+                            <p v-for="(option) in item.question_answer.answer_options" style="'position:absolute;top: '+(50+20*index)+'px;'">
                                 <span>{{option.label}}.{{option.text}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </p>
                         </div>
@@ -128,13 +141,13 @@
                 <template v-for="(item, index) in data.questions">
                     <template v-if="item.type==2">
 
-                        <div style="height:180px;line-height: 15px;overflow: hidden">
+                        <div style="height:180px;line-height: 15px;overflow: hidden;position: relative">
                             <p style="font-weight: bolder">(判断题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
 
-                            <p v-html="item.question_content.content"></p>
+                            <p v-html="item.question_content.content" ></p>
 
-                            <p  v-for="(option2) in item.question_answer.answer_options2">
+                            <p  v-for="(option2,index) in item.question_answer.answer_options2" :style="'position:absolute;top: '+(50+20*index)+'px;'">
                                 <span>{{option2.label}}.{{option2.text}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </p>
                         </div>
@@ -173,6 +186,7 @@
     import questions from '../components/questions'
     import classes from '../components/classes'
     import {homework_edit,homework_info} from '@/api/getDatahomework'
+    import {admin_user_all_list} from '@/api/getDataEarth'
     import html2canvas from 'html2canvas';
     export default {
         data(){
@@ -189,9 +203,11 @@
                     other_downloads:'',
                     teacher_name:'',
                     questions:[],
-                    classes:[]
+                    classes:[],
+                    author:[]
 
                 },
+                authors:[],
                 fullscreenLoading:false,
                 fileList:[],
                 upload_url:this.$store.state.constant.upload_url_local,
@@ -216,11 +232,13 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
 //                console.log(vm.id )
-            if (vm.id && vm.id > 0) {
-                vm.get_info();
-            } else {
-                vm.init();
-            }
+            vm.init_options().then(function () {
+                if (vm.id && vm.id > 0) {
+                    vm.get_info();
+                } else {
+                    vm.init();
+                }
+            });
 
         })
         },
@@ -230,7 +248,24 @@
                 this.loading = false;
                 this.name = '';
             },
+            init_options(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    admin_user_all_list({'is_question_author':1}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.authors = res.data;
 
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                }.bind(this))
+            },
 
             get_info() {
                 homework_info({id:this.id}).then(function (res) {
@@ -251,7 +286,7 @@
 
                 if(this.data.response_type == 2) {//线下形式,生成图片
                     var total_height = this.data.questions.length * 180;
-                    html2canvas(this.$refs.questions_paper).then(function(canvas) {
+                    html2canvas(this.$refs.questions_paper, {useCORS:true}).then(function(canvas) {
 
                         var c=document.getElementById("myCanvas");
                         var ctx=c.getContext("2d");
@@ -273,7 +308,7 @@
                         }
 
                         //this.data.homework_pic = canvas.toDataURL();
-//                        return;
+                        //return;
                         this._submit();
 
                     }.bind(this));

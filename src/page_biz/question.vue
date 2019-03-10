@@ -4,39 +4,52 @@
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
 
-            <el-select v-model="entity" placeholder="科目">
-                <el-option
-                        v-for="item in [{label:'全部',value:0},{label:'语文',value:1},{label:'数学',value:2},{label:'英语',value:3}]"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
+            <div style="display: inline-block;width: 80%">
+                <el-select v-model="entity" placeholder="科目">
+                    <el-option
+                            v-for="item in [{label:'全部',value:0},{label:'语文',value:1},{label:'数学',value:2},{label:'英语',value:3}]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
 
-            <el-select v-model="type" placeholder="类型">
-                <el-option
-                        v-for="item in [{label:'全部',value:0},{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4}]"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
+                <el-select v-model="type" placeholder="类型">
+                    <el-option
+                            v-for="item in [{label:'全部',value:0},{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4}]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
 
-            <el-input
-                    style="display: inline-block;width: 250px;"
-                    placeholder="题干关键词"
-                    v-model="title"
-                    clearable>
-            </el-input>
+                <el-input
+                        style="display: inline-block;width: 250px;"
+                        placeholder="题干关键词"
+                        v-model="title"
+                        clearable>
+                </el-input>
 
-            <!--<el-input-->
-                    <!--style="display: inline-block;width: 250px;"-->
-                    <!--placeholder="标签"-->
-                    <!--v-model="tag"-->
-                    <!--clearable>-->
-            <!--</el-input>-->
 
-            <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                <el-select v-model="grade" placeholder="年级" clearable>
+                    <el-option
+                            v-for="item in grades"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item">
+                    </el-option>
+                </el-select>
+
+                <el-input
+                        style="display: inline-block;width: 100px;"
+                        type="number"
+                        placeholder="难度"
+                        v-model="hard_level"
+                        clearable>
+                </el-input>
+
+                <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+            </div>
             <el-button style="float: right" type="primary" @click="goto_edit(0)">新增试题</el-button>
         </div>
         <div class="table_container">
@@ -110,7 +123,7 @@
                         </el-form>
                         <el-form label-position="left" inline class="demo-table-expand">
                             <el-form-item label="录入者" >
-                                <span>{{ props.row.inputer}}</span>
+                                <span v-for="(inputer) in props.row.inputer">{{inputer.show_name}};</span>
                             </el-form-item>
                             <el-form-item label="年份" >
                                 <span>{{ props.row.year}}</span>
@@ -194,7 +207,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {question_list,question_del} from '@/api/getDataEarth'
+    import {question_list,question_del,get_grades} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -208,6 +221,9 @@
                 type:0,
                 tag:'',
                 title:'',
+                grade:{},
+                grades:[],
+                hard_level:'',
 
                 dialogFormVisible:false,
                 dialogFormVisibleDaoru:false,
@@ -232,59 +248,33 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
-            vm.list();
+            vm.init_grades().then(function(){
+                vm.list();
+            })
+
         })
         },
         methods: {
-//            handleSuccess(res, file) {
-//                this.loadingBtn = '-1';
-//                if (this.upload_loading) {
-//                    this.upload_loading.close();
-//                }
-//
-//                if (res.code == this.$store.state.constant.status_success) {
-//                    this.dialogFormVisibleDaoru = false;
-//                    this.$message({
-//                        type: 'success',
-//                        message: res.msg
-//                    });
-//                } else {
-//                    this.$message({
-//                        type: 'warning',
-//                        message: res.msg
-//                    });
-//                }
-//
-//            },
-//            beforeUpload(file) {
-//                this.loadingBtn = 'daoru';
-//                var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
-//                const extension = testmsg === 'xls'
-//                const extension2 = testmsg === 'xlsx'
-//                const isLt2M = file.size / 1024 / 1024 < 100
-//                if(!extension && !extension2) {
-//                    this.$message({
-//                        message: '上传文件只能是 xls、xlsx格式!',
-//                        type: 'warning'
-//                    });
-//                }
-//                if(!isLt2M) {
-//                    this.$message({
-//                        message: '上传文件大小不能超过 100MB!',
-//                        type: 'warning'
-//                    });
-//                }
-//                this.upload_loading = this.$loading({
-//                    lock: true,
-//                    text: 'Loading',
-//                    spinner: 'el-icon-loading',
-//                    background: 'rgba(0, 0, 0, 0.7)'
-//                });
-//
-//                return extension || extension2 && isLt2M;
-//            },
+            init_grades(){
+                return new Promise(function(resolve,reject){
+                    this.loading_info = true;
+                    get_grades({}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.grades = res.data;
+
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                }.bind(this))
+            },
             list() {
-                question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,type:this.type,tag:this.tag}).then(function(res){
+                question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,type:this.type,tag:this.tag,hard_level:this.hard_level,grade:this.grade}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);

@@ -26,7 +26,13 @@
                         </p>
                     </template>
                 </el-table-column>
-                <el-table-column label="布置老师" prop="teacher_name"></el-table-column>
+                <el-table-column label="布置老师">
+                    <template slot-scope="scope">
+                        <span v-for="(item) in scope.row.teacher_name">
+                            {{item.show_name}};
+                        </span>
+                    </template>
+                </el-table-column>
 
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="操作" width="300">
@@ -97,6 +103,7 @@
         })
         },
         methods: {
+
             list() {
                 homework_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {

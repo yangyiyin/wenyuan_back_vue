@@ -93,6 +93,7 @@ export const question_info = data => fetch('/wenyuanjiaoyu/question/info', data,
 export const question_verify = data => fetch('/wenyuanjiaoyu/question/verify', data, 'POST').then(check_login);
 export const question_del = data => fetch('/wenyuanjiaoyu/question/del', data, 'POST').then(check_login);
 export const question_edit = data => fetch('/wenyuanjiaoyu/question/edit', data, 'POST').then(check_login);
+export const get_grades = data => fetch('/wenyuanjiaoyu/question/get_grades', data, 'POST').then(check_login);
 
 export const course_list = data => fetch('/wenyuanjiaoyu/common/course_list', data, 'POST').then(check_login);
 export const class_list = data => fetch('/wenyuanjiaoyu/common/class_list', data, 'POST').then(check_login);
