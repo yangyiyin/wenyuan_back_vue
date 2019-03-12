@@ -11,6 +11,7 @@ export const knowledge_point_del = data => fetch('/wenyuanjiaoyu/knowledge_point
 export const knowledge_point_info = data => fetch('/wenyuanjiaoyu/knowledge_point/info', data, 'POST').then(check_login);
 export const knowledge_point_sort = data => fetch('/wenyuanjiaoyu/knowledge_point/sort', data, 'POST').then(check_login);
 export const get_groups = data => fetch('/wenyuanjiaoyu/knowledge_point/get_groups', data, 'POST').then(check_login);
+export const get_groups_subject = data => fetch('/wenyuanjiaoyu/knowledge_point/get_groups_subject', data, 'POST').then(check_login);
 
 
 

@@ -41,7 +41,7 @@
                     <template slot-scope="scope">
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
-                        <el-button size="mini" type="primary" @click="current=scope.row;showSetResultVisible=true;current_result={}" v-if="scope.row.homework.response_type == 2 && !scope.row.total_score">批改作业</el-button>
+                        <el-button size="mini" type="primary" @click="current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra" v-if="scope.row.homework.response_type == 2 && !scope.row.total_score">批改作业</el-button>
                         <el-button size="mini" type="primary" v-if="!scope.row.teacher_suggest" @click="current=scope.row;showSuggestVisible=true">评价</el-button>
                         <el-button size="mini" v-if="scope.row.teacher_suggest" @click="current=scope.row;showSuggestVisible=true">评价</el-button>
                         <el-button size="mini" @click="current=scope.row;showResultVisible=true">查看成绩</el-button>
@@ -144,6 +144,14 @@
 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="current.question_answer_map[question.qid] ? '答案:'+current.question_answer_map[question.qid].answer : '答案:'"></p>
                     </template>
                 </p>
+<div style="height: 30px;border-bottom: 1px solid #999"></div>
+<template v-if="current.total_score_extra > 0">
+
+</template>
+<el-tag>非题库题</el-tag>
+<p>【题目id:0】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="result_other.score"></el-input><span>{{result_other.total_score}}分</span></p>
+
+
             </div>
             <el-button type="success" style="position: fixed;bottom: 20px;right: 18%;" @click="submit_result">确 认</el-button>
             <el-button type="danger" style="position: fixed;bottom: 20px;right: 6%;" @click="showSetResultVisible = false">关 闭</el-button>
@@ -169,6 +177,10 @@
                 showSuggestVisible:false,
                 showSetResultVisible:false,
                 current:{},
+                result_other:{
+                    score:0,
+                    total_score:0
+                },
 //                remark:'',
 //                choose_categories:[],
 //                categories:[],
@@ -253,7 +265,7 @@
 
             },
             submit_result() {
-                submit_result({result:this.current.homework_question, from_type:1, main_id:this.current.homework_id,sub_id:this.current.classid,student_id:this.current.student_id}).then(function(res){
+                submit_result({result:this.current.homework_question, result_other:this.result_other,from_type:1, main_id:this.current.homework_id,sub_id:this.current.classid,student_id:this.current.student_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.reckon_result();
                     } else {

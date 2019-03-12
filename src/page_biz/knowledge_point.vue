@@ -17,6 +17,14 @@
                         :value="item">
                 </el-option>
             </el-select>
+            <el-select v-model="group_subject" value-key="id" placeholder="请选择知识点科目分组" clearable>
+                <el-option
+                        v-for="item in groups_subject"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item">
+                </el-option>
+            </el-select>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_knowledge_point(0)">新增知识点</el-button>
 
@@ -26,7 +34,8 @@
                     :data="tableData"
                     style="width: 100%">
                 <el-table-column label="名称" prop="name"></el-table-column>
-                <el-table-column label="分组" prop="group_name"></el-table-column>
+                <el-table-column label="年级分组" prop="group_name"></el-table-column>
+                <el-table-column label="科目分组" prop="group_name_subject"></el-table-column>
                 <el-table-column label="排序">
                     <template slot-scope="scope">
                         {{scope.row.sort}}
@@ -70,7 +79,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {knowledge_point_list,knowledge_point_del,knowledge_point_verify,knowledge_point_sort,get_groups} from '@/api/getDataknowledge_point'
+    import {knowledge_point_list,knowledge_point_del,knowledge_point_verify,knowledge_point_sort,get_groups,get_groups_subject} from '@/api/getDataknowledge_point'
     export default {
         data(){
             return {
@@ -86,7 +95,9 @@
                 name:'',
                 loadingBtn:-1,
                 group:{},
-                groups:[]
+                groups:[],
+                group_subject:{},
+                groups_subject:[],
             }
         },
         components: {
@@ -115,19 +126,33 @@
                         if (res.code == this.$store.state.constant.status_success) {
                             this.groups = res.data;
 
+                            get_groups_subject({}).then(function (res) {
+                                if (res.code == this.$store.state.constant.status_success) {
+                                    this.groups_subject = res.data;
+
+                                } else {
+                                    this.$message({
+                                        message: res.msg,
+                                        type: 'warning'
+                                    });
+                                }
+                                this.loading_info = false;
+                                resolve();
+                            }.bind(this));
+
                         } else {
                             this.$message({
                                 message: res.msg,
                                 type: 'warning'
                             });
                         }
-                        this.loading_info = false;
-                        resolve();
+                        //this.loading_info = false;
+                        //resolve();
                     }.bind(this));
                 }.bind(this))
             },
             list() {
-                knowledge_point_list({page:this.currentPage,page_size:this.limit,name:this.name,group:this.group}).then(function(res){
+                knowledge_point_list({page:this.currentPage,page_size:this.limit,name:this.name,group:this.group,group_subject:this.group_subject}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);

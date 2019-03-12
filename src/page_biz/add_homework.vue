@@ -35,7 +35,7 @@
 
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>附件资料:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">附件资料:</span>
 
                 <el-upload
                         style="display: inline-block;width: 500px;vertical-align: top"
@@ -51,7 +51,7 @@
                         :before-upload="beforeUpload"
                         :file-list="fileList">
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png/ppt/doc/xls文件，最多上传5个文件,且每个不超过100kb</div>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png/ppt/doc/xls文件，最多上传5个文件,且每个不超过3M</div>
                 </el-upload>
 
             </div>
@@ -65,6 +65,24 @@
                     <span v-for="(item,index) in data.questions">{{item.title.substring(0,10)}}...</span>
                 </p>
             </div>
+
+            <template v-if="data.response_type == 2">
+                <div class="search_item">
+                    <span class="pre_info" style="font-size: 16px;font-weight: bolder;">非题库作业说明:</span>
+                    <el-input
+                            style="width: 450px;vertical-align: top"
+                            type="textarea"
+                            rows="5"
+                            placeholder="请输入内容"
+                            v-model="data.content_extra">
+                    </el-input>
+                </div>
+
+                <div class="search_item">
+                    <span class="pre_info" style="font-size: 16px;font-weight: bolder">非题库作业总分:</span>
+                    <el-input clearable placeholder="请输入总分" v-model="data.total_score_extra" style="width: 150px"></el-input>
+                </div>
+            </template>
 
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>布置给班级:</span>
@@ -202,6 +220,8 @@
                     homework_downloads:'',
                     other_downloads:'',
                     teacher_name:'',
+                    total_score_extra:'0',
+                    content_extra:'',
                     questions:[],
                     classes:[],
                     author:[]
@@ -247,6 +267,19 @@
             init() {
                 this.loading = false;
                 this.name = '';
+                this.data = {
+                    name:'',
+                    response_type:'2',
+                    limit_min:0,
+                    content:'',
+                    homework_downloads:'',
+                    other_downloads:'',
+                    homework_pic:[],
+                    teacher_name:'',
+                    questions:[],
+                    classes:[],
+                    author:[]
+                }
             },
             init_options(){
                 return new Promise(function(resolve,reject){
@@ -286,32 +319,36 @@
 
                 if(this.data.response_type == 2) {//线下形式,生成图片
                     var total_height = this.data.questions.length * 180;
-                    html2canvas(this.$refs.questions_paper, {useCORS:true}).then(function(canvas) {
+                    if (total_height > 0) {
+                        html2canvas(this.$refs.questions_paper, {useCORS:true}).then(function(canvas) {
 
-                        var c=document.getElementById("myCanvas");
-                        var ctx=c.getContext("2d");
-                        var canvastx=canvas.getContext("2d");
+                            var c=document.getElementById("myCanvas");
+                            var ctx=c.getContext("2d");
+                            var canvastx=canvas.getContext("2d");
 
-                        function copy(x, y)
-                        {
-                            var imgData=canvastx.getImageData(x,y,650,900);
-                            ctx.putImageData(imgData,0,0);
-                            return c.toDataURL();
-                        }
-                        this.data.homework_pic = [];
-                        for (var i=0;i<100;i+=5) {
-                            this.data.homework_pic.push(copy(0,i*180));
-                            //break;
-                            if ((i+5)*180 >= total_height) {
-                                break;
+                            function copy(x, y)
+                            {
+                                var imgData=canvastx.getImageData(x,y,650,900);
+                                ctx.putImageData(imgData,0,0);
+                                return c.toDataURL();
                             }
-                        }
+                            this.data.homework_pic = [];
+                            for (var i=0;i<100;i+=5) {
+                                this.data.homework_pic.push(copy(0,i*180));
+                                //break;
+                                if ((i+5)*180 >= total_height) {
+                                    break;
+                                }
+                            }
 
-                        //this.data.homework_pic = canvas.toDataURL();
-                        //return;
+                            //this.data.homework_pic = canvas.toDataURL();
+                            //return;
+                            this._submit();
+
+                        }.bind(this));
+                    } else {
                         this._submit();
-
-                    }.bind(this));
+                    }
                 } else {
                     this._submit();
                 }
@@ -320,7 +357,7 @@
             _submit(){
                 var error_msg = '';
 
-                if (!this.data.questions.length) error_msg = '请选择题目';
+                if (this.data.response_type == 1 && !this.data.questions.length) error_msg = '请选择题目';
 
                 if (error_msg) {
                     this.$message({
@@ -361,14 +398,14 @@
             beforeUpload(file){
                 const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1)|| (file.name.indexOf('.ppt') != -1)|| (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
 
-                const isLt2M = file.size / 1024  < 100;
+                const isLt2M = file.size / 1024  < 1024 * 3;
 
                 if (!isJPG) {
                     this.$message.error('只能上传jpg/png/ppt/doc/xls文件!');
                 }
 
                 if (!isLt2M) {
-                    this.$message.error('文件大小不能超过 100kb!');
+                    this.$message.error('文件大小不能超过 3M!');
                 }
                 return  isJPG && isLt2M;
             },

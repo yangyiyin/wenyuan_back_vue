@@ -822,14 +822,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return knowledge_point_list; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return knowledge_point_all_list; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return knowledge_point_edit; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return knowledge_point_verify; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return knowledge_point_del; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return knowledge_point_info; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return knowledge_point_sort; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return knowledge_point_list; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return knowledge_point_all_list; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return knowledge_point_edit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return knowledge_point_verify; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return knowledge_point_del; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return knowledge_point_info; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return knowledge_point_sort; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return get_groups; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return get_groups_subject; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_fetch__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config_mUtils__ = __webpack_require__(64);
@@ -860,6 +861,9 @@ var knowledge_point_sort = function knowledge_point_sort(data) {
 };
 var get_groups = function get_groups(data) {
   return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__config_fetch__["a" /* default */])('/wenyuanjiaoyu/knowledge_point/get_groups', data, 'POST').then(__WEBPACK_IMPORTED_MODULE_2__config_mUtils__["check_login"]);
+};
+var get_groups_subject = function get_groups_subject(data) {
+  return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__config_fetch__["a" /* default */])('/wenyuanjiaoyu/knowledge_point/get_groups_subject', data, 'POST').then(__WEBPACK_IMPORTED_MODULE_2__config_mUtils__["check_login"]);
 };
 
 /***/ }),
@@ -1082,6 +1086,8 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
             authors: [],
             group: { id: 1, name: '一年级' },
             groups: [],
+            group_subject: { id: 1, name: '语文' },
+            groups_subject: [],
             years: [],
             grades: [],
             loading: false,
@@ -1141,14 +1147,25 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["a" /* get_groups */])({}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.groups = res.data;
+
+                        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["b" /* get_groups_subject */])({}).then(function (res) {
+                            if (res.code == this.$store.state.constant.status_success) {
+                                this.groups_subject = res.data;
+                            } else {
+                                this.$message({
+                                    message: res.msg,
+                                    type: 'warning'
+                                });
+                            }
+                            this.loading_info = false;
+                            resolve();
+                        }.bind(this));
                     } else {
                         this.$message({
                             message: res.msg,
                             type: 'warning'
                         });
                     }
-                    this.loading_info = false;
-                    resolve();
                 }.bind(this));
             }.bind(this));
         },
@@ -1172,7 +1189,7 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
         init_options: function init_options() {
             return new __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
                 this.loading_info = true;
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["h" /* knowledge_point_all_list */])({ group: this.group }).then(function (res) {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["i" /* knowledge_point_all_list */])({ group: this.group, group_subject: this.group_subject }).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.knowledge_points = res.data;
                         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__api_getDatalabel__["g" /* label_all_list */])({}).then(function (res) {
@@ -1276,6 +1293,27 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
         },
         init: function init() {
             this.loading = false;
+            this.question = {
+                entity: "1",
+                score: 1,
+                useway: [],
+                type: "1",
+                title: "",
+                content: "",
+                answer: "",
+                answer_option: "A",
+                answer_obj: [{ text: '' }],
+                answer_parse: "",
+                answer_options: [{ label: 'A', text: '' }, { label: 'B', text: '' }, { label: 'C', text: '' }],
+                answer_options_2: [{ label: 'A', text: '是' }, { label: 'B', text: '否' }],
+                label: [],
+                knowledge_point: [],
+                hard_level: 1,
+                year: '2018',
+                grade: 1,
+                author: [],
+                fill_num: '1'
+            };
         },
         get_info: function get_info() {
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__api_getDataEarth__["g" /* question_info */])({ id: this.id }).then(function (res) {
@@ -1379,7 +1417,7 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
             this.question.answer_obj = arr;
         },
         get_knowledge_points: function get_knowledge_points() {
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["h" /* knowledge_point_all_list */])({ group: this.group }).then(function (res) {
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["i" /* knowledge_point_all_list */])({ group: this.group, group_subject: this.group_subject }).then(function (res) {
                 if (res.code == this.$store.state.constant.status_success) {
                     this.question.knowledge_point = [];
                     this.knowledge_points = res.data;
@@ -1617,7 +1655,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     attrs: {
       "value-key": "id",
-      "placeholder": "请选择知识点分组"
+      "placeholder": "请选择知识点分组",
+      "clearable": ""
     },
     on: {
       "change": function($event) {
@@ -1639,7 +1678,36 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "value": item
       }
     })
-  })), _vm._v(" "), _c('el-checkbox-group', {
+  })), _vm._v(" "), _c('el-select', {
+    staticStyle: {
+      "width": "120px"
+    },
+    attrs: {
+      "value-key": "id",
+      "placeholder": "请选择知识点科目分组",
+      "clearable": ""
+    },
+    on: {
+      "change": function($event) {
+        _vm.get_knowledge_points()
+      }
+    },
+    model: {
+      value: (_vm.group_subject),
+      callback: function($$v) {
+        _vm.group_subject = $$v
+      },
+      expression: "group_subject"
+    }
+  }, _vm._l((_vm.groups_subject), function(item) {
+    return _c('el-option', {
+      key: item.id,
+      attrs: {
+        "label": item.name,
+        "value": item
+      }
+    })
+  })), _vm._v(" "), (_vm.knowledge_points.length > 0) ? [_c('el-checkbox-group', {
     staticStyle: {
       "display": "inline-block"
     },
@@ -1660,7 +1728,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "border": ""
       }
     }, [_vm._v(_vm._s(item.name))])]
-  })], 2)], 1), _vm._v(" "), _c('div', {
+  })], 2)] : [_c('span', {
+    staticStyle: {
+      "color": "red"
+    }
+  }, [_vm._v("当前分组下无标签")])]], 2), _vm._v(" "), _c('div', {
     staticClass: "search_item"
   }, [_c('span', {
     staticClass: "pre_info",
@@ -1699,7 +1771,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     attrs: {
       "step": 1,
-      "max": 10,
+      "max": 5,
       "show-input": ""
     },
     model: {

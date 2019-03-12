@@ -64,7 +64,7 @@
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>知识点:</span>
 
-                <el-select v-model="group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()">
+                <el-select v-model="group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
                     <el-option
                             v-for="item in groups"
                             :key="item.id"
@@ -73,12 +73,24 @@
                     </el-option>
                 </el-select>
 
-
-                <el-checkbox-group v-model="question.knowledge_point" size="mini" style="display: inline-block">
-                    <template v-for="(item, index) in knowledge_points">
-                        <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
-                    </template>
-                </el-checkbox-group>
+                <el-select v-model="group_subject" value-key="id" placeholder="请选择知识点科目分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
+                    <el-option
+                            v-for="item in groups_subject"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item">
+                    </el-option>
+                </el-select>
+                <template v-if="knowledge_points.length > 0">
+                    <el-checkbox-group v-model="question.knowledge_point" size="mini" style="display: inline-block">
+                        <template v-for="(item, index) in knowledge_points">
+                            <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
+                        </template>
+                    </el-checkbox-group>
+                </template>
+                <template v-else>
+                    <span style="color: red">当前分组下无标签</span>
+                </template>
             </div>
 
             <div class="search_item">
@@ -97,7 +109,7 @@
                 <el-slider style="display: inline-block;width: 300px;vertical-align: middle"
                         v-model="question.hard_level"
                         :step="1"
-                           :max="10"
+                           :max="5"
                            show-input
                 >
                 </el-slider>
@@ -218,7 +230,7 @@
 <script>
     import headTop from '../components/headTop'
     import {question_edit,question_info,get_grades,admin_user_all_list} from '@/api/getDataEarth'
-    import {knowledge_point_all_list,get_groups} from '@/api/getDataknowledge_point'
+    import {knowledge_point_all_list,get_groups,get_groups_subject} from '@/api/getDataknowledge_point'
     import {label_all_list} from '@/api/getDatalabel'
     import  { quillEditor,Quill } from 'vue-quill-editor'
     import { ImageDrop } from 'quill-image-drop-module'
@@ -258,6 +270,8 @@
                 authors:[],
                 group:{id:1,name:'一年级'},
                 groups:[],
+                group_subject:{id:1,name:'语文'},
+                groups_subject:[],
                 years:[],
                 grades:[],
                 loading:false,
@@ -328,14 +342,28 @@
                         if (res.code == this.$store.state.constant.status_success) {
                             this.groups = res.data;
 
+                            get_groups_subject({}).then(function (res) {
+                                if (res.code == this.$store.state.constant.status_success) {
+                                    this.groups_subject = res.data;
+
+                                } else {
+                                    this.$message({
+                                        message: res.msg,
+                                        type: 'warning'
+                                    });
+                                }
+                                this.loading_info = false;
+                                resolve();
+                            }.bind(this));
+
                         } else {
                             this.$message({
                                 message: res.msg,
                                 type: 'warning'
                             });
                         }
-                        this.loading_info = false;
-                        resolve();
+                        //this.loading_info = false;
+                        //resolve();
                     }.bind(this));
                 }.bind(this))
             },
@@ -360,7 +388,7 @@
             init_options(){
                 return new Promise(function(resolve,reject){
                     this.loading_info = true;
-                    knowledge_point_all_list({group:this.group}).then(function (res) {
+                    knowledge_point_all_list({group:this.group, group_subject:this.group_subject}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.knowledge_points = res.data;
                             label_all_list({}).then(function (res) {
@@ -469,6 +497,27 @@
             },
             init() {
                 this.loading = false;
+                this.question = {
+                    entity:"1",
+                    score:1,
+                    useway:[],
+                    type:"1",
+                    title:"",
+                    content:"",
+                    answer:"",
+                    answer_option:"A",
+                    answer_obj:[{text:''}],
+                    answer_parse:"",
+                    answer_options:[{label:'A',text:''},{label:'B',text:''},{label:'C',text:''}],
+                    answer_options_2:[{label:'A',text:'是'},{label:'B',text:'否'}],
+                    label:[],
+                    knowledge_point:[],
+                    hard_level:1,
+                    year:'2018',
+                    grade:1,
+                    author:[],
+                    fill_num:'1'
+                }
             },
 
             get_info() {
@@ -578,7 +627,7 @@
                 this.question.answer_obj = arr;
             },
             get_knowledge_points() {
-                knowledge_point_all_list({group:this.group}).then(function (res) {
+                knowledge_point_all_list({group:this.group,group_subject:this.group_subject}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.question.knowledge_point = [];
                         this.knowledge_points = res.data;

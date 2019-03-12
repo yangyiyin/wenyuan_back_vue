@@ -14,6 +14,14 @@
                             :value="item">
                     </el-option>
                 </el-select>
+                <el-select v-model="group_subject" value-key="id" placeholder="请选择">
+                    <el-option
+                            v-for="item in groups_subject"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item">
+                    </el-option>
+                </el-select>
             </div>
 
 
@@ -35,7 +43,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {knowledge_point_edit,knowledge_point_info,get_groups} from '@/api/getDataknowledge_point'
+    import {knowledge_point_edit,knowledge_point_info,get_groups,get_groups_subject} from '@/api/getDataknowledge_point'
     export default {
         data(){
             return {
@@ -43,7 +51,9 @@
                 loading:false,
                 name:'',
                 group:{},
-                groups:[]
+                groups:[],
+                group_subject:{},
+                groups_subject:[]
             }
 
         },
@@ -82,14 +92,28 @@
                         if (res.code == this.$store.state.constant.status_success) {
                             this.groups = res.data;
 
+                            get_groups_subject({}).then(function (res) {
+                                if (res.code == this.$store.state.constant.status_success) {
+                                    this.groups_subject = res.data;
+
+                                } else {
+                                    this.$message({
+                                        message: res.msg,
+                                        type: 'warning'
+                                    });
+                                }
+                                this.loading_info = false;
+                                resolve();
+                            }.bind(this));
+
                         } else {
                             this.$message({
                                 message: res.msg,
                                 type: 'warning'
                             });
                         }
-                        this.loading_info = false;
-                        resolve();
+                        //this.loading_info = false;
+                        //resolve();
                     }.bind(this));
                 }.bind(this))
             },
@@ -105,6 +129,10 @@
                         this.group = {
                             id:parseInt(res.data.group_id),
                             name:res.data.group_name,
+                        }
+                        this.group_subject = {
+                            id:parseInt(res.data.group_id_subject),
+                            name:res.data.group_name_subject,
                         }
                     } else {
                         this.$message({
@@ -135,7 +163,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    knowledge_point_edit({id:this.id,name:this.name,group:this.group}).then(function (res) {
+                    knowledge_point_edit({id:this.id,name:this.name,group:this.group,group_subject:this.group_subject}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
