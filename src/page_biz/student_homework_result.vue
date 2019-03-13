@@ -146,11 +146,11 @@
                 </p>
 <div style="height: 30px;border-bottom: 1px solid #999"></div>
 <template v-if="current.total_score_extra > 0">
+    <el-tag>非题库题</el-tag>
+    <p>【题目id:0】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="result_other.score"></el-input><span>{{result_other.total_score}}分</span></p>
+
 
 </template>
-<el-tag>非题库题</el-tag>
-<p>【题目id:0】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="result_other.score"></el-input><span>{{result_other.total_score}}分</span></p>
-
 
             </div>
             <el-button type="success" style="position: fixed;bottom: 20px;right: 18%;" @click="submit_result">确 认</el-button>
