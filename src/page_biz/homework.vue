@@ -70,7 +70,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {homework_list,homework_del,homework_verify,homework_sort} from '@/api/getDatahomework'
+    import {homework_list,homework_del,homework_verify,homework_sort} from '@/api/getDataHomework'
     export default {
         data(){
             return {

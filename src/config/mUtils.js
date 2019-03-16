@@ -288,3 +288,14 @@ export const deepCopy = function(obj){
     }
     return newobj;
 }
+
+export const check_login = function(res){
+    return new Promise(function(resolve,reject){
+        if (res.code == 999) {
+            router.push('/');
+        } else {
+            resolve(res);
+        }
+
+    });
+}

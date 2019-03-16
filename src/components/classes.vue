@@ -12,6 +12,15 @@
                 </el-option>
             </el-select>
 
+            <el-autocomplete
+                    v-model="classname"
+                    :fetch-suggestions="querySearchAsync"
+                    placeholder="请输入班级名称"
+                    @select="handleSelect"
+                    clearable="true"
+                    style="width: 250px;"
+            ></el-autocomplete>
+
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
         </div>
         <div class="table_container">
@@ -70,6 +79,10 @@
                 currentPage: 1,
                 courseid:'',
                 courses:[],
+                classname:'',
+                classinfo:{
+                    value:''
+                },
 
                 dialogFormVisible:false,
                 dialogFormVisibleDaoru:false,
@@ -103,7 +116,7 @@
 
             },
             list() {
-                class_list({courseid:this.courseid}).then(function(res){
+                class_list({courseid:this.courseid,name:this.classname}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data;
                         setTimeout(()=>{
@@ -173,6 +186,29 @@
                     });
                 }
             },
+
+            querySearchAsync(queryString, cb) {
+                this.classinfo = {};
+                var results = [];
+                class_list({name:queryString}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        results = res.data;
+                        results.forEach(function(val){
+                            val.value = val.classname
+                        });
+                        cb(results);
+                    } else {
+                        cb([]);
+                    }
+                }.bind(this));
+
+
+            },
+            handleSelect(item) {
+                this.classinfo = item;
+            },
+
+
         },
 
     }

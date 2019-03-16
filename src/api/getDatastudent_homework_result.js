@@ -12,6 +12,7 @@ export const student_homework_result_info = data => fetch('/wenyuanjiaoyu/studen
 export const student_homework_result_sort = data => fetch('/wenyuanjiaoyu/student_homework_result/sort', data, 'POST').then(check_login);
 export const teacher_suggest = data => fetch('/wenyuanjiaoyu/student_homework_result/teacher_suggest', data, 'POST').then(check_login);
 export const reckon_result = data => fetch('/wenyuanjiaoyu/student_homework_result/reckon_result', data, 'POST').then(check_login);
+export const getResultHomeWorkStudentlist = data => fetch('/wenyuanjiaoyu/student_homework_result/getResultHomeWorkStudentlist', data, 'POST').then(check_login);
 export const submit_result = data => fetch('/wenyuanjiaoyu/question_student_result/submit_result', data, 'POST').then(check_login);
 
 

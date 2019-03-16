@@ -8,7 +8,7 @@
                     :fetch-suggestions="querySearchAsync"
                     placeholder="请输入班级名称"
                     @select="handleSelect"
-                    clearable="true"
+                    clearable
                     style="width: 250px;"
             ></el-autocomplete>
 
@@ -17,7 +17,16 @@
                     :fetch-suggestions="querySearchAsyncHomework"
                     placeholder="请输入作业名称"
                     @select="handleSelectHomework"
-                    clearable="true"
+                    clearable
+                    style="width: 250px;"
+            ></el-autocomplete>
+
+            <el-autocomplete
+                    v-model="studentname"
+                    :fetch-suggestions="querySearchAsyncStudent"
+                    placeholder="请输入学生姓名"
+                    @select="handleSelectStudent"
+                    clearable
                     style="width: 250px;"
             ></el-autocomplete>
 
@@ -33,6 +42,7 @@
                         {{scope.row.student.name}}
                     </template>
                 </el-table-column>
+                <el-table-column label="班级" prop="classinfo.classname"></el-table-column>
                 <el-table-column label="成绩" prop="total_score"></el-table-column>
                 <el-table-column label="星级" prop="star_2"></el-table-column>
                 <el-table-column label="作业完成率" prop="homework_complete_rate"></el-table-column>
@@ -162,7 +172,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {student_homework_result_list,student_homework_result_del,student_homework_result_verify,teacher_suggest, reckon_result, submit_result} from '@/api/getDatastudent_homework_result'
+    import {student_homework_result_list,student_homework_result_del,student_homework_result_verify,teacher_suggest, reckon_result, submit_result,getResultHomeWorkStudentlist} from '@/api/getDatastudent_homework_result'
     import {class_list} from '@/api/getDataEarth'
     import {homework_list} from '@/api/getDataHomework'
     export default {
@@ -186,11 +196,16 @@
 //                categories:[],
                 classname:'',
                 homeworkname:'',
+                studentname:'',
                 classinfo:{
                     value:''
                 },
                 homeworkinfo:{
                     value:''
+                },
+                studentinfo:{
+                    value:'',
+                    id:''
                 },
                 loadingBtn:-1,
                 current_result:{}
@@ -213,7 +228,7 @@
         },
         methods: {
             list() {
-                student_homework_result_list({page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.classinfo.homework_id}).then(function(res){
+                student_homework_result_list({page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.classinfo.homework_id,student_id:this.studentinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -344,6 +359,7 @@
             },
             handleSelect(item) {
                 this.classinfo = item;
+                //console.log(this.classinfo);
             },
 
             querySearchAsyncHomework(queryString, cb) {
@@ -366,6 +382,29 @@
             handleSelectHomework(item) {
                 this.homeworkinfo = item;
             },
+
+            querySearchAsyncStudent(queryString, cb) {
+                this.studentinfo = {};
+                var results = [];
+                //console.log(this.classinfo);
+                getResultHomeWorkStudentlist({student_name:queryString, classid:this.classinfo.classid,homework_id:this.homeworkinfo.id}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        results = res.data;
+                        results.forEach(function(val){
+                            val.value = val.name
+                        });
+                        cb(results);
+                    } else {
+                        cb([]);
+                    }
+                }.bind(this));
+
+
+            },
+            handleSelectStudent(item) {
+                this.studentinfo = item;
+            },
+
         },
     }
 </script>

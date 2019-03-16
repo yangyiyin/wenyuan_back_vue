@@ -5,21 +5,40 @@
         <div class="table_container" style="padding-bottom: 0">
 
             <div style="display: inline-block;width: 80%">
-                <el-select v-model="entity" placeholder="科目">
+
+                <el-select v-model="type" placeholder="类型" clearable>
                     <el-option
-                            v-for="item in [{label:'全部',value:0},{label:'语文',value:1},{label:'数学',value:2},{label:'英语',value:3}]"
+                            v-for="item in [{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4}]"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
                     </el-option>
                 </el-select>
 
-                <el-select v-model="type" placeholder="类型">
+                <el-select v-model="grade" placeholder="年级" clearable @change="get_knowledge_points()">
                     <el-option
-                            v-for="item in [{label:'全部',value:0},{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4}]"
+                            v-for="item in grades"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item">
+                    </el-option>
+                </el-select>
+
+                <el-select v-model="entity" placeholder="科目" clearable @change="get_knowledge_points()">
+                    <el-option
+                            v-for="item in [{label:'语文',value:1},{label:'数学',value:2},{label:'英语',value:3}]"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
+                    </el-option>
+                </el-select>
+
+                <el-select v-model="knowledge_point_ids" placeholder="知识点" multiple clearable>
+                    <el-option
+                            v-for="item in knowledge_points"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                     </el-option>
                 </el-select>
 
@@ -30,13 +49,12 @@
                         clearable>
                 </el-input>
 
-
-                <el-select v-model="grade" placeholder="年级" clearable>
+                <el-select v-model="useway_ids" placeholder="绝密等级" multiple clearable>
                     <el-option
-                            v-for="item in grades"
+                            v-for="item in [{label:'等级一',value:1},{label:'等级二',value:2},{label:'等级三',value:3},{label:'等级四',value:4}]"
                             :key="item.value"
                             :label="item.label"
-                            :value="item">
+                            :value="item.value">
                     </el-option>
                 </el-select>
 
@@ -208,6 +226,7 @@
 <script>
     import headTop from '../components/headTop'
     import {question_list,question_del,get_grades} from '@/api/getDataEarth'
+    import {knowledge_point_all_list} from '@/api/getDataknowledge_point'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -217,14 +236,16 @@
                 limit: 10,
                 count: 0,
                 currentPage: 1,
-                entity:0,
-                type:0,
+                entity:'',
+                type:'',
                 tag:'',
                 title:'',
                 grade:{},
                 grades:[],
                 hard_level:'',
-
+                useway_ids:[],
+                knowledge_point_ids:[],
+                knowledge_points:[],
                 dialogFormVisible:false,
                 dialogFormVisibleDaoru:false,
                 dialogFormVisibleDaochu:false,
@@ -249,6 +270,7 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
             vm.init_grades().then(function(){
+                vm.get_knowledge_points();
                 vm.list();
             })
 
@@ -274,7 +296,10 @@
                 }.bind(this))
             },
             list() {
-                question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,type:this.type,tag:this.tag,hard_level:this.hard_level,grade:this.grade}).then(function(res){
+                question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,
+                    type:this.type,tag:this.tag,hard_level:this.hard_level,grade:this.grade,useway_ids:this.useway_ids,
+                    knowledge_point_ids:this.knowledge_point_ids
+                }).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -318,7 +343,21 @@
                 }.bind(this))
 
             },
-
+            get_knowledge_points() {
+                this.knowledge_points = [];
+                this.knowledge_point_ids = [];
+                var group_subject = parseInt(this.entity) ? {id:this.entity} : '';
+                knowledge_point_all_list({group_subject:group_subject,group:this.grade}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.knowledge_points = res.data;
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+            }
 //            handleDaoru(row){
 //                this.dialogFormVisibleDaoru = true;
 //                this.current = row;

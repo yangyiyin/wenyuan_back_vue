@@ -51,18 +51,32 @@
                         :before-upload="beforeUpload"
                         :file-list="fileList">
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png/ppt/doc/xls文件，最多上传5个文件,且每个不超过3M</div>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png/ppt/doc/xls文件，最多上传5个文件,且每个不超过5M</div>
                 </el-upload>
 
             </div>
 
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>选择题目:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">选择题目:</span>
 
                 <el-button size="small" type="primary" @click="dialogFormVisibleQuestions = true;">选择</el-button>
                 <p style="display: inline-block">
-                    <span v-for="(item,index) in data.questions">{{item.title.substring(0,10)}}...</span>
+                    <!--<span v-for="(item,index) in data.questions">{{item.title.substring(0,10)}}...</span>-->
+                    <template v-for="(item,index) in data.questions">
+                        <el-popover
+                                placement="top"
+                                width="160"
+                                v-model="item.visible"
+                                style="margin-left: 5px;">
+                            <p>{{item.title}}</p>
+                            <div style="text-align: center; margin: 0">
+
+                                <el-button type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
+                            </div>
+                            <el-button slot="reference">{{item.title.substring(0,10)}}...</el-button>
+                        </el-popover>
+                    </template>
                 </p>
             </div>
 
@@ -84,12 +98,29 @@
                 </div>
             </template>
 
+
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>布置给班级:</span>
 
                 <el-button size="small" type="primary" @click="dialogFormVisibleClasses = true">选择</el-button>
                 <p style="display: inline-block">
-                    <span v-for="(item,index) in data.classes">{{item.classname}};</span>
+                    <!--<span v-for="(item,index) in data.classes">{{item.classname}};</span>-->
+
+                    <template v-for="(item,index) in data.classes">
+                        <el-popover
+                                placement="top"
+                                width="160"
+                                v-model="item.visible"
+                                style="margin-left: 5px;"
+                        >
+                                <div style="text-align: center; margin: 0">
+
+                                    <el-button type="danger" size="mini" @click="data.classes.splice(index, 1)">删除</el-button>
+                                </div>
+                                <el-button slot="reference">{{item.classname}}</el-button>
+                        </el-popover>
+                </template>
+
                 </p>
             </div>
 
@@ -227,6 +258,8 @@
                     author:[]
 
                 },
+                visible_question:false,
+                visible_class:false,
                 authors:[],
                 fullscreenLoading:false,
                 fileList:[],
@@ -357,7 +390,11 @@
             _submit(){
                 var error_msg = '';
 
+                if (!this.data.name) error_msg = '请填写作业标题';
+                if (!this.data.content) error_msg = '请填写学习内容';
                 if (this.data.response_type == 1 && !this.data.questions.length) error_msg = '请选择题目';
+                if (!this.data.classes.length) error_msg = '请选择班级';
+                if (!this.data.author.length) error_msg = '请选择录题者';
 
                 if (error_msg) {
                     this.$message({
@@ -398,14 +435,14 @@
             beforeUpload(file){
                 const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1)|| (file.name.indexOf('.ppt') != -1)|| (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
 
-                const isLt2M = file.size / 1024  < 1024 * 3;
+                const isLt2M = file.size / 1024  < 1024 * 5;
 
                 if (!isJPG) {
                     this.$message.error('只能上传jpg/png/ppt/doc/xls文件!');
                 }
 
                 if (!isLt2M) {
-                    this.$message.error('文件大小不能超过 3M!');
+                    this.$message.error('文件大小不能超过 5M!');
                 }
                 return  isJPG && isLt2M;
             },
