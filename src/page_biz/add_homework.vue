@@ -58,7 +58,7 @@
 
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">选择题目:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">选择题库题目:</span>
 
                 <el-button size="small" type="primary" @click="dialogFormVisibleQuestions = true;">选择</el-button>
                 <p style="display: inline-block">
@@ -90,12 +90,41 @@
                             placeholder="请输入内容"
                             v-model="data.content_extra">
                     </el-input>
+                    <span style="color: #999;font-size: 11px;">如:XX提高作业本第33页至第35页。表示线下练习等的作业</span>
                 </div>
 
                 <div class="search_item">
                     <span class="pre_info" style="font-size: 16px;font-weight: bolder">非题库作业总分:</span>
                     <el-input clearable placeholder="请输入总分" v-model="data.total_score_extra" style="width: 150px"></el-input>
+                    <span style="color: #999;font-size: 11px;">此总分作为批改作业时的非题库作业的总分</span>
                 </div>
+
+                <div class="search_item">
+                    <span class="pre_info" style="font-size: 16px;font-weight: bolder;">音频材料:</span>
+
+                    <el-upload
+                            style="display: inline-block;width: 500px;vertical-align: top"
+                            class="upload-demo"
+                            :action="upload_url"
+                            :on-remove="(file, fileList) => {return handleRemove(file, fileList, 'audio')}"
+                            multiple
+                            :limit="2"
+                            :on-exceed="(files, fileList) => {return handleExceed(files, fileList, 'audio')}"
+                            :on-success="(res, file, fileList) => {return handleSuccess(res, file, fileList, 'audio')}"
+                            :before-upload="(file) => {return beforeUpload(file, 'audio')}"
+                            :file-list="fileList_audio">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传mp3/wav文件，最多上传2个文件,且每个不超过8M</div>
+                    </el-upload>
+
+                </div>
+
+                <div class="search_item">
+                    <span class="pre_info" style="font-size: 16px;font-weight: bolder">学生是否需要上传录音:</span>
+                    <el-radio v-model="data.need_record_voice" label="1">是</el-radio>
+                    <el-radio v-model="data.need_record_voice" label="0">否</el-radio>
+                </div>
+
             </template>
 
 
@@ -249,13 +278,15 @@
                     limit_min:0,
                     content:'',
                     homework_downloads:'',
+                    homework_downloads_objs:'',
                     other_downloads:'',
                     teacher_name:'',
                     total_score_extra:'0',
                     content_extra:'',
                     questions:[],
                     classes:[],
-                    author:[]
+                    author:[],
+                    need_record_voice:'0'
 
                 },
                 visible_question:false,
@@ -263,6 +294,7 @@
                 authors:[],
                 fullscreenLoading:false,
                 fileList:[],
+                fileList_audio:[],
                 upload_url:this.$store.state.constant.upload_url_local,
                 dialogFormVisibleQuestions:false,
                 dialogFormVisibleClasses:false,
@@ -306,12 +338,15 @@
                     limit_min:0,
                     content:'',
                     homework_downloads:'',
+                    homework_downloads_objs:'',
                     other_downloads:'',
-                    homework_pic:[],
                     teacher_name:'',
+                    total_score_extra:'0',
+                    content_extra:'',
                     questions:[],
                     classes:[],
-                    author:[]
+                    author:[],
+                    need_record_voice:'0'
                 }
             },
             init_options(){
@@ -339,6 +374,7 @@
                         this.data = res.data.homework_data;
 //                        this.$set(this.data, 'questions', '123')
                         this.fileList = res.data.homework_data.fileList;
+                        this.fileList_audio = res.data.homework_data.fileList_audio;
                     } else {
                         this.$message({
                             message: res.msg,
@@ -432,62 +468,120 @@
                     this.loading = false;
                 }.bind(this));
             },
-            beforeUpload(file){
-                const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1)|| (file.name.indexOf('.ppt') != -1)|| (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
+            beforeUpload(file, ele){
 
-                const isLt2M = file.size / 1024  < 1024 * 5;
+                if (ele == 'audio') {
+                    const isJPG = (file.name.indexOf('.mp3') != -1) || (file.name.indexOf('.wav') != -1)
 
-                if (!isJPG) {
-                    this.$message.error('只能上传jpg/png/ppt/doc/xls文件!');
-                }
+                    const isLt2M = file.size / 1024  < 1024 * 8;
 
-                if (!isLt2M) {
-                    this.$message.error('文件大小不能超过 5M!');
-                }
-                return  isJPG && isLt2M;
-            },
-            handleRemove(file, fileList) {
-                //console.log(file, fileList);
-                this.data.other_downloads = [];
-                this.data.fileList = fileList;
-                fileList.forEach(function(val){
-                    var name_arr = val.name.split('.');
-                    var ext = name_arr[name_arr.length - 1];
-                    if (val.response.code == this.$store.state.constant.status_success && val.response.data) {
-                        this.data.other_downloads.push({
-                            url:val.response.data[0],
-                            name:val.name,
-                            ext:ext
-                        });
+                    if (!isJPG) {
+                        this.$message.error('只能上传mp3/wav文件!');
                     }
 
-                }.bind(this));
+                    if (!isLt2M) {
+                        this.$message.error('文件大小不能超过 8M!');
+                    }
+                    return  isJPG && isLt2M;
+                } else {
+                    const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1)|| (file.name.indexOf('.ppt') != -1)|| (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
+
+                    const isLt2M = file.size / 1024  < 1024 * 5;
+
+                    if (!isJPG) {
+                        this.$message.error('只能上传jpg/png/ppt/doc/xls文件!');
+                    }
+
+                    if (!isLt2M) {
+                        this.$message.error('文件大小不能超过 5M!');
+                    }
+                    return  isJPG && isLt2M;
+                }
+
+            },
+            handleRemove(file, fileList, ele) {
+                //console.log(file, fileList);
+                if (ele == 'audio') {
+                    this.data.homework_downloads_objs = [];
+                    this.data.fileList_audio = fileList;
+                    fileList.forEach(function(val){
+                        var name_arr = val.name.split('.');
+                        var ext = name_arr[name_arr.length - 1];
+                        if (val.response.code == this.$store.state.constant.status_success && val.response.data) {
+                            this.data.homework_downloads_objs.push({
+                                url:val.response.data[0],
+                                name:val.name,
+                                ext:ext
+                            });
+                        }
+
+                    }.bind(this));
+                } else {
+                    this.data.other_downloads = [];
+                    this.data.fileList = fileList;
+                    fileList.forEach(function(val){
+                        var name_arr = val.name.split('.');
+                        var ext = name_arr[name_arr.length - 1];
+                        if (val.response.code == this.$store.state.constant.status_success && val.response.data) {
+                            this.data.other_downloads.push({
+                                url:val.response.data[0],
+                                name:val.name,
+                                ext:ext
+                            });
+                        }
+
+                    }.bind(this));
+                }
 
             },
             handlePreview(file) {
                 //console.log(file);
             },
-            handleExceed(files, fileList) {
-                this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            handleExceed(files, fileList, ele) {
+                if (ele == 'audio') {
+                    this.$message.warning(`当前限制选择 2 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+                } else {
+                    this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+
+                }
             },
             beforeRemove(file, fileList) {
                 //return this.$confirm(`确定移除 ${ file.name }？`);
             },
-            handleSuccess(res, file, fileList) {
-                this.data.other_downloads = [];
-                this.data.fileList = fileList;
-                fileList.forEach(function(val){
-                    var name_arr = val.name.split('.');
-                    var ext = name_arr[name_arr.length - 1];
-                    if (val.response.code == this.$store.state.constant.status_success && val.response.data) {
-                        this.data.other_downloads.push({
-                            url:val.response.data[0],
-                            name:val.name,
-                            ext:ext
-                        });
-                    }
+            handleSuccess(res, file, fileList, ele) {
+                if (ele == 'audio') {
+                    this.data.homework_downloads_objs = [];
+                    this.data.fileList_audio = fileList;
+                    fileList.forEach(function(val){
+                        var name_arr = val.name.split('.');
+                        var ext = name_arr[name_arr.length - 1];
+                        if (val.response.code == this.$store.state.constant.status_success && val.response.data) {
+                            this.data.homework_downloads_objs.push({
+                                url:val.response.data[0],
+                                name:val.name,
+                                ext:ext
+                            });
+                        }
 
-                }.bind(this));
+                    }.bind(this));
+
+                } else {
+                    this.data.other_downloads = [];
+                    this.data.fileList = fileList;
+                    fileList.forEach(function(val){
+                        var name_arr = val.name.split('.');
+                        var ext = name_arr[name_arr.length - 1];
+                        if (val.response.code == this.$store.state.constant.status_success && val.response.data) {
+                            this.data.other_downloads.push({
+                                url:val.response.data[0],
+                                name:val.name,
+                                ext:ext
+                            });
+                        }
+
+                    }.bind(this));
+
+                }
 
                 this.fullscreenLoading = false
 

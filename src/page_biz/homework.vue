@@ -19,6 +19,14 @@
                     style="width: 100%">
                 <el-table-column label="作业标题" prop="name"></el-table-column>
                 <el-table-column label="作业形式" prop="response_type_desc"></el-table-column>
+                <el-table-column label="是否需要录音">
+
+                    <template slot-scope="scope">
+                        <span>
+                            {{scope.row.need_record_voice == 1 ? '是':'否'}}
+                        </span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="附件" >
                     <template slot-scope="scope">
                         <p v-for="(item) in scope.row.other_downloads">
@@ -131,7 +139,7 @@
                 this.list();
             },
             show_img(row){
-                this.$router.push({path:'show_img',query:{path:row.homework_downloads}});
+                this.$router.push({path:'show_img',query:{path:row.homework_downloads, mp3_path:row.homework_downloads_objs}});
             },
             goto_edit_homework(id) {
                 this.$router.push({path:'add_homework',query:{id:id}});

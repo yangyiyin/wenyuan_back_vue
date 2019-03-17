@@ -4,6 +4,9 @@
         <p v-for="(item, index) in path">
             <img :src="item.url"/>
         </p>
+        <p v-for="(item, index) in mp3_path">
+            <audio :src="item.url" controls="controls"></audio>
+        </p>
     </div>
 </template>
 
@@ -13,7 +16,8 @@
     export default {
         data(){
             return {
-                path:[]
+                path:[],
+                mp3_path:[]
             }
         },
         components: {
@@ -28,7 +32,8 @@
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
-                vm.path = to.query.path ? to.query.path : 0;
+                vm.path = to.query.path ? to.query.path : [];
+                vm.mp3_path = to.query.mp3_path ? to.query.mp3_path : [];
         })
         },
         methods: {
