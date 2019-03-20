@@ -42,6 +42,7 @@
                         {{scope.row.student.name}}
                     </template>
                 </el-table-column>
+                <el-table-column label="作业" prop="homework.name"></el-table-column>
                 <el-table-column label="班级" prop="classinfo.classname"></el-table-column>
                 <el-table-column label="成绩" prop="total_score"></el-table-column>
                 <el-table-column label="星级" prop="star_2"></el-table-column>
@@ -51,7 +52,12 @@
                     <template slot-scope="scope">
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
-                        <el-button size="mini" type="primary" @click="current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra" v-if="scope.row.homework.response_type == 2 && !scope.row.total_score">批改作业</el-button>
+                        <el-button
+                                size="mini" type="primary"
+                                @click="current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra"
+                                v-if="scope.row.homework.need_manual_check && !scope.row.total_score && scope.row.is_submit_offline == 1">
+                            批改作业
+                        </el-button>
                         <el-button size="mini" type="primary" v-if="!scope.row.teacher_suggest" @click="current=scope.row;showSuggestVisible=true">评价</el-button>
                         <el-button size="mini" v-if="scope.row.teacher_suggest" @click="current=scope.row;showSuggestVisible=true">评价</el-button>
                         <el-button size="mini" @click="current=scope.row;showResultVisible=true">查看成绩</el-button>
@@ -125,10 +131,11 @@
 
             <div style="height:85%;padding:10px 0;overflow-y: auto;width: 20%;float: right;margin-right: 5%;background: #fff;border-radius: 10px;">
                  <el-tag>单选题</el-tag>
-                <p v-for="(question, index) in current.homework_question" >
-                    <template v-if="current.question_map[question.qid] && current.question_map[question.qid].type == 1">
-                        <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>3分</span></p>
+                <p v-for="(question, index) in current.homework_question2" >
+                    <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 1">
+                        <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
                         <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer : ''}}</p>
+                        <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
                     </template>
 
 
@@ -136,37 +143,58 @@
 <div style="height: 30px;border-bottom: 1px solid #999"></div>
 
                 <el-tag>判断题</el-tag>
-                <p v-for="(question, index) in current.homework_question" >
-                    <template v-if="current.question_map[question.qid] && current.question_map[question.qid].type == 2">
-<p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>3分</span></p>
+                <p v-for="(question, index) in current.homework_question2" >
+                    <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 2">
+<p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer : ''}}</p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+
                     </template>
                 </p>
 <div style="height: 30px;border-bottom: 1px solid #999"></div>
                 <el-tag>填空题</el-tag>
-                <p v-for="(question, index) in current.homework_question" >
-                    <template v-if="current.question_map[question.qid] && current.question_map[question.qid].type == 3">
-<p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>3分</span></p>
+                <p v-for="(question, index) in current.homework_question2" >
+                    <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 3">
+<p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案:{{current.question_answer_map[question.qid] ? JSON.parse(current.question_answer_map[question.qid].answer) : ''}}</p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+
                     </template>
                 </p>
 <div style="height: 30px;border-bottom: 1px solid #999"></div>
                 <el-tag>简答题</el-tag>
-                <p v-for="(question, index) in current.homework_question" >
-                    <template v-if="current.question_map[question.qid] && current.question_map[question.qid].type == 4">
-<p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>3分</span></p>
+                <p v-for="(question, index) in current.homework_question2" >
+                    <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 4">
+<p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="current.question_answer_map[question.qid] ? '答案:'+current.question_answer_map[question.qid].answer : '答案:'"></p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+
                     </template>
                 </p>
 <div style="height: 30px;border-bottom: 1px solid #999"></div>
+                <el-tag>其他题</el-tag>
+                <p v-for="(question, index) in current.homework_question2" >
+                    <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 5">
+                <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
+                <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="current.question_answer_map[question.qid] ? '答案:'+current.question_answer_map[question.qid].answer : '答案:'"></p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+
+                </template>
+                </p>
+                <div style="height: 30px;border-bottom: 1px solid #999"></div>
+
 <template v-if="result_other.total_score > 0">
     <el-tag>非题库题</el-tag>
     <p>【题目id:0】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="result_other.score"></el-input><span>{{result_other.total_score}}分</span></p>
 
 
 </template>
+<div style="height: 30px;border-bottom: 1px solid #999"></div>
+<el-tag>教师点拨</el-tag>
+<p><el-input style="width: 90%;margin: 5px;" type="textarea" placeholder="输入内容" v-model="answer_comment"></el-input></p>
 
-            </div>
+
+</div>
             <el-button type="success" style="position: fixed;bottom: 20px;right: 18%;" @click="submit_result">确 认</el-button>
             <el-button type="danger" style="position: fixed;bottom: 20px;right: 6%;" @click="showSetResultVisible = false">关 闭</el-button>
 
@@ -195,7 +223,7 @@
                     score:0,
                     total_score:0
                 },
-//                remark:'',
+                answer_comment:'',
 //                choose_categories:[],
 //                categories:[],
                 classname:'',
@@ -232,7 +260,7 @@
         },
         methods: {
             list() {
-                student_homework_result_list({page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.classinfo.homework_id,student_id:this.studentinfo.id}).then(function(res){
+                student_homework_result_list({page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -284,7 +312,7 @@
 
             },
             submit_result() {
-                submit_result({result:this.current.homework_question, result_other:this.result_other,from_type:1, main_id:this.current.homework_id,sub_id:this.current.classid,student_id:this.current.student_id}).then(function(res){
+                submit_result({manual_check:1,answer_comment:this.answer_comment,result:this.current.homework_question2, result_other:this.result_other,from_type:1, main_id:this.current.homework_id,sub_id:this.current.classid,student_id:this.current.student_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.reckon_result();
                     } else {
@@ -299,7 +327,7 @@
             },
 
             reckon_result() {
-                reckon_result({homework_id:this.current.homework_id,classid:this.current.classid,student_id:this.current.student_id}).then(function(res){
+                reckon_result({manual_check:1,homework_id:this.current.homework_id,classid:this.current.classid,student_id:this.current.student_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.showSetResultVisible = false;
                         this.list();

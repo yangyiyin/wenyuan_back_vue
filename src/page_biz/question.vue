@@ -8,7 +8,7 @@
 
                 <el-select v-model="type" placeholder="类型" clearable>
                     <el-option
-                            v-for="item in [{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4}]"
+                            v-for="item in [{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4},{label:'其他题',value:5}]"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -128,7 +128,7 @@
                                 <el-tag size="mini" v-for="name in props.row.question_useway_names">{{ name}}</el-tag>
                             </el-form-item>
                             <el-form-item label="年级" >
-                                <span>{{ props.row.grade}}</span>
+                                <span v-for="(item) in props.row.grade">{{item.label}};</span>
                             </el-form-item>
                         </el-form>
                         <el-form label-position="left" inline class="demo-table-expand">

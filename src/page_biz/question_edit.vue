@@ -20,6 +20,7 @@
                     <el-radio label="2" border >判断题</el-radio>
                     <el-radio label="3" border >填空题</el-radio>
                     <el-radio label="4" border >简答题</el-radio>
+                    <el-radio label="5" border >其他题</el-radio>
                 </el-radio-group>
             </div>
 
@@ -126,12 +127,12 @@
 
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>年级:</span>
-                <el-select v-model="question.grade" placeholder="请选择年级">
+                <el-select v-model="question.grade" placeholder="请选择年级" multiple value-key="value">
                     <el-option
                             v-for="item in grades"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value">
+                            :value="item">
                     </el-option>
                 </el-select>
             </div>
@@ -195,7 +196,7 @@
 
             </div>
 
-            <div v-show="question.type==4" class="search_item">
+            <div v-show="question.type==4 || question.type==5" class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>答案:</span>
                 <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor2" :content="question.answer" :options = "editorOption" @change="onEditorChange($event,'answer')"></quill-editor>
             </div>
@@ -259,7 +260,7 @@
                     knowledge_point:[],
                     hard_level:1,
                     year:'2018',
-                    grade:1,
+                    grade:[],
                     author:[],
                     fill_num:'1'
 
@@ -514,7 +515,7 @@
                     knowledge_point:[],
                     hard_level:1,
                     year:'2018',
-                    grade:1,
+                    grade:[],
                     author:[],
                     fill_num:'1'
                 }
@@ -680,7 +681,7 @@
     }
     .pre_info{
         display:inline-block ;
-        width: 120px;
+        width: 150px;
     }
     .option{
         margin-bottom: 10px;

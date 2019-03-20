@@ -5,24 +5,25 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder"><i style="color:red;">*</i>作业标题:</span>
+                <span class="pre_info" style="font-size: 16px;width: 150px;font-weight: bolder"><i style="color:red;">*</i>标题:</span>
                 <el-input clearable placeholder="请输入名称" v-model="data.name" style="width: 350px"></el-input>
+                <span class="el-upload__tip">如:第xx次英语堂课程学习</span>
             </div>
 
-            <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder"><i style="color:red;">*</i>作业形式:</span>
+            <div class="search_item" style="display: none">
+                <span class="pre_info" style="font-size: 16px;width: 150px;font-weight: bolder"><i style="color:red;">*</i>作业形式:</span>
                 <el-radio-group v-model="data.response_type" size="small">
                     <el-radio label="2" border >线下</el-radio>
                     <el-radio label="1" border>线上</el-radio>
                 </el-radio-group>
             </div>
 
-            <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder">建议完成时间:</span>
+            <div class="search_item" style="display: none">
+                <span class="pre_info" style="font-size: 16px;width: 150px;font-weight: bolder">建议完成时间:</span>
                 <el-input clearable placeholder="60" type="number" v-model="data.limit_min" style="width: 150px"></el-input>分钟
             </div>
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>学习内容:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;width: 150px;"><i style="color:red;">*</i>学习内容:</span>
                 <el-input
                         style="width: 450px;vertical-align: top"
                         type="textarea"
@@ -35,7 +36,7 @@
 
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">附件资料:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;width: 150px;">附件资料:</span>
 
                 <el-upload
                         style="display: inline-block;width: 500px;vertical-align: top"
@@ -51,85 +52,135 @@
                         :before-upload="beforeUpload"
                         :file-list="fileList">
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png/ppt/doc/xls文件，最多上传5个文件,且每个不超过5M</div>
+                    <span style="margin-left: 10px;" slot="tip" class="el-upload__tip">只限上传jpg/png/ppt/doc/xls文件，最多上传5个文件,且每个不超过5M</span>
                 </el-upload>
 
             </div>
 
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">选择题库题目:</span>
-
-                <el-button size="small" type="primary" @click="dialogFormVisibleQuestions = true;">选择</el-button>
-                <p style="display: inline-block">
-                    <!--<span v-for="(item,index) in data.questions">{{item.title.substring(0,10)}}...</span>-->
-                    <template v-for="(item,index) in data.questions">
-                        <el-popover
-                                placement="top"
-                                width="160"
-                                v-model="item.visible"
-                                style="margin-left: 5px;">
-                            <p>{{item.title}}</p>
-                            <div style="text-align: center; margin: 0">
-
-                                <el-button type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
-                            </div>
-                            <el-button slot="reference">{{item.title.substring(0,10)}}...</el-button>
-                        </el-popover>
-                    </template>
-                </p>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">课后作业:</span>
+                <el-input
+                        style="width: 450px;vertical-align: top"
+                        type="textarea"
+                        rows="5"
+                        placeholder="作业说明"
+                        v-model="data.content_extra">
+                </el-input>
+                <span style="color: #999;font-size: 11px;">如:XX提高作业本第33页至第35页。表示线下练习等的作业</span>
             </div>
 
-            <template v-if="data.response_type == 2">
-                <div class="search_item">
-                    <span class="pre_info" style="font-size: 16px;font-weight: bolder;">非题库作业说明:</span>
-                    <el-input
-                            style="width: 450px;vertical-align: top"
-                            type="textarea"
-                            rows="5"
-                            placeholder="请输入内容"
-                            v-model="data.content_extra">
-                    </el-input>
-                    <span style="color: #999;font-size: 11px;">如:XX提高作业本第33页至第35页。表示线下练习等的作业</span>
+            <div  style="border: 1px dashed #999;margin: 10px;padding-bottom: 10px;margin-left: 150px;">
+                <el-tag type="success" style="font-size: 16px;">线上作业(在线答,自动计算成绩):</el-tag>
+
+                <div style="margin-left: 10px;">
+
+                    <div class="search_item">
+                        <span style="font-size: 16px;">选择题库题目:</span>
+
+                        <el-button size="small" type="primary" @click="dialogFormVisibleQuestions = true;">选择</el-button>
+                        <p style="display: inline-block">
+                            <!--<span v-for="(item,index) in data.questions">{{item.title.substring(0,10)}}...</span>-->
+                            <template v-for="(item,index) in data.questions">
+                                <el-popover
+                                        placement="top"
+                                        width="160"
+                                        v-model="item.visible"
+                                        style="margin-left: 5px;">
+                        <p>{{item.title}}</p>
+                        <div style="text-align: center; margin: 0">
+
+                            <el-button type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
+                        </div>
+                        <el-button slot="reference">{{item.title.substring(0,10)}}...</el-button>
+                        </el-popover>
+                </template>
+                </p>
+                </div>
+                </div>
+            </div>
+
+            <div  style="border: 1px dashed #999;margin: 10px;padding-bottom: 10px;margin-left: 150px;">
+                <el-tag type="success" style="font-size: 16px;">线下作业(可以包括题库题目,书本题目):</el-tag>
+
+                <div style="margin-left: 10px;">
+                    <div class="search_item">
+                        <span style="font-size: 16px;">选择题库题目:</span>
+
+                        <el-button size="small" type="primary" @click="dialogFormVisibleQuestions2 = true;">选择</el-button>
+                        <span style="margin-left: 10px;" class="el-upload__tip">选择的题目将自动合成图片供学生下载</span>
+                        <p style="display: inline-block">
+                            <!--<span v-for="(item,index) in data.questions">{{item.title.substring(0,10)}}...</span>-->
+                            <template v-for="(item,index) in data.questions2">
+                                <el-popover
+                                        placement="top"
+                                        width="160"
+                                        v-model="item.visible"
+                                        style="margin-left: 5px;">
+                                    <p>{{item.title}}</p>
+                                    <div style="text-align: center; margin: 0">
+
+                                        <el-button type="danger" size="mini" @click="data.questions2.splice(index, 1)">删除</el-button>
+                                    </div>
+                                    <el-button slot="reference">{{item.title.substring(0,10)}}...</el-button>
+                                </el-popover>
+                            </template>
+                        </p>
+                    </div>
+
+
+                    <div class="search_item">
+                        <span class="pre_info" style="font-size: 16px;font-weight: bolder">额外分:</span>
+                        <el-input clearable placeholder="请输入总分" v-model="data.total_score_extra" style="width: 150px"></el-input>
+                        <span style="color: #999;font-size: 11px;">此总分作为批改作业时的非题库作业的总分,<span style="color: red">如果有非题库作业(书本作业等),请务必输入此分数</span></span>
+                    </div>
+
+                    <div class="search_item">
+                        <span class="pre_info" style="font-size: 16px;font-weight: bolder;">音频材料:</span>
+
+                        <el-upload
+                                style="display: inline-block;width: 500px;vertical-align: top"
+                                class="upload-demo"
+                                :action="upload_url"
+                                :on-remove="(file, fileList) => {return handleRemove(file, fileList, 'audio')}"
+                                multiple
+                                :limit="2"
+                                :on-exceed="(files, fileList) => {return handleExceed(files, fileList, 'audio')}"
+                                :on-success="(res, file, fileList) => {return handleSuccess(res, file, fileList, 'audio')}"
+                                :before-upload="(file) => {return beforeUpload(file, 'audio')}"
+                                :file-list="fileList_audio">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传mp3/wav文件，最多上传2个文件,且每个不超过8M</div>
+                        </el-upload>
+
+                    </div>
+
+                    <div class="search_item">
+                        <span class="pre_info" style="font-size: 16px;font-weight: bolder">学生是否需要上传图片:</span>
+                        <el-radio @change="change_need_manual_check" v-model="data.need_upload_pic" label="1">是</el-radio>
+                        <el-radio @change="change_need_manual_check" v-model="data.need_upload_pic" label="0">否</el-radio>
+                    </div>
+
+                    <div class="search_item">
+                        <span class="pre_info" style="font-size: 16px;font-weight: bolder">学生是否需要上传录音:</span>
+                        <el-radio @change="change_need_manual_check" v-model="data.need_record_voice" label="1">是</el-radio>
+                        <el-radio @change="change_need_manual_check" v-model="data.need_record_voice" label="0">否</el-radio>
+                    </div>
+
+                    <div class="search_item">
+                        <span class="pre_info" style="font-size: 16px;font-weight: bolder">是否需要人工批阅:</span>
+                        <el-radio disabled v-model="data.need_manual_check" label="1">是</el-radio>
+                        <el-radio disabled v-model="data.need_manual_check" label="0">否</el-radio>
+                    </div>
+
                 </div>
 
-                <div class="search_item">
-                    <span class="pre_info" style="font-size: 16px;font-weight: bolder">非题库作业总分:</span>
-                    <el-input clearable placeholder="请输入总分" v-model="data.total_score_extra" style="width: 150px"></el-input>
-                    <span style="color: #999;font-size: 11px;">此总分作为批改作业时的非题库作业的总分</span>
-                </div>
 
-                <div class="search_item">
-                    <span class="pre_info" style="font-size: 16px;font-weight: bolder;">音频材料:</span>
-
-                    <el-upload
-                            style="display: inline-block;width: 500px;vertical-align: top"
-                            class="upload-demo"
-                            :action="upload_url"
-                            :on-remove="(file, fileList) => {return handleRemove(file, fileList, 'audio')}"
-                            multiple
-                            :limit="2"
-                            :on-exceed="(files, fileList) => {return handleExceed(files, fileList, 'audio')}"
-                            :on-success="(res, file, fileList) => {return handleSuccess(res, file, fileList, 'audio')}"
-                            :before-upload="(file) => {return beforeUpload(file, 'audio')}"
-                            :file-list="fileList_audio">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传mp3/wav文件，最多上传2个文件,且每个不超过8M</div>
-                    </el-upload>
-
-                </div>
-
-                <div class="search_item">
-                    <span class="pre_info" style="font-size: 16px;font-weight: bolder">学生是否需要上传录音:</span>
-                    <el-radio v-model="data.need_record_voice" label="1">是</el-radio>
-                    <el-radio v-model="data.need_record_voice" label="0">否</el-radio>
-                </div>
-
-            </template>
+            </div>
 
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>布置给班级:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>课程班级:</span>
 
                 <el-button size="small" type="primary" @click="dialogFormVisibleClasses = true">选择</el-button>
                 <p style="display: inline-block">
@@ -159,7 +210,7 @@
             <!--</div>-->
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>布置老师:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>课程老师:</span>
                 <el-select v-model="data.author" multiple value-key="id" placeholder="请选择">
                     <el-option
                             v-for="item in authors"
@@ -183,10 +234,19 @@
             </p>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleQuestions = false">关 闭</el-button>
-
-
             </div>
         </el-dialog>
+
+
+    <el-dialog title="题库" :visible.sync="dialogFormVisibleQuestions2" width="80%">
+
+        <p>
+            <questions v-if="dialogFormVisibleQuestions2" :checked="data.questions2" v-on:SelectionChange="SelectionChangeQuestions2"></questions>
+        </p>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisibleQuestions2 = false">关 闭</el-button>
+        </div>
+    </el-dialog>
 
         <el-dialog title="班级" :visible.sync="dialogFormVisibleClasses" width="80%">
 
@@ -200,60 +260,65 @@
             </div>
         </el-dialog>
         <canvas id="myCanvas" width="650" height="900" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
+<!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
-        <div ref="questions_paper" class="ql-editor" style="position: absolute;z-index:-1;top:-999999px;height:auto;width:650px;background: #fff">
-            <div  style="border-bottom: 1px solid #ddd">
-                <template v-for="(item, index) in data.questions">
-                    <template v-if="item.type==1">
+        <div  class="ql-editor" style="position: absolute;z-index:-1;top:-999999px;height:auto;background: #fff;font-size:20px;">
+            <div ref="questions_paper" style="border-bottom: 1px solid #ddd;width:650px;white-space:normal">
 
-                        <div style="height:180px;line-height: 15px;overflow: hidden;position: relative">
-                            <p style="font-weight: bolder">(单选题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
-                            <p v-html="item.question_content.content" ></p>
-                            <p v-for="(option) in item.question_answer.answer_options" style="'position:absolute;top: '+(50+20*index)+'px;'">
-                                <span>{{option.label}}.{{option.text}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            </p>
-                        </div>
+                <template v-for="(item, index) in data.questions2">
 
-                    </template>
+                    <div v-if="item.type==1" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-weight: bolder">(单选题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                        <p v-html="item.question_content.content" ></p>
+                        <p v-for="(option) in item.question_answer.answer_options" style="'position:absolute;top: '+(50+20*index)+'px;'">
+                            <span>{{option.label}}.{{option.text}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </p>
+                    </div>
+
                 </template>
-                <template v-for="(item, index) in data.questions">
-                    <template v-if="item.type==2">
-
-                        <div style="height:180px;line-height: 15px;overflow: hidden;position: relative">
-                            <p style="font-weight: bolder">(判断题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                <template v-for="(item, index) in data.questions2">
 
 
-                            <p v-html="item.question_content.content" ></p>
+                    <div  v-if="item.type==2" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-weight: bolder">(判断题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
-                            <p  v-for="(option2,index) in item.question_answer.answer_options2" :style="'position:absolute;top: '+(50+20*index)+'px;'">
-                                <span>{{option2.label}}.{{option2.text}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            </p>
-                        </div>
 
-                    </template>
+                        <p v-html="item.question_content.content" ></p>
+
+                        <p  v-for="(option2,index) in item.question_answer.answer_options2" :style="'position:absolute;top: '+(50+20*index)+'px;'">
+                            <span>{{option2.label}}.{{option2.text}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </p>
+                    </div>
+
                 </template>
-                <template v-for="(item, index) in data.questions">
-                    <template v-if="item.type==3">
-                        <div style="height:180px;line-height: 15px;overflow: hidden">
-                            <p v-if="item.type==3"  style="font-weight: bolder">(填空题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
-                            <p v-html="item.question_content.content"></p>
+                <template v-for="(item, index) in data.questions2">
+                    <div v-if="item.type==3" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
+                        <p v-if="item.type==3"  style="font-weight: bolder">(填空题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                        <p v-html="item.question_content.content"></p>
 
-                        </div>
-                    </template>
+                    </div>
                 </template>
-                <template v-for="(item, index) in data.questions">
-                    <template v-if="item.type==4">
+                <template v-for="(item, index) in data.questions2">
 
-
-                        <div style="height:180px;line-height: 15px;overflow: hidden">
+                        <div v-if="item.type==4" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
                             <p style="font-weight: bolder">(简答题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
                             <p v-html="item.question_content.content"></p>
 
                         </div>
 
-                    </template>
                 </template>
+
+                <template v-for="(item, index) in data.questions2">
+
+                        <div v-if="item.type==5" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
+                            <p style="font-weight: bolder">(其他题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+
+                            <p v-html="item.question_content.content"></p>
+
+                        </div>
+                </template>
+
             </div>
         </div>
     </div>
@@ -284,9 +349,12 @@
                     total_score_extra:'0',
                     content_extra:'',
                     questions:[],
+                    questions2:[],
                     classes:[],
                     author:[],
-                    need_record_voice:'0'
+                    need_record_voice:'0',
+                    need_upload_pic:'0',
+                    need_manual_check:'0',
 
                 },
                 visible_question:false,
@@ -297,6 +365,7 @@
                 fileList_audio:[],
                 upload_url:this.$store.state.constant.upload_url_local,
                 dialogFormVisibleQuestions:false,
+                dialogFormVisibleQuestions2:false,
                 dialogFormVisibleClasses:false,
             }
 
@@ -344,9 +413,12 @@
                     total_score_extra:'0',
                     content_extra:'',
                     questions:[],
+                    questions2:[],
                     classes:[],
                     author:[],
-                    need_record_voice:'0'
+                    need_record_voice:'0',
+                    need_upload_pic:'0',
+                    need_manual_check:'0',
                 }
             },
             init_options(){
@@ -386,8 +458,8 @@
             },
             submit: function () {
 
-                if(this.data.response_type == 2) {//线下形式,生成图片
-                    var total_height = this.data.questions.length * 180;
+                if(this.data.questions2 && this.data.questions2.length) {//线下形式,生成图片
+                    var total_height = this.data.questions2.length * 180;
                     if (total_height > 0) {
                         html2canvas(this.$refs.questions_paper, {useCORS:true}).then(function(canvas) {
 
@@ -410,8 +482,6 @@
                                 }
                             }
 
-                            //this.data.homework_pic = canvas.toDataURL();
-                            //return;
                             this._submit();
 
                         }.bind(this));
@@ -428,9 +498,9 @@
 
                 if (!this.data.name) error_msg = '请填写作业标题';
                 if (!this.data.content) error_msg = '请填写学习内容';
-                if (this.data.response_type == 1 && !this.data.questions.length) error_msg = '请选择题目';
+//                if (this.data.response_type == 1 && !this.data.questions.length) error_msg = '请选择题目';
                 if (!this.data.classes.length) error_msg = '请选择班级';
-                if (!this.data.author.length) error_msg = '请选择录题者';
+                if (!this.data.author.length) error_msg = '请选择老师';
 
                 if (error_msg) {
                     this.$message({
@@ -589,8 +659,15 @@
             SelectionChange(multipleSelectionAll){
                 this.data.questions = multipleSelectionAll;
             },
+            SelectionChangeQuestions2(multipleSelectionAll){
+                this.data.questions2 = multipleSelectionAll;
+            },
             SelectionChangeClass(multipleSelectionAll){
                 this.data.classes = multipleSelectionAll;
+            },
+
+            change_need_manual_check(){
+                this.data.need_manual_check = (this.data.need_record_voice == 1) ? this.data.need_record_voice : this.data.need_upload_pic;
             }
 
         }
@@ -603,6 +680,10 @@
 
         margin-top: 10px;
 
+    }
+    .pre_info{
+        width: 150px;
+        display:inline-block ;
     }
 
 </style>

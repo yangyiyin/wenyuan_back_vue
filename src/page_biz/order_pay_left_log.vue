@@ -41,6 +41,7 @@
 
                 <el-table-column label="订单编号" prop="order_no"></el-table-column>
                 <el-table-column label="余款收账金额" prop="remark"></el-table-column>
+                <el-table-column label="备忘" prop="bak"></el-table-column>
                 <el-table-column label="操作员" prop="opt_name"></el-table-column>
                 <el-table-column label="时间" prop="create_time" width="180"></el-table-column>
 

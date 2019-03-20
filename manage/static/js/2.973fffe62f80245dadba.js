@@ -1080,7 +1080,7 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
                 knowledge_point: [],
                 hard_level: 1,
                 year: '2018',
-                grade: 1,
+                grade: [],
                 author: [],
                 fill_num: '1'
 
@@ -1314,7 +1314,7 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
                 knowledge_point: [],
                 hard_level: 1,
                 year: '2018',
-                grade: 1,
+                grade: [],
                 author: [],
                 fill_num: '1'
             };
@@ -1446,7 +1446,7 @@ exports = module.exports = __webpack_require__(118)(false);
 
 
 // module
-exports.push([module.i, ".allcover{position:absolute;top:0;right:0}.ctt{left:50%;transform:translate(-50%,-50%)}.ctt,.tb{position:absolute;top:50%}.tb{transform:translateY(-50%)}.lr{position:absolute;left:50%;transform:translateX(-50%)}.search_item{margin-top:10px}.avatar-uploader .el-upload{border:1px dashed #d9d9d9;border-radius:6px;cursor:pointer;position:relative;overflow:hidden}.avatar-uploader .el-upload:hover{border-color:#409eff}.avatar-uploader-icon{font-size:28px;color:#8c939d;width:200px;height:100px;line-height:100px;text-align:center}.avatar{width:200px;height:100px;display:block}.ql-editor{min-height:100px}.pre_info{display:inline-block;width:120px}.option{margin-bottom:10px}", ""]);
+exports.push([module.i, ".allcover{position:absolute;top:0;right:0}.ctt{left:50%;transform:translate(-50%,-50%)}.ctt,.tb{position:absolute;top:50%}.tb{transform:translateY(-50%)}.lr{position:absolute;left:50%;transform:translateX(-50%)}.search_item{margin-top:10px}.avatar-uploader .el-upload{border:1px dashed #d9d9d9;border-radius:6px;cursor:pointer;position:relative;overflow:hidden}.avatar-uploader .el-upload:hover{border-color:#409eff}.avatar-uploader-icon{font-size:28px;color:#8c939d;width:200px;height:100px;line-height:100px;text-align:center}.avatar{width:200px;height:100px;display:block}.ql-editor{min-height:100px}.pre_info{display:inline-block;width:150px}.option{margin-bottom:10px}", ""]);
 
 // exports
 
@@ -1550,7 +1550,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "label": "4",
       "border": ""
     }
-  }, [_vm._v("简答题")])], 1)], 1), _vm._v(" "), _c('div', {
+  }, [_vm._v("简答题")]), _vm._v(" "), _c('el-radio', {
+    attrs: {
+      "label": "5",
+      "border": ""
+    }
+  }, [_vm._v("其他题")])], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "search_item"
   }, [_vm._m(2), _vm._v(" "), _c('quill-editor', {
     ref: "myQuillEditor1",
@@ -1803,7 +1808,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "search_item"
   }, [_vm._m(8), _vm._v(" "), _c('el-select', {
     attrs: {
-      "placeholder": "请选择年级"
+      "placeholder": "请选择年级",
+      "multiple": "",
+      "value-key": "value"
     },
     model: {
       value: (_vm.question.grade),
@@ -1817,7 +1824,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       key: item.value,
       attrs: {
         "label": item.label,
-        "value": item.value
+        "value": item
       }
     })
   }))], 1), _vm._v(" "), (_vm.question.type == 1) ? _c('div', {
@@ -2017,8 +2024,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: (_vm.question.type == 4),
-      expression: "question.type==4"
+      value: (_vm.question.type == 4 || _vm.question.type == 5),
+      expression: "question.type==4 || question.type==5"
     }],
     staticClass: "search_item"
   }, [_vm._m(12), _vm._v(" "), _c('quill-editor', {

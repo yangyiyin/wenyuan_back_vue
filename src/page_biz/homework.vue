@@ -18,8 +18,16 @@
                     :data="tableData"
                     style="width: 100%">
                 <el-table-column label="作业标题" prop="name"></el-table-column>
-                <el-table-column label="作业形式" prop="response_type_desc"></el-table-column>
-                <el-table-column label="是否需要录音">
+                <!--<el-table-column label="作业形式" prop="response_type_desc"></el-table-column>-->
+                <el-table-column label="是否需要上传图片">
+
+                    <template slot-scope="scope">
+                        <span>
+                            {{scope.row.need_upload_pic == 1 ? '是':'否'}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="是否需要上传录音">
 
                     <template slot-scope="scope">
                         <span>
@@ -27,14 +35,30 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="附件" >
+                <el-table-column label="是否需要人工批阅">
+
                     <template slot-scope="scope">
-                        <p v-for="(item) in scope.row.other_downloads">
-                            {{item.name}}
-                        </p>
+                        <span>
+                            {{scope.row.need_manual_check == 1 ? '是':'否'}}
+                        </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="布置老师">
+                <!--<el-table-column label="附件" >-->
+                    <!--<template slot-scope="scope">-->
+                        <!--<p v-for="(item) in scope.row.other_downloads">-->
+                            <!--{{item.name}}-->
+                        <!--</p>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
+                <el-table-column label="课程班级">
+                    <template slot-scope="scope">
+                        <span v-for="(item) in scope.row.classes">
+                            {{item.classname}};
+                        </span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="课程老师">
                     <template slot-scope="scope">
                         <span v-for="(item) in scope.row.teacher_name">
                             {{item.show_name}};
@@ -47,6 +71,10 @@
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.response_type == 2" size="mini" @click="show_img(scope.row)">预览作业</el-button>
                         <el-button size="mini" @click="goto_edit_homework(scope.row.id)">编辑</el-button>
+
+                        <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
+                        <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
+
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
