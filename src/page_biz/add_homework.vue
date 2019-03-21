@@ -150,7 +150,7 @@
                                 :before-upload="(file) => {return beforeUpload(file, 'audio')}"
                                 :file-list="fileList_audio">
                             <el-button size="small" type="primary">点击上传</el-button>
-                            <div slot="tip" class="el-upload__tip">只能上传mp3/wav文件，最多上传2个文件,且每个不超过8M</div>
+                            <div slot="tip" class="el-upload__tip">只能上传mp3/wav/m4a/aac文件，最多上传2个文件,且每个不超过8M</div>
                         </el-upload>
 
                     </div>
@@ -541,12 +541,12 @@
             beforeUpload(file, ele){
 
                 if (ele == 'audio') {
-                    const isJPG = (file.name.indexOf('.mp3') != -1) || (file.name.indexOf('.wav') != -1)
+                    const isJPG = (file.name.indexOf('.mp3') != -1) || (file.name.indexOf('.wav') != -1) || (file.name.indexOf('.m4a') != -1) || (file.name.indexOf('.aac') != -1)
 
                     const isLt2M = file.size / 1024  < 1024 * 8;
 
                     if (!isJPG) {
-                        this.$message.error('只能上传mp3/wav文件!');
+                        this.$message.error('只能上传mp3/wav/m4a/aac文件!');
                     }
 
                     if (!isLt2M) {
@@ -554,7 +554,7 @@
                     }
                     return  isJPG && isLt2M;
                 } else {
-                    const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1)|| (file.name.indexOf('.ppt') != -1)|| (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
+                    const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1) || (file.name.indexOf('.ppt') != -1) || (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
 
                     const isLt2M = file.size / 1024  < 1024 * 5;
 
