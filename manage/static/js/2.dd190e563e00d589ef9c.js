@@ -1082,15 +1082,17 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
                 year: '2018',
                 grade: [],
                 author: [],
-                fill_num: '1'
+                fill_num: '1',
+                knowledge_group_subject: { id: 1, name: '语文' },
+                knowledge_group: { id: 1, name: '一年级' }
 
             },
             knowledge_points: [],
             labels: [],
             authors: [],
-            group: { id: 1, name: '一年级' },
+
             groups: [],
-            group_subject: { id: 1, name: '语文' },
+
             groups_subject: [],
             years: [],
             grades: [],
@@ -1193,7 +1195,7 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
         init_options: function init_options() {
             return new __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
                 this.loading_info = true;
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["a" /* knowledge_point_all_list */])({ group: this.group, group_subject: this.group_subject }).then(function (res) {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["a" /* knowledge_point_all_list */])({ group: this.question.knowledge_group, group_subject: this.question.knowledge_group_subject }).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.knowledge_points = res.data;
                         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__api_getDatalabel__["g" /* label_all_list */])({}).then(function (res) {
@@ -1421,7 +1423,7 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
             this.question.answer_obj = arr;
         },
         get_knowledge_points: function get_knowledge_points() {
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["a" /* knowledge_point_all_list */])({ group: this.group, group_subject: this.group_subject }).then(function (res) {
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataknowledge_point__["a" /* knowledge_point_all_list */])({ group: this.question.knowledge_group, group_subject: this.question.knowledge_group_subject }).then(function (res) {
                 if (res.code == this.$store.state.constant.status_success) {
                     this.question.knowledge_point = [];
                     this.knowledge_points = res.data;
@@ -1673,11 +1675,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     },
     model: {
-      value: (_vm.group),
+      value: (_vm.question.knowledge_group),
       callback: function($$v) {
-        _vm.group = $$v
+        _vm.$set(_vm.question, "knowledge_group", $$v)
       },
-      expression: "group"
+      expression: "question.knowledge_group"
     }
   }, _vm._l((_vm.groups), function(item) {
     return _c('el-option', {
@@ -1702,11 +1704,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     },
     model: {
-      value: (_vm.group_subject),
+      value: (_vm.question.knowledge_group_subject),
       callback: function($$v) {
-        _vm.group_subject = $$v
+        _vm.$set(_vm.question, "knowledge_group_subject", $$v)
       },
-      expression: "group_subject"
+      expression: "question.knowledge_group_subject"
     }
   }, _vm._l((_vm.groups_subject), function(item) {
     return _c('el-option', {

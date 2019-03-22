@@ -65,7 +65,7 @@
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>知识点:</span>
 
-                <el-select v-model="group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
+                <el-select v-model="question.knowledge_group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
                     <el-option
                             v-for="item in groups"
                             :key="item.id"
@@ -74,7 +74,7 @@
                     </el-option>
                 </el-select>
 
-                <el-select v-model="group_subject" value-key="id" placeholder="请选择知识点科目分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
+                <el-select v-model="question.knowledge_group_subject" value-key="id" placeholder="请选择知识点科目分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
                     <el-option
                             v-for="item in groups_subject"
                             :key="item.id"
@@ -262,16 +262,18 @@
                     year:'2018',
                     grade:[],
                     author:[],
-                    fill_num:'1'
+                    fill_num:'1',
+                    knowledge_group_subject:{id:1,name:'语文'},
+                    knowledge_group:{id:1,name:'一年级'},
 
 
                 },
                 knowledge_points:[],
                 labels:[],
                 authors:[],
-                group:{id:1,name:'一年级'},
+                //group:{id:1,name:'一年级'},
                 groups:[],
-                group_subject:{id:1,name:'语文'},
+                //group_subject:{id:1,name:'语文'},
                 groups_subject:[],
                 years:[],
                 grades:[],
@@ -389,7 +391,7 @@
             init_options(){
                 return new Promise(function(resolve,reject){
                     this.loading_info = true;
-                    knowledge_point_all_list({group:this.group, group_subject:this.group_subject}).then(function (res) {
+                    knowledge_point_all_list({group:this.question.knowledge_group, group_subject:this.question.knowledge_group_subject}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.knowledge_points = res.data;
                             label_all_list({}).then(function (res) {
@@ -628,7 +630,7 @@
                 this.question.answer_obj = arr;
             },
             get_knowledge_points() {
-                knowledge_point_all_list({group:this.group,group_subject:this.group_subject}).then(function (res) {
+                knowledge_point_all_list({group:this.question.knowledge_group,group_subject:this.question.knowledge_group_subject}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.question.knowledge_point = [];
                         this.knowledge_points = res.data;
