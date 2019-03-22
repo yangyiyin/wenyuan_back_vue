@@ -1132,17 +1132,23 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
     beforeRouteEnter: function beforeRouteEnter(to, from, next) {
         next(function (vm) {
             vm.id = to.query.id ? to.query.id : 0;
-            vm.init_options().then(function () {
-                vm.init_groups().then(function () {
-                    vm.init_grades().then(function () {
-                        if (vm.id && vm.id > 0) {
-                            vm.get_info();
-                        } else {
-                            vm.init();
-                        }
+
+            if (vm.id && vm.id > 0) {
+                vm.get_info().then(function () {
+                    vm.init_options().then(function () {
+                        vm.init_groups().then(function () {
+                            vm.init_grades();
+                        });
                     });
                 });
-            });
+            } else {
+                vm.init();
+                vm.init_options().then(function () {
+                    vm.init_groups().then(function () {
+                        vm.init_grades();
+                    });
+                });
+            }
         });
     },
 
@@ -1318,22 +1324,29 @@ __WEBPACK_IMPORTED_MODULE_5_vue_quill_editor__["Quill"].register('modules/imageR
                 year: '2018',
                 grade: [],
                 author: [],
-                fill_num: '1'
+                fill_num: '1',
+                knowledge_group_subject: { id: 1, name: '语文' },
+                knowledge_group: { id: 1, name: '一年级' }
             };
         },
         get_info: function get_info() {
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__api_getDataEarth__["h" /* question_info */])({ id: this.id }).then(function (res) {
-                if (res.code == this.$store.state.constant.status_success) {
+            var _this = this;
 
-                    this.question = res.data.question_data;
-                } else {
-                    this.$message({
-                        message: res.msg,
-                        type: 'warning'
-                    });
-                }
-                this.loading_info = false;
-            }.bind(this));
+            return new __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__api_getDataEarth__["h" /* question_info */])({ id: _this.id }).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+
+                        this.question = res.data.question_data;
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                    this.loading_info = false;
+                    resolve();
+                }.bind(_this));
+            });
         },
 
         submit: function submit() {

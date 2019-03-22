@@ -320,19 +320,26 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
-                vm.init_options().then(function () {
-                    vm.init_groups().then(function(){
-                        vm.init_grades().then(function(){
-                            if (vm.id && vm.id > 0) {
-                                vm.get_info();
-                            } else {
-                                vm.init();
-                            }
+
+            if (vm.id && vm.id > 0) {
+                vm.get_info().then(function(){
+                    vm.init_options().then(function () {
+                        vm.init_groups().then(function(){
+                            vm.init_grades();
                         })
 
                     })
+                });
+            } else {
+                vm.init();
+                vm.init_options().then(function () {
+                    vm.init_groups().then(function(){
+                        vm.init_grades();
+                    })
 
                 })
+            }
+
 
 
             })
@@ -519,24 +526,29 @@
                     year:'2018',
                     grade:[],
                     author:[],
-                    fill_num:'1'
+                    fill_num:'1',
+                    knowledge_group_subject:{id:1,name:'语文'},
+                    knowledge_group:{id:1,name:'一年级'},
                 }
             },
 
             get_info() {
-                question_info({id:this.id}).then(function (res) {
-                    if (res.code == this.$store.state.constant.status_success) {
+                return new Promise((resolve,reject) => {
+                    question_info({id: this.id}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
 
-                        this.question = res.data.question_data;
+                            this.question = res.data.question_data;
 
-                    } else {
-                        this.$message({
-                            message: res.msg,
-                            type: 'warning'
-                        });
-                    }
-                    this.loading_info = false;
-                }.bind(this));
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+                });
             },
             submit: function () {
 
