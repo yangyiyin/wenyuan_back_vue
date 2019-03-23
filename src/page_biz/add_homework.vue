@@ -7,7 +7,7 @@
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;width: 150px;font-weight: bolder"><i style="color:red;">*</i>标题:</span>
                 <el-input clearable placeholder="请输入名称" v-model="data.name" style="width: 350px"></el-input>
-                <span class="el-upload__tip">如:第xx次英语堂课程学习</span>
+                <span class="el-upload__tip">如:19春英语堂Level X 外（中）教课 - 第X次</span>
             </div>
 
             <div class="search_item" style="display: none">
