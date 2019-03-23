@@ -52,7 +52,7 @@
                         :before-upload="beforeUpload"
                         :file-list="fileList">
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <span style="margin-left: 10px;" slot="tip" class="el-upload__tip">只限上传jpg/png/ppt/doc/xls文件，最多上传5个文件,且每个不超过5M</span>
+                    <span style="margin-left: 10px;" slot="tip" class="el-upload__tip">只限上传jpg/png/ppt/doc/xls/pdf文件，最多上传5个文件,且每个不超过5M</span>
                 </el-upload>
 
             </div>
@@ -554,12 +554,12 @@
                     }
                     return  isJPG && isLt2M;
                 } else {
-                    const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1) || (file.name.indexOf('.ppt') != -1) || (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
+                    const isJPG = (file.name.indexOf('.jpg') != -1) || (file.name.indexOf('.jpeg') != -1)|| (file.name.indexOf('.png') != -1) || (file.name.indexOf('.ppt') != -1) || (file.name.indexOf('.pptx') != -1)|| (file.name.indexOf('.doc') != -1)|| (file.name.indexOf('.docx') != -1)|| (file.name.indexOf('.pdf') != -1)|| (file.name.indexOf('.xls') != -1)|| (file.name.indexOf('.xlsx') != -1)
 
                     const isLt2M = file.size / 1024  < 1024 * 5;
 
                     if (!isJPG) {
-                        this.$message.error('只能上传jpg/png/ppt/doc/xls文件!');
+                        this.$message.error('只能上传jpg/png/ppt/doc/xls/pdf文件!');
                     }
 
                     if (!isLt2M) {
