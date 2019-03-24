@@ -8,6 +8,7 @@
                     :fetch-suggestions="querySearchAsync"
                     placeholder="请输入班级名称"
                     @select="handleSelect"
+                    @focus="focusInput('classname', 'classinfo')"
                     clearable
                     style="width: 250px;"
             ></el-autocomplete>
@@ -17,6 +18,7 @@
                     :fetch-suggestions="querySearchAsyncHomework"
                     placeholder="请输入作业名称"
                     @select="handleSelectHomework"
+                    @focus="focusInput('homeworkname', 'homeworkinfo')"
                     clearable
                     style="width: 250px;"
             ></el-autocomplete>
@@ -26,6 +28,7 @@
                     :fetch-suggestions="querySearchAsyncStudent"
                     placeholder="请输入学生姓名"
                     @select="handleSelectStudent"
+                    @focus="focusInput('studentname', 'studentinfo')"
                     clearable
                     style="width: 250px;"
             ></el-autocomplete>
@@ -37,6 +40,19 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="重置成绩" style="width: 100%">
+                                <el-button
+                                        size="mini" type="primary"
+                                        @click="current=props.row;showSetResultVisible=true;current_result={};result_other.total_score=props.row.homework.total_score_extra">
+                                    重置成绩
+                                </el-button>
+                            </el-form-item>
+                        </el-form>
+                    </template>
+                </el-table-column>
                 <el-table-column label="学生" >
                     <template slot-scope="scope">
                         {{scope.row.student.name}}
@@ -55,7 +71,7 @@
                         <el-button
                                 size="mini" type="primary"
                                 @click="current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra"
-                                v-if="scope.row.homework.need_manual_check && !scope.row.total_score && scope.row.is_submit_offline == 1">
+                                v-if="scope.row.homework.need_manual_check && !scope.row.total_score && scope.row.is_submit_offline == 1 && scope.row.is_manual_resulted == 0">
                             批改作业
                         </el-button>
                         <el-button size="mini" type="primary" v-if="!scope.row.teacher_suggest" @click="current=scope.row;showSuggestVisible=true">评价</el-button>
@@ -191,7 +207,7 @@
 </template>
 <div style="height: 30px;border-bottom: 1px solid #999"></div>
 <el-tag>教师点拨</el-tag>
-<p><el-input style="width: 90%;margin: 5px;" type="textarea" placeholder="输入内容" v-model="answer_comment"></el-input></p>
+<p><el-input style="width: 90%;margin: 5px;" type="textarea" placeholder="输入内容" v-model="current.answer_comment"></el-input></p>
 
 
 </div>
@@ -312,7 +328,7 @@
 
             },
             submit_result() {
-                submit_result({manual_check:1,answer_comment:this.answer_comment,result:this.current.homework_question2, result_other:this.result_other,from_type:1, main_id:this.current.homework_id,sub_id:this.current.classid,student_id:this.current.student_id}).then(function(res){
+                submit_result({manual_check:1,answer_comment:this.current.answer_comment,result:this.current.homework_question2, result_other:this.result_other,from_type:1, main_id:this.current.homework_id,sub_id:this.current.classid,student_id:this.current.student_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.reckon_result();
                     } else {
@@ -329,8 +345,8 @@
             reckon_result() {
                 reckon_result({manual_check:1,homework_id:this.current.homework_id,classid:this.current.classid,student_id:this.current.student_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
-                        this.showSetResultVisible = false;
-                        this.list();
+                       // this.showSetResultVisible = false;
+//                        this.list();
                         this.$message({
                             type: 'success',
                             message: '提交成功'
@@ -341,6 +357,8 @@
                             message: res.msg
                         });
                     }
+                    this.list();
+                    this.showSetResultVisible = false;
                 }.bind(this)).finally(function(){
 
                 }.bind(this));
@@ -373,9 +391,9 @@
 
             },
             querySearchAsync(queryString, cb) {
-                this.classinfo = {};
+                //this.classinfo = {};
                 var results = [];
-                class_list({name:queryString}).then(function (res) {
+                class_list({name:this.classname}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         results = res.data;
                         results.forEach(function(val){
@@ -395,9 +413,9 @@
             },
 
             querySearchAsyncHomework(queryString, cb) {
-                this.homeworkinfo = {};
+                //this.homeworkinfo = {};
                 var results = [];
-                homework_list({name:queryString, classid:this.classinfo.classid,page:1,page_size:20}).then(function (res) {
+                homework_list({name:this.homeworkname, classid:this.classinfo.classid,page:1,page_size:20}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         results = res.data.list
                         results.forEach(function(val){
@@ -416,10 +434,10 @@
             },
 
             querySearchAsyncStudent(queryString, cb) {
-                this.studentinfo = {};
+                //this.studentinfo = {};
                 var results = [];
                 //console.log(this.classinfo);
-                getResultHomeWorkStudentlist({student_name:queryString, classid:this.classinfo.classid,homework_id:this.homeworkinfo.id}).then(function (res) {
+                getResultHomeWorkStudentlist({student_name:this.studentname, classid:this.classinfo.classid,homework_id:this.homeworkinfo.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         results = res.data;
                         results.forEach(function(val){
@@ -436,7 +454,10 @@
             handleSelectStudent(item) {
                 this.studentinfo = item;
             },
-
+            focusInput(name,info){
+                this[name] = '';
+                this[info] = {};
+            }
         },
     }
 </script>

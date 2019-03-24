@@ -17,11 +17,17 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-button size="mini" @click="dialogFormVisible_setmaitianuid=true;current=props.row" :loading="loadingBtn == props.$index">设置麦田uid</el-button>
+
+                    </template>
+                </el-table-column>
                 <el-table-column label="用户名" prop="user_name"></el-table-column>
                 <el-table-column label="显示名" prop="show_name"></el-table-column>
                 <el-table-column label="权限组" prop="group_name"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
-                <el-table-column label="操作" width="400">
+                <el-table-column label="操作" width="500">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="goto_edit_admin_user(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>
@@ -43,12 +49,27 @@
                 </el-pagination>
             </div>
         </div>
+        <el-dialog :title="'设置账号-'+current.user_name" :visible.sync="dialogFormVisible_setmaitianuid" width="50%">
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="" v-model="current.maitian_uid" style="width: 250px">
+                    <template slot="prepend">设置麦田uid</template>
+                </el-input>
+                <span style="font-size: 12px;color:#5E97FF;vertical-align: bottom">(麦田后台>系统>用户管理>工号)</span>
+
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible_setmaitianuid = false">取 消</el-button>
+                <el-button type="primary" @click="set_maitian_uid(current)">确认</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort,admin_user_set_author,del_app_login_token} from '@/api/getDataEarth'
+    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort,admin_user_set_author,del_app_login_token,set_maitian_uid} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -57,6 +78,7 @@
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
+                dialogFormVisible_setmaitianuid:false,
                 current:{},
                 user_name:'',
                 loadingBtn:-1
@@ -207,6 +229,23 @@
                         }
                     }.bind(this));
                 }.bind(this))
+            },
+            set_maitian_uid(current){
+                set_maitian_uid({id:current.id,maitian_uid:current.maitian_uid}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                        this.dialogFormVisible_setmaitianuid = false;
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.msg
+                        });
+                    }
+                }.bind(this));
             }
         },
     }

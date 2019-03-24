@@ -3,12 +3,33 @@
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
 
-            <el-input
-                    style="display: inline-block;width: 250px;"
-                    placeholder="名称"
-                    v-model="name"
-                    clearable>
-            </el-input>
+            <!--<el-input-->
+                    <!--style="display: inline-block;width: 250px;"-->
+                    <!--placeholder="名称"-->
+                    <!--v-model="name"-->
+                    <!--clearable>-->
+            <!--</el-input>-->
+
+            <el-autocomplete
+                    v-model="classname"
+                    :fetch-suggestions="querySearchAsync"
+                    placeholder="请输入班级名称"
+                    @select="handleSelect"
+                    @focus="focusInput('classname', 'classinfo')"
+                    clearable
+                    style="width: 250px;"
+            ></el-autocomplete>
+
+            <el-autocomplete
+                    v-model="homeworkname"
+                    :fetch-suggestions="querySearchAsyncHomework"
+                    placeholder="请输入作业名称"
+                    @select="handleSelectHomework"
+                    @focus="focusInput('homeworkname', 'homeworkinfo')"
+                    clearable
+                    style="width: 250px;"
+            ></el-autocomplete>
+
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_homework(0)">新增家庭作业</el-button>
 
@@ -107,6 +128,7 @@
 <script>
     import headTop from '../components/headTop'
     import {homework_list,homework_del,homework_verify,homework_sort} from '@/api/getDataHomework'
+    import {class_list} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -116,9 +138,14 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 current:{},
-//                remark:'',
-//                choose_categories:[],
-//                categories:[],
+                classname:'',
+                homeworkname:'',
+                classinfo:{
+                    value:''
+                },
+                homeworkinfo:{
+                    value:''
+                },
                 name:'',
                 loadingBtn:-1
             }
@@ -141,7 +168,7 @@
         methods: {
 
             list() {
-                homework_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
+                homework_list({page:this.currentPage,page_size:this.limit,name:this.name, classid:this.classinfo.classid, homework_id:this.homeworkinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -252,6 +279,55 @@
                     }
                 }.bind(this));
                 this.dialogFormVisible = false;
+            },
+
+            querySearchAsync(queryString, cb) {
+              //  this.classinfo = {};
+
+                var results = [];
+                class_list({name:this.classname}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        results = res.data;
+                        results.forEach(function(val){
+                            val.value = val.classname
+                        });
+                        cb(results);
+                    } else {
+                        cb([]);
+                    }
+                }.bind(this));
+
+
+            },
+            handleSelect(item) {
+                this.classinfo = item;
+                //console.log(this.classinfo);
+            },
+
+            querySearchAsyncHomework(queryString, cb) {
+               // this.homeworkinfo = {};
+                var results = [];
+                homework_list({name:this.homeworkname, classid:this.classinfo.classid,page:1,page_size:20}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        results = res.data.list
+                        results.forEach(function(val){
+                            val.value = val.name
+                        });
+                        cb(results);
+                    } else {
+                        cb([]);
+                    }
+                }.bind(this));
+
+
+            },
+            handleSelectHomework(item) {
+                this.homeworkinfo = item;
+            },
+
+            focusInput(name,info){
+                this[name] = '';
+                this[info] = {};
             }
         },
     }
