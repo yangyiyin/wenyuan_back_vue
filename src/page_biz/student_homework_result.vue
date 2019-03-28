@@ -46,7 +46,7 @@
                             <el-form-item label="重置成绩" style="width: 100%">
                                 <el-button
                                         size="mini" type="primary"
-                                        @click="current=props.row;showSetResultVisible=true;current_result={};result_other.total_score=props.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra">
+                                        @click="img_class='class1';current=props.row;showSetResultVisible=true;current_result={};result_other.total_score=props.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra">
                                     重置成绩
                                 </el-button>
                             </el-form-item>
@@ -70,7 +70,7 @@
                         <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
                         <el-button
                                 size="mini" type="primary"
-                                @click="current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra"
+                                @click="img_class='class1';current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra"
                                 v-if="scope.row.homework.need_manual_check && !scope.row.total_score && scope.row.is_submit_offline == 1 && scope.row.is_manual_resulted == 0">
                             批改作业
                         </el-button>
@@ -140,8 +140,8 @@
                     <audio :src="item" controls="controls"></audio>
                 </div>
 
-                <div v-for="(item) in current.homework_upload_docs">
-                    <img style="width:100%;" :src="item">
+                <div v-for="(item,index) in current.homework_upload_docs">
+                    <img @click="changeRotation(index)" :class="img_class" style="width:100%;" :src="item">
                 </div>
             </div>
 
@@ -256,7 +256,9 @@
                     id:''
                 },
                 loadingBtn:-1,
-                current_result:{}
+                current_result:{},
+                imgs:[],
+                img_class:'class1'
             }
         },
         components: {
@@ -457,6 +459,27 @@
             focusInput(name,info){
                 this[name] = '';
                 this[info] = {};
+            },
+            changeRotation(index){
+                if (!this.imgs[index]) {
+                    this.imgs[index] = {}
+                }
+                this.imgs[index].rotation = this.imgs[index].rotation ?(this.imgs[index].rotation + 90):90;
+
+                if (!(this.imgs[index].rotation % 360)) {
+                    this.img_class = 'class1';
+                }
+                else if (!(this.imgs[index].rotation % 270)) {
+                    this.img_class = 'class2';
+                }
+                else if (!(this.imgs[index].rotation % 180)) {
+                    this.img_class = 'class3';
+                }
+                else {
+                    this.img_class = 'class4';
+                }
+
+
             }
         },
     }
@@ -478,5 +501,18 @@
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;
+    }
+
+    .class1{
+        transform:rotate(0deg);
+    }
+    .class2{
+        transform:rotate(270deg);
+    }
+    .class3{
+        transform:rotate(180deg);
+    }
+    .class4{
+        transform:rotate(90deg);
     }
 </style>
