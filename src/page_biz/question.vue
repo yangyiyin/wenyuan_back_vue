@@ -68,7 +68,10 @@
 
                 <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             </div>
-            <el-button style="float: right" type="primary" @click="goto_edit(0)">新增试题</el-button>
+            <div style="float: right; width: 20%;text-align: right;">
+                <el-button style="margin: 5px;" type="primary" @click="goto_edit(0)">新增试题</el-button>
+                <el-button style="margin: 5px;" type="primary" @click="dialogFormVisibleDaoru=true">批量导入</el-button>
+            </div>
         </div>
         <div class="table_container">
             <el-table
@@ -182,30 +185,31 @@
                 </el-pagination>
             </div>
         </div>
-        <!--<el-dialog title="导入" :visible.sync="dialogFormVisibleDaoru" width="30%">-->
-            <!--<p>-->
-                <!--您即将导入教师评语数据:【{{current.title}}】。-->
-            <!--</p>-->
-            <!--<p>-->
-                <!--特别说明:导入的excel数据将全部替代现有的后台数据,请确保导入数据正常且完整!-->
-            <!--</p>-->
-            <!--<div slot="footer" class="dialog-footer">-->
-                <!--<el-button @click="dialogFormVisibleDaoru = false">取 消</el-button>-->
-                <!--&lt;!&ndash;<el-button type="primary" @click="daoru">开始导入</el-button>&ndash;&gt;-->
-                <!--<el-upload-->
+        <el-dialog title="导入" :visible.sync="dialogFormVisibleDaoru" width="30%">
+            <p>
+                批量导入试题数据
+            </p>
+            <p>
+                特别说明:导入的excel将作为新的试题录入到系统,请确保每一题设置正确,严格参照<span style="color: green">模板</span>进行设置。导入后如出现个别题目错误,可单独编辑进行修改。
+                <a style="text-decoration: underline;color: green" href="http://api.yixsu.com/static/uploads/question_template.xlsx">点击下载模板</a>
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleDaoru = false">取 消</el-button>
+                <!--<el-button type="primary" @click="daoru">开始导入</el-button>-->
+                <el-upload
 
-                        <!--class=""-->
-                        <!--:action="upload_url+'?id='+current.id"-->
-                        <!--:data="upload_data"-->
-                        <!--:show-file-list="false"-->
-                        <!--:on-success="handleSuccess"-->
-                        <!--:before-upload="beforeUpload"-->
-                        <!--style="display: inline-block;">-->
-                    <!--&lt;!&ndash;<img v-if="img" :src="img" class="avatar">&ndash;&gt;-->
-                    <!--<el-button type="primary" :loading="loadingBtn == 'daoru'">开始导入</el-button>-->
-                <!--</el-upload>-->
-            <!--</div>-->
-        <!--</el-dialog>-->
+                        class=""
+                        :action="upload_url+'?id='+current.id"
+                        :data="upload_data"
+                        :show-file-list="false"
+                        :on-success="handleSuccess"
+                        :before-upload="beforeUpload"
+                        style="display: inline-block;">
+                    <!--<img v-if="img" :src="img" class="avatar">-->
+                    <el-button type="primary" :loading="loadingBtn == 'daoru'">开始导入</el-button>
+                </el-upload>
+            </div>
+        </el-dialog>
 
 
         <!--<el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">-->
@@ -252,7 +256,7 @@
 
                 current:{},
                 loadingBtn:-1,
-                upload_url:this.$store.state.constant.words_content_daoru_excel_in,
+                upload_url:this.$store.state.constant.question_daoru_excel_url,
                 upload_data:{token:getStore('token') ? getStore('token') : ''}
             }
         },
@@ -357,7 +361,54 @@
                         });
                     }
                 }.bind(this));
-            }
+            },
+            beforeUpload(file) {
+                this.loadingBtn = 'daoru';
+                var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+                const extension = testmsg === 'xls'
+                const extension2 = testmsg === 'xlsx'
+                const isLt2M = file.size / 1024 / 1024 < 20
+                if(!extension && !extension2) {
+                    this.$message({
+                        message: '上传文件只能是 xls、xlsx格式!',
+                        type: 'warning'
+                    });
+                }
+                if(!isLt2M) {
+                    this.$message({
+                        message: '上传文件大小不能超过 20MB!',
+                        type: 'warning'
+                    });
+                }
+                this.upload_loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+
+                return extension || extension2 && isLt2M;
+            },
+            handleSuccess(res, file) {
+                this.loadingBtn = '-1';
+                if (this.upload_loading) {
+                    this.upload_loading.close();
+                }
+
+                if (res.code == this.$store.state.constant.status_success) {
+                    this.dialogFormVisibleDaoru = false;
+                    this.$message({
+                        type: 'success',
+                        message: res.msg
+                    });
+                } else {
+                    this.$message({
+                        type: 'warning',
+                        message: res.msg
+                    });
+                }
+
+            },
 //            handleDaoru(row){
 //                this.dialogFormVisibleDaoru = true;
 //                this.current = row;

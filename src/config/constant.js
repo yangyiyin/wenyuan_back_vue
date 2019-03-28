@@ -13,4 +13,5 @@ export default {
     suggest_excel_out:baseUrl + '/wenyuanjiaoyu/suggest/excel_out',
     order_excel_out:baseUrl + '/wenyuanjiaoyu/order/excel_out',
     order_pay_left_log_excel_out:baseUrl + '/wenyuanjiaoyu/order_pay_left_log/excel_out',
+    question_daoru_excel_url:baseUrl + '/wenyuanjiaoyu/question/excel_in',
 }

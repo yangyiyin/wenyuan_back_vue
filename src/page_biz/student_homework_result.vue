@@ -46,7 +46,7 @@
                             <el-form-item label="重置成绩" style="width: 100%">
                                 <el-button
                                         size="mini" type="primary"
-                                        @click="current=props.row;showSetResultVisible=true;current_result={};result_other.total_score=props.row.homework.total_score_extra">
+                                        @click="current=props.row;showSetResultVisible=true;current_result={};result_other.total_score=props.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra">
                                     重置成绩
                                 </el-button>
                             </el-form-item>
@@ -70,7 +70,7 @@
                         <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
                         <el-button
                                 size="mini" type="primary"
-                                @click="current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra"
+                                @click="current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra"
                                 v-if="scope.row.homework.need_manual_check && !scope.row.total_score && scope.row.is_submit_offline == 1 && scope.row.is_manual_resulted == 0">
                             批改作业
                         </el-button>
