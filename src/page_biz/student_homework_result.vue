@@ -33,6 +33,14 @@
                     style="width: 250px;"
             ></el-autocomplete>
 
+            <el-select v-model="search_param.status" placeholder="请选择状态" clearable>
+                <el-option
+                        v-for="item in [{label:'未提交',value:1},{label:'已提交',value:2},{label:'已批改',value:3},{label:'已出成绩',value:4},{label:'已评价',value:5}]"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
 
         </div>
@@ -43,13 +51,19 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="重置成绩" style="width: 100%">
+                            <el-form-item label="重置成绩" style="width: 50%">
                                 <el-button
                                         size="mini" type="primary"
                                         @click="img_class='class1';current=props.row;showSetResultVisible=true;current_result={};result_other.total_score=props.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra">
                                     重置成绩
                                 </el-button>
                             </el-form-item>
+
+                            <el-form-item label="教师点拨" style="width: 50%">
+
+                                {{props.row.answer_comment}}
+                            </el-form-item>
+
                         </el-form>
                     </template>
                 </el-table-column>
@@ -63,6 +77,15 @@
                 <el-table-column label="成绩" prop="total_score"></el-table-column>
                 <el-table-column label="星级" prop="star_2"></el-table-column>
                 <el-table-column label="作业完成率" prop="homework_complete_rate"></el-table-column>
+                <el-table-column label="当前状态">
+                    <template slot-scope="scope">
+                        <el-tag size="mini" type="success" v-if="scope.row.is_submit_offline == 0 && scope.row.is_submit == 0">未提交</el-tag>
+                        <el-tag size="mini" type="success" v-if="scope.row.is_submit_offline == 1">已提交</el-tag>
+                        <el-tag size="mini" type="success" v-if="scope.row.is_manual_resulted == 1">已批改</el-tag>
+                        <el-tag size="mini" type="success" v-if="scope.row.total_score">已出成绩</el-tag>
+                        <el-tag size="mini" type="success" v-if="scope.row.teacher_suggest">已评价</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="操作" width="400">
                     <template slot-scope="scope">
@@ -258,7 +281,10 @@
                 loadingBtn:-1,
                 current_result:{},
                 imgs:[],
-                img_class:'class1'
+                img_class:'class1',
+                search_param:{
+                    status:''
+                }
             }
         },
         components: {
@@ -278,7 +304,7 @@
         },
         methods: {
             list() {
-                student_homework_result_list({page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
+                student_homework_result_list({search_param:this.search_param,page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
