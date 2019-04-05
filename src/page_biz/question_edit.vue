@@ -26,7 +26,10 @@
 
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>题干:</span>
-                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor1" :content="question.content" :options = "editorOption" @change="onEditorChange($event,'content')"></quill-editor>
+                <!--<quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor1" :content="question.content" :options = "editorOption" @change="onEditorChange($event,'content')"></quill-editor>-->
+                <div class="editor-container">
+                    <script id="editor1" type="text/plain" ></script>
+                </div>
                 <el-upload style="display: none"
                            class="avatar-uploader"
                            ref="upload"
@@ -198,12 +201,18 @@
 
             <div v-show="question.type==4 || question.type==5" class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>答案:</span>
-                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor2" :content="question.answer" :options = "editorOption" @change="onEditorChange($event,'answer')"></quill-editor>
+                <!--<quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor2" :content="question.answer" :options = "editorOption" @change="onEditorChange($event,'answer')"></quill-editor>-->
+                <div class="editor-container">
+                    <script id="editor2" type="text/plain" ></script>
+                </div>
             </div>
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;">答案解析:</span>
-                <quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor3" :content="question.answer_parse" :options = "editorOption" @change="onEditorChange($event,'answer_parse')"></quill-editor>
+                <!--<quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor3" :content="question.answer_parse" :options = "editorOption" @change="onEditorChange($event,'answer_parse')"></quill-editor>-->
 
+                <div class="editor-container">
+                    <script id="editor3" type="text/plain" ></script>
+                </div>
 
             </div>
             <div class="search_item">
@@ -218,8 +227,11 @@
                 </el-select>
             </div>
 
-
-
+            <!--<div class="editor-container">-->
+                <!--<UE :defaultMsg=defaultMsg :config=config ref="ue"></UE>-->
+            <!--</div>-->
+            <el-button @click="getUEContent()">获取内容</el-button>
+            <el-button @click="getUEText()">获取text</el-button>
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">录入</el-button>
 
 
@@ -238,6 +250,7 @@
     import ImageResize from 'quill-image-resize-module'
     Quill.register('modules/imageDrop', ImageDrop)
     Quill.register('modules/imageResize', ImageResize)
+//    import UE from '../components/ue.vue';
     export default {
         data(){
             return {
@@ -299,15 +312,29 @@
                 editor:1,
                 toolbars:{subfield: true},
                 fullscreenLoading:false,
-                myQuillEditor_index:1
+                myQuillEditor_index:1,
+
+                defaultMsg: '',
+                config: {
+                    initialFrameWidth: null,
+                    initialFrameHeight: 250,
+                    initialFrameWidth: 600,
+                    toolbars: [[
+                        'fullscreen', 'source', '|',
+                        'bold', 'italic', 'underline', '|', 'fontsize', 'insertimage', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'kityformula',
+                        'preview'
+                    ]]
+                }
             }
 
         },
         components: {
             headTop,
-            quillEditor
+            quillEditor,
+            UE
         },
         created(){
+
 
         },
         mounted(){
@@ -326,6 +353,7 @@
                     vm.init_options().then(function () {
                         vm.init_groups().then(function(){
                             vm.init_grades();
+                            vm.init_editor();
                         })
 
                     })
@@ -335,6 +363,7 @@
                 vm.init_options().then(function () {
                     vm.init_groups().then(function(){
                         vm.init_grades();
+                        vm.init_editor();
                     })
 
                 })
@@ -345,6 +374,35 @@
             })
         },
         methods: {
+            init_editor(){
+                var _this = this;
+                if (!this.editor1) {
+                    this.editor1 = UE.getEditor('editor1', this.config); // 初始化UE
+                    this.editor1.addListener("ready", function () {
+                        _this.editor1.setContent(_this.question.content); // 确保UE加载完成后，放入内容。
+                    });
+                } else {
+                    _this.editor1.setContent(_this.question.content); // 确保UE加载完成后，放入内容。
+                }
+
+                if (!this.editor2) {
+                    this.editor2 = UE.getEditor('editor2', this.config); // 初始化UE
+                    this.editor2.addListener("ready", function () {
+                        _this.editor2.setContent(_this.question.answer); // 确保UE加载完成后，放入内容。
+                    });
+                } else {
+                    _this.editor2.setContent(_this.question.answer); // 确保UE加载完成后，放入内容。
+                }
+
+                if (!this.editor3) {
+                    this.editor3 = UE.getEditor('editor3', this.config); // 初始化UE
+                    this.editor3.addListener("ready", function () {
+                        _this.editor3.setContent(_this.question.answer_parse); // 确保UE加载完成后，放入内容。
+                    });
+                } else {
+                    _this.editor3.setContent(_this.question.answer_parse); // 确保UE加载完成后，放入内容。
+                }
+            },
             init_groups(){
                 return new Promise(function(resolve,reject){
                     this.loading_info = true;
@@ -550,8 +608,33 @@
                     }.bind(this));
                 });
             },
-            submit: function () {
+            submit(){
+                this.editor1.getKfContent((content) => {
+                    this.editor2.getKfContent((content) => {
+                        this.editor3.getKfContent((content) => {
+                            this._submit();
+                        });
+                    });
+                });
 
+
+            },
+            _submit: function () {
+                this.question.title = this.editor1.getContentTxt();
+                this.question.content = this.editor1.getContent();
+                this.question.answer = this.editor2.getContent();
+                this.question.answer_parse = this.editor3.getContent();
+
+//                console.log(this.question.content)
+//                return ;
+                var error = this.submit_check();
+                if (error.length) {
+                    this.$message({
+                        message: error.join(';'),
+                        type: 'warning'
+                    });
+                    return ;
+                }
                 this.loading = true;
                 question_edit({
                     id:this.id,
@@ -572,6 +655,13 @@
                     this.loading = false;
                 }.bind(this));
 
+            },
+            submit_check(){
+                var error = [];
+                if (!this.question.title) {
+                    error.push('请输入题干');
+                }
+                return error;
             },
             add_option(){
 
@@ -653,7 +743,15 @@
                         });
                     }
                 }.bind(this));
-            }
+            },
+//            getUEContent() {
+//                let content = this.editor1.getContent();
+//                console.log(content)
+//            },
+//            getUEText() {
+//                let content = this.editor1.getContentTxt();
+//                console.log(content)
+//            }
 
         }
     }
@@ -699,5 +797,8 @@
     }
     .option{
         margin-bottom: 10px;
+    }
+    .editor-container{
+        display: inline-block;vertical-align: top;
     }
 </style>

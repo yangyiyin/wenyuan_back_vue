@@ -88,4 +88,7 @@
 	.el-menu-item.is-active{
 		background-color: rgb(60, 70, 70)!important;
 	}
+	img.kfformula {
+		vertical-align: middle;
+	}
 </style>

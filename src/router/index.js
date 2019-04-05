@@ -48,6 +48,8 @@ const add_homework = r => require.ensure([], () => r(require('@/page_biz/add_hom
 const student_homework_result = r => require.ensure([], () => r(require('@/page_biz/student_homework_result')), 'student_homework_result');
 const show_img = r => require.ensure([], () => r(require('@/page_biz/show_img')), 'show_img');
 const admin_log = r => require.ensure([], () => r(require('@/page_biz/admin_log')), 'admin_log');
+const examine_paper = r => require.ensure([], () => r(require('@/page_biz/examine_paper')), 'examine_paper');
+const add_examine_paper = r => require.ensure([], () => r(require('@/page_biz/add_examine_paper')), 'add_examine_paper');
 //{#replace1#}
 
 const routes = [
@@ -240,6 +242,8 @@ const routes = [
 {path: '/student_homework_result',component: student_homework_result,meta: ['题库', '批改作业'],},
 {path: '/show_img',component: show_img,meta: ['题库', '作业图'],},
 {path: '/admin_log',component: admin_log,meta: ['用户管理', '操作日志'],},
+{path: '/examine_paper',component: examine_paper,meta: ['题库', '试卷'],},
+{path: '/add_examine_paper',component: add_examine_paper,meta: ['题库', '编辑试卷'],},
 //{#replace2#}
 		],
 	}

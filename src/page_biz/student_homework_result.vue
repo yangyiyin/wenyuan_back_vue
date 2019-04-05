@@ -42,7 +42,7 @@
                 </el-option>
             </el-select>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-
+            <el-button style="margin: 5px;" type="primary" @click="dialogFormVisibleDaoru=true">批量导入评价</el-button>
         </div>
         <div class="table_container">
             <el-table
@@ -174,7 +174,7 @@
                     <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 1">
                         <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
                         <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer : ''}}</p>
-                        <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+                <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="'答案解析:'+(current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : '')"><p/>
                     </template>
 
 
@@ -186,7 +186,7 @@
                     <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 2">
 <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer : ''}}</p>
-<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="'答案解析:'+(current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : '')"><p/>
 
                     </template>
                 </p>
@@ -196,7 +196,7 @@
                     <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 3">
 <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案:{{current.question_answer_map[question.qid] ? JSON.parse(current.question_answer_map[question.qid].answer) : ''}}</p>
-<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="'答案解析:'+(current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : '')"><p/>
 
                     </template>
                 </p>
@@ -206,7 +206,7 @@
                     <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 4">
 <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="current.question_answer_map[question.qid] ? '答案:'+current.question_answer_map[question.qid].answer : '答案:'"></p>
-<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="'答案解析:'+(current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : '')"><p/>
 
                     </template>
                 </p>
@@ -216,7 +216,7 @@
                     <template v-if="question.useto == 2 && current.question_map[question.qid] && current.question_map[question.qid].type == 5">
                 <p>【题目id:{{question.qid}}】:<el-input style="width: 40%;margin: 5px;" type="number" placeholder="输入得分" v-model="question.result"></el-input><span>{{current.question_map[question.qid] ? current.question_map[question.qid].score : 0}}分</span></p>
                 <p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="current.question_answer_map[question.qid] ? '答案:'+current.question_answer_map[question.qid].answer : '答案:'"></p>
-<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto">答案解析:{{current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : ''}}</p>
+<p style="border-radius:5px;background: #eee;font-size: 12px;width: 90%;margin: 0 auto" v-html="'答案解析:'+(current.question_answer_map[question.qid] ? current.question_answer_map[question.qid].answer_parse : '')"><p/>
 
                 </template>
                 </p>
@@ -238,14 +238,43 @@
             <el-button type="danger" style="position: fixed;bottom: 20px;right: 6%;" @click="showSetResultVisible = false">关 闭</el-button>
 
         </div>
+
+<el-dialog title="导入" :visible.sync="dialogFormVisibleDaoru" width="30%">
+    <p>
+        批量导入试题数据
+    </p>
+    <p>
+        特别说明:导入前请务必点击链接导出现有数据excel,根据现有数据excel进行评价输入,然后导入excel。
+        <a style="text-decoration: underline;color: green" href="javascript:;" @click="daochu()">点击导出现有数据</a>
+    </p>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleDaoru = false">取 消</el-button>
+        <!--<el-button type="primary" @click="daoru">开始导入</el-button>-->
+        <el-upload
+
+                class=""
+                :action="upload_url+'?id='+current.id"
+                :data="upload_data"
+                :show-file-list="false"
+                :on-success="handleSuccess"
+                :before-upload="beforeUpload"
+                style="display: inline-block;">
+            <!--<img v-if="img" :src="img" class="avatar">-->
+            <el-button type="primary" :loading="loadingBtn == 'daoru'">开始导入</el-button>
+        </el-upload>
+    </div>
+</el-dialog>
+
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {student_homework_result_list,student_homework_result_del,student_homework_result_verify,teacher_suggest, reckon_result, submit_result,getResultHomeWorkStudentlist} from '@/api/getDatastudent_homework_result'
+    import {student_homework_result_list,student_homework_result_del,student_homework_result_verify,teacher_suggest, reckon_result, submit_result,getResultHomeWorkStudentlist,homework_result_excel_out,homework_result_excel_in} from '@/api/getDatastudent_homework_result'
     import {class_list} from '@/api/getDataEarth'
     import {homework_list} from '@/api/getDataHomework'
+    import {getStore} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -257,6 +286,7 @@
                 showResultVisible:false,
                 showSuggestVisible:false,
                 showSetResultVisible:false,
+                dialogFormVisibleDaoru:false,
                 current:{},
                 result_other:{
                     score:0,
@@ -284,7 +314,9 @@
                 img_class:'class1',
                 search_param:{
                     status:''
-                }
+                },
+                upload_url:this.$store.state.constant.homework_result_excel_in,
+                upload_data:{token:getStore('token') ? getStore('token') : ''}
             }
         },
         components: {
@@ -506,7 +538,79 @@
                 }
 
 
-            }
+            },
+            daochu() {
+                var param1 = {
+                    is_ajax:true,
+                    search_param:this.search_param,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id
+                };
+                var param2 = {
+                    search_param:this.search_param,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id
+                };
+                homework_result_excel_out(param1).then(function(res){
+                    //this.loadingBtn = '-1';
+                    if (res.code == this.$store.state.constant.status_success) {
+                        window.open(this.$store.state.constant.homework_result_excel_out + '?param='+JSON.stringify(param2)+'&token=' + (getStore('token') ? getStore('token') : ''));
+                        return;
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                }.bind(this));
+            },
+
+            beforeUpload(file) {
+                this.loadingBtn = 'daoru';
+                var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+                const extension = testmsg === 'xls'
+                const extension2 = testmsg === 'xlsx'
+                const isLt2M = file.size / 1024 / 1024 < 20
+                if(!extension && !extension2) {
+                    this.$message({
+                        message: '上传文件只能是 xls、xlsx格式!',
+                        type: 'warning'
+                    });
+                }
+                if(!isLt2M) {
+                    this.$message({
+                        message: '上传文件大小不能超过 20MB!',
+                        type: 'warning'
+                    });
+                }
+                this.upload_loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+
+                return extension || extension2 && isLt2M;
+            },
+            handleSuccess(res, file) {
+                this.loadingBtn = '-1';
+                if (this.upload_loading) {
+                    this.upload_loading.close();
+                }
+
+                if (res.code == this.$store.state.constant.status_success) {
+                    this.list();
+                    this.dialogFormVisibleDaoru = false;
+                    this.$message({
+                        type: 'success',
+                        message: res.msg
+                    });
+                } else {
+                    this.$message({
+                        type: 'warning',
+                        message: res.msg
+                    });
+                }
+
+            },
         },
     }
 </script>

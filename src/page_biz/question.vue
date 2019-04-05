@@ -396,6 +396,7 @@
                 }
 
                 if (res.code == this.$store.state.constant.status_success) {
+                    this.list();
                     this.dialogFormVisibleDaoru = false;
                     this.$message({
                         type: 'success',
