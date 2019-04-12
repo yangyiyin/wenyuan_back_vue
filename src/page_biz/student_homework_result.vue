@@ -501,7 +501,7 @@
                     if (res.code == this.$store.state.constant.status_success) {
                         results = res.data;
                         results.forEach(function(val){
-                            val.value = val.name
+                            val.value = val.name+'('+val.studentid+')';
                         });
                         cb(results);
                     } else {
