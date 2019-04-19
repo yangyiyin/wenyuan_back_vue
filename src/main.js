@@ -7,6 +7,7 @@ import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css';
 import mavonEditor from 'mavon-editor'
 // import 'mavon-editor/dist/css/index.css'
+import uploader from 'vue-simple-uploader'
 
 import '../static/UE/ueditor.config.js'
 import '../static/UE/ueditor.all.min.js'
@@ -19,6 +20,7 @@ import '../static/UE/kityformula-plugin/defaultFilterFix.js'
 
 // use
 Vue.use(mavonEditor);
+Vue.use(uploader);
 
 Vue.config.productionTip = false;
 

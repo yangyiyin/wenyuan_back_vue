@@ -10,6 +10,7 @@ export const examine_paper_verify = data => fetch('/wenyuanjiaoyu/examine_paper/
 export const examine_paper_del = data => fetch('/wenyuanjiaoyu/examine_paper/del', data, 'POST').then(check_login);
 export const examine_paper_info = data => fetch('/wenyuanjiaoyu/examine_paper/info', data, 'POST').then(check_login);
 export const examine_paper_sort = data => fetch('/wenyuanjiaoyu/examine_paper/sort', data, 'POST').then(check_login);
+export const examine_paper_set_questions = data => fetch('/wenyuanjiaoyu/examine_paper/set_questions', data, 'POST').then(check_login);
 
 
 

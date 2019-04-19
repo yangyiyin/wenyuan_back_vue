@@ -50,6 +50,11 @@ const show_img = r => require.ensure([], () => r(require('@/page_biz/show_img'))
 const admin_log = r => require.ensure([], () => r(require('@/page_biz/admin_log')), 'admin_log');
 const examine_paper = r => require.ensure([], () => r(require('@/page_biz/examine_paper')), 'examine_paper');
 const add_examine_paper = r => require.ensure([], () => r(require('@/page_biz/add_examine_paper')), 'add_examine_paper');
+const examine_paper_set_questions = r => require.ensure([], () => r(require('@/page_biz/examine_paper_set_questions')), 'examine_paper_set_questions');
+const student_examine_result = r => require.ensure([], () => r(require('@/page_biz/student_examine_result')), 'student_examine_result');
+const add_student_examine_result = r => require.ensure([], () => r(require('@/page_biz/add_student_examine_result')), 'add_student_examine_result');
+const examination_examine_paper = r => require.ensure([], () => r(require('@/page_biz/examination_examine_paper')), 'examination_examine_paper');
+// const review_examine_paper = r => require.ensure([], () => r(require('@/page_biz/review_examine_paper')), 'review_examine_paper');
 //{#replace1#}
 
 const routes = [
@@ -244,6 +249,11 @@ const routes = [
 {path: '/admin_log',component: admin_log,meta: ['用户管理', '操作日志'],},
 {path: '/examine_paper',component: examine_paper,meta: ['题库', '试卷'],},
 {path: '/add_examine_paper',component: add_examine_paper,meta: ['题库', '编辑试卷'],},
+{path: '/examine_paper_set_questions',component: examine_paper_set_questions,meta: ['考试卷', '设置题目'],},
+{path: '/student_examine_result',component: student_examine_result,meta: ['考试', '学生答卷'],},
+{path: '/add_student_examine_result',component: add_student_examine_result,meta: ['考试', '编辑答卷'],},
+{path: '/examination_examine_paper',component: examination_examine_paper,meta: ['考试', '试卷'],},
+{path: '/student_examine_result',component: student_examine_result,meta: ['考试', '学生试卷'],},
 //{#replace2#}
 		],
 	}

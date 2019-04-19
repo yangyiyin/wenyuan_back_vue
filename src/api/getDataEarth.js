@@ -35,6 +35,9 @@ export const examination_del = data => fetch('/wenyuanjiaoyu/examination/del', d
 export const examination_edit = data => fetch('/wenyuanjiaoyu/examination/edit', data, 'POST').then(check_login);
 export const examination_sign_options = data => fetch('/wenyuanjiaoyu/examination/get_sign_options', data, 'POST').then(check_login);
 export const examination_sort = data => fetch('/wenyuanjiaoyu/examination/sort', data, 'POST').then(check_login);
+export const get_examine_papers = data => fetch('/wenyuanjiaoyu/examination/get_examine_papers', data, 'POST').then(check_login);
+export const set_examine_paper = data => fetch('/wenyuanjiaoyu/examination/set_examine_paper', data, 'POST').then(check_login);
+export const set_publish_examine_paper_result = data => fetch('/wenyuanjiaoyu/examination/set_publish_examine_paper_result', data, 'POST').then(check_login);
 export const examination_excel_out = data => fetch('/wenyuanjiaoyu/examination_signs/excel_out', data, 'POST').then(check_login);
 export const examination_gen_ticket = data => fetch('/wenyuanjiaoyu/examination_signs/gen_ticket', data, 'POST').then(check_login);
 export const examination_signs_change_data = data => fetch('/wenyuanjiaoyu/examination_signs/change_data', data, 'POST').then(check_login);
@@ -93,6 +96,7 @@ export const question_info = data => fetch('/wenyuanjiaoyu/question/info', data,
 export const question_verify = data => fetch('/wenyuanjiaoyu/question/verify', data, 'POST').then(check_login);
 export const question_del = data => fetch('/wenyuanjiaoyu/question/del', data, 'POST').then(check_login);
 export const question_edit = data => fetch('/wenyuanjiaoyu/question/edit', data, 'POST').then(check_login);
+export const rand_questions = data => fetch('/wenyuanjiaoyu/question/rand_questions', data, 'POST').then(check_login);
 export const get_grades = data => fetch('/wenyuanjiaoyu/question/get_grades', data, 'POST').then(check_login);
 
 export const course_list = data => fetch('/wenyuanjiaoyu/common/course_list', data, 'POST').then(check_login);

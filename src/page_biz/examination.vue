@@ -61,6 +61,12 @@
                     </template>
                 </el-table-column>
 
+                <el-table-column label="试卷">
+                    <template slot-scope="scope">
+                        <el-button size="mini" @click="goto_examine_paper(scope.row)">查看</el-button>
+                    </template>
+                </el-table-column>
+
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
 
@@ -288,6 +294,9 @@
             },
             goto_sign_list(id){
                 this.$router.push({path:'examination_signs',query:{id:id}});
+            },
+            goto_examine_paper(row){
+                this.$router.push({path:'examination_examine_paper',query:{id:row.id}});
             },
             verify(scope, status) {
 
