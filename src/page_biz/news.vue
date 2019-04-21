@@ -88,7 +88,7 @@
             headTop,
         },
         created(){
-            this.list();
+
         },
         mounted(){
 

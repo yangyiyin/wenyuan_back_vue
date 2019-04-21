@@ -162,14 +162,19 @@
                                 <div style="float: right;vertical-align:top;width: 50px;" v-html="'<p style=\'display:inline-block\'>['+question.score+'分]</p>'"></div>
                                 <div style="float: left;vertical-align:top;width: 670px;" v-html="question.question_content"></div>
 
-                                <template v-if="question.type==1 || question.type==2">
+                                <template v-if="question.type==1">
                                     <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options">
                                         {{option.label}}.{{option.text}}
                                     </div>
 
                                 </template>
 
+                                <template v-if="question.type==2">
+                                    <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options2">
+                                        {{option.label}}.{{option.text}}
+                                    </div>
 
+                                </template>
                                 <div style="clear: both"></div>
                             </div>
                         </template>
