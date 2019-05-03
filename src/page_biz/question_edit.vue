@@ -377,6 +377,7 @@
             init_editor(){
                 var _this = this;
                 if (!this.editor1) {
+                    UE.delEditor('editor1');
                     this.editor1 = UE.getEditor('editor1', this.config); // 初始化UE
                     this.editor1.addListener("ready", function () {
                         _this.editor1.setContent(_this.question.content); // 确保UE加载完成后，放入内容。
@@ -386,6 +387,7 @@
                 }
 
                 if (!this.editor2) {
+                    UE.delEditor('editor2');
                     this.editor2 = UE.getEditor('editor2', this.config); // 初始化UE
                     this.editor2.addListener("ready", function () {
                         _this.editor2.setContent(_this.question.answer); // 确保UE加载完成后，放入内容。
@@ -395,6 +397,7 @@
                 }
 
                 if (!this.editor3) {
+                    UE.delEditor('editor3');
                     this.editor3 = UE.getEditor('editor3', this.config); // 初始化UE
                     this.editor3.addListener("ready", function () {
                         _this.editor3.setContent(_this.question.answer_parse); // 确保UE加载完成后，放入内容。

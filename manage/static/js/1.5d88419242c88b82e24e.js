@@ -1255,6 +1255,7 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
         init_editor: function init_editor() {
             var _this = this;
             if (!this.editor1) {
+                UE.delEditor('editor1');
                 this.editor1 = UE.getEditor('editor1', this.config);
                 this.editor1.addListener("ready", function () {
                     _this.editor1.setContent(_this.question.content);
@@ -1264,6 +1265,7 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
             }
 
             if (!this.editor2) {
+                UE.delEditor('editor2');
                 this.editor2 = UE.getEditor('editor2', this.config);
                 this.editor2.addListener("ready", function () {
                     _this.editor2.setContent(_this.question.answer);
@@ -1273,6 +1275,7 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
             }
 
             if (!this.editor3) {
+                UE.delEditor('editor3');
                 this.editor3 = UE.getEditor('editor3', this.config);
                 this.editor3.addListener("ready", function () {
                     _this.editor3.setContent(_this.question.answer_parse);
