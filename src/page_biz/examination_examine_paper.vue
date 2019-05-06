@@ -22,9 +22,10 @@
             <!--</div>-->
 
 
-            <div v-for="(paper, index) in data.papers" style="width: 700px;margin: 0 auto;padding:5px;margin-top: 20px;text-align: center;border-bottom: 1px solid #ddd">
+            <div v-for="(paper, index) in data.papers" style="width: 900px;margin: 0 auto;padding:5px;margin-top: 20px;text-align: center;border-bottom: 1px solid #ddd">
                 <p style="display: inline-block">试卷:{{paper.title}}</p>
                 <el-button type="warning" size="mini"  @click="pre_print(1, paper)">打印试卷</el-button>
+                <el-button type="warning" size="mini"  @click="pre_print(1, paper, true)">打印试卷(含答案)</el-button>
                 <el-button type="warning" size="mini"  @click="pre_print(2, paper)">打印答题卡</el-button>
                 <el-button type="primary" size="mini"  @click="goto_review_examine_paper(paper)">学生答卷</el-button>
                 <el-button type="danger" size="mini"  @click="del(paper)">删除</el-button>
@@ -50,17 +51,8 @@
 
         <div style="display: none">
             <div id="preview" style="width: 794px;height:1115px;position: relative">
-                <!--<div class="question_block" style="height:1123px;" v-for="(aa,index) in count_test">-->
-                <!--<template v-for="(item,index) in current.questions">-->
-
-                <!--<div class="question_item">-->
-                <!--{{index+1}}.{{item.title}}-->
-                <!--</div>-->
-                <!--</template>-->
-                <!--</div>-->
-
                 <template v-if="preview_content.id">
-                    <p style="text-align: center;font-size: 20px;font-weight: bolder">{{preview_content.title}}(试卷)</p>
+                    <p style="text-align: center;font-size: 20px;font-weight: bolder">{{preview_content.title}}</p>
                     <p style="text-align: center;font-size: 12px;margin-bottom: 20px;">考试时间:{{preview_content.time_limit_min}}分钟</p>
                     <div style="font-size: 14px;margin-bottom: 10px;" v-for="(_question, type, index2) in preview_content.questions_with_types">
                         <p style="float: 16px;font-weight: bolder;margin-top:20px;">{{_question.name}}</p>
@@ -87,6 +79,17 @@
 
 
                                 <div style="clear: both"></div>
+
+                                <template v-if="show_answer">
+                                    <div style="color: red;font-weight: bolder">
+                                        <p v-if="question.type != 3" v-html="'答案:'+question.question_answer.answer"></p>
+                                        <p v-if="question.type == 3" >
+                                            <span>答案:</span>
+                                            <span style="margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">{{answer_item.text}}</span>
+                                        </p>
+                                        <p v-html="'答案解析:'+question.question_answer.answer_parse"></p>
+                                    </div>
+                                </template>
                             </div>
                         </template>
                     </div>
@@ -104,7 +107,7 @@
 
                         <div style="position: absolute;left: 13px;top:13px;width: 768px;height:1089px;border: 1px solid #000"></div>
 
-                        <div style="text-align: center;color:#E188BA;font-size: 24px;font-weight: bolder;position: absolute;top:40px;width: 100%;">答题卡({{order_id+1}})</div>
+                        <div style="text-align: center;color:#E188BA;font-size: 24px;font-weight: bolder;position: absolute;top:40px;width: 100%;">{{preview_content_datika.title}}答题卡({{order_id+1}})</div>
 
                         <div style="position:absolute;left: 30px;top:100px;width: 150px;height:160px;line-height:60px;border: 2px solid #E188BA">
                             <p>姓名:</p>
@@ -158,7 +161,7 @@
                 <!--</template>-->
 
                 <template v-if="preview_content.id">
-                    <p style="text-align: center;font-size: 20px;font-weight: bolder">{{preview_content.title}}(试卷)</p>
+                    <p style="text-align: center;font-size: 20px;font-weight: bolder">{{preview_content.title}}</p>
                     <p style="text-align: center;font-size: 12px;margin-bottom: 20px;">考试时间:{{preview_content.time_limit_min}}分钟</p>
                     <div style="font-size: 14px;margin-bottom: 10px;" v-for="(_question, type, index2) in preview_content.questions_with_types">
                         <p style="float: 16px;font-weight: bolder;margin-top:20px;">{{_question.name}}</p>
@@ -183,6 +186,16 @@
 
                                 </template>
                                 <div style="clear: both"></div>
+                                <template v-if="show_answer">
+                                    <div style="color: red;font-weight: bolder">
+                                        <p v-if="question.type != 3" v-html="'答案:'+question.question_answer.answer"></p>
+                                        <p v-if="question.type == 3" >
+                                            <span>答案:</span>
+                                            <span style="margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">{{answer_item.text}}</span>
+                                        </p>
+                                        <p v-html="'答案解析:'+question.question_answer.answer_parse"></p>
+                                    </div>
+                                </template>
                             </div>
                         </template>
                     </div>
@@ -207,7 +220,7 @@
 
                 <div style="position: absolute;left: 13px;top:13px;width: 768px;height:1089px;border: 1px solid #000"></div>
 
-                <div style="text-align: center;color:#E188BA;font-size: 24px;font-weight: bolder;position: absolute;top:40px;width: 100%;">答题卡({{order_id+1}})</div>
+                <div style="text-align: center;color:#E188BA;font-size: 24px;font-weight: bolder;position: absolute;top:40px;width: 100%;">{{preview_content_datika.title}}答题卡({{order_id+1}})</div>
 
                 <div style="position:absolute;left: 30px;top:100px;width: 150px;height:160px;line-height:60px;border: 2px solid #E188BA">
                     <p>姓名:</p>
@@ -276,7 +289,7 @@
                 dialogFormVisiblePreview2:false,
                 preview_content:{},
                 preview_content_datika: {},
-
+                show_answer:false,
 
                 current:{}
             }
@@ -376,7 +389,7 @@
                     cb([]);
                     return ;
                 }
-                examine_paper_all_list({title:this.name,status:1}).then(function (res) {
+                examine_paper_all_list({name:this.name,status:1}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         results = res.data;
                         results.forEach(function(val){
@@ -393,10 +406,11 @@
             handleSelect(item) {
                 this.add_paper = item;
             },
-            pre_print(type, paper) {
+            pre_print(type, paper, show_answer) {
                 this.preview_content = {};
                 this.preview_content_datika = {};
                 this.current=paper;
+                this.show_answer = show_answer ? true : false;
                 var datika = 0;
                 if(type == 1) {//试卷
                     datika = 0;
@@ -412,6 +426,7 @@
                             this.preview_content = res.data;
                         } else if(type == 2){//答题卡
                             this.preview_content_datika = res.data.datika_info;
+                            this.preview_content_datika.title = res.data.title;
                         }
 
                         this['dialogFormVisiblePreview'+type]=true;

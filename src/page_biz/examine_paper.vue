@@ -95,7 +95,7 @@
                     <template slot-scope="scope">
                         <el-button type="danger" v-if="!scope.row.questions.length" size="mini" @click="set_question(scope.row)">!添加题目</el-button>
                         <el-button v-if="scope.row.questions.length" size="mini" @click="set_question(scope.row)">设置题目</el-button>
-                        <el-button v-if="scope.row.questions.length" size="mini" @click="dialogFormVisiblePreview=true;current=scope.row">预览</el-button>
+                        <el-button v-if="scope.row.questions.length" size="mini" @click="pre_print(scope.row)">预览</el-button>
                         <el-button size="mini" @click="goto_edit_examine_paper(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
@@ -126,30 +126,79 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="预览" :visible.sync="dialogFormVisiblePreview" width="80%">
-            <div style="display: none">
-                <div id="preview" style="width: 794px;">
-                    <div class="question_block" style="height:1123px;" v-for="(aa,index) in count_test">
-                        <template v-for="(item,index) in current.questions">
+        <!--<el-dialog title="预览" :visible.sync="dialogFormVisiblePreview" width="80%">-->
+            <!--<div style="display: none">-->
+                <!--<div id="preview" style="width: 794px;">-->
+                    <!--<div class="question_block" style="height:1123px;" v-for="(aa,index) in count_test">-->
+                        <!--<template v-for="(item,index) in current.questions">-->
 
-                            <div class="question_item">
-                                {{index+1}}.{{item.title}}
+                            <!--<div class="question_item">-->
+                                <!--{{index+1}}.{{item.title}}-->
+                            <!--</div>-->
+                        <!--</template>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="question_block" style="height:1123px;width: 794px;margin: 0 auto;border: 1px solid #ddd; " >-->
+                <!--<template v-for="(item,index) in current.questions">-->
+
+                    <!--<div class="question_item">-->
+                        <!--{{index+1}}.{{item.title}}-->
+                    <!--</div>-->
+                <!--</template>-->
+            <!--</div>-->
+
+            <!--<div slot="footer" class="dialog-footer">-->
+                <!--<el-button type="primary" @click="print()">打 印</el-button>-->
+                <!--<el-button @click="dialogFormVisiblePreview = false">关 闭</el-button>-->
+            <!--</div>-->
+        <!--</el-dialog>-->
+
+        <el-dialog title="预览" :visible.sync="dialogFormVisiblePreview" width="80%">
+
+            <div id="preview" class="question_block" style="width: 754px;padding:20px;margin: 0 auto;border: 1px solid #ddd;position: relative " >
+                <!--<template v-for="(item,index) in current.questions">-->
+
+                <!--<div class="question_item">-->
+                <!--{{index+1}}.{{item.title}}-->
+                <!--</div>-->
+                <!--</template>-->
+
+                <template v-if="preview_content.id">
+                    <p style="text-align: center;font-size: 20px;font-weight: bolder">{{preview_content.title}}</p>
+                    <p style="text-align: center;font-size: 12px;margin-bottom: 20px;">考试时间:{{preview_content.time_limit_min}}分钟</p>
+                    <div style="font-size: 14px;margin-bottom: 10px;" v-for="(_question, type, index2) in preview_content.questions_with_types">
+                        <p style="float: 16px;font-weight: bolder;margin-top:20px;">{{_question.name}}</p>
+
+                        <template v-for="(question, index) in _question.list">
+                            <div style="margin-top: 10px;">
+                                <div style="float: left;vertical-align:top;width: 20px;" v-html="'<p style=\'display:inline-block\'>'+(index+1)+'、</p>'"></div>
+                                <div style="float: right;vertical-align:top;width: 50px;" v-html="'<p style=\'display:inline-block\'>['+question.score+'分]</p>'"></div>
+                                <div style="float: left;vertical-align:top;width: 670px;" v-html="question.question_content"></div>
+
+                                <template v-if="question.type==1">
+                                    <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options">
+                                        {{option.label}}.{{option.text}}
+                                    </div>
+
+                                </template>
+
+                                <template v-if="question.type==2">
+                                    <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options2">
+                                        {{option.label}}.{{option.text}}
+                                    </div>
+
+                                </template>
+                                <div style="clear: both"></div>
                             </div>
                         </template>
                     </div>
-                </div>
-            </div>
-            <div class="question_block" style="height:1123px;width: 794px;margin: 0 auto;border: 1px solid #ddd; " >
-                <template v-for="(item,index) in current.questions">
 
-                    <div class="question_item">
-                        {{index+1}}.{{item.title}}
-                    </div>
                 </template>
             </div>
 
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="print()">打 印</el-button>
+            <div slot="footer" class="dialog-footer" style="position: fixed;bottom:20px;left:50%">
+                <!--<el-button type="primary" @click="print()">打 印</el-button>-->
                 <el-button @click="dialogFormVisiblePreview = false">关 闭</el-button>
             </div>
         </el-dialog>
@@ -160,7 +209,7 @@
 <script>
     import headTop from '../components/headTop'
     import {get_grades} from '@/api/getDataEarth'
-    import {examine_paper_list,examine_paper_del,examine_paper_verify,examine_paper_sort} from '@/api/getDataexamine_paper'
+    import {examine_paper_list,examine_paper_del,examine_paper_verify,examine_paper_sort,examine_paper_info} from '@/api/getDataexamine_paper'
 
     import '@/assets/js/jquery-1.4.4.min';
     import '@/assets/js/jquery.jqprint-0.3';
@@ -185,7 +234,8 @@
                 hard_level:'',
                 useway_ids:[],
                 entity:'',
-                count_test:[1]
+                count_test:[1],
+                preview_content:{}
             }
         },
         components: {
@@ -341,6 +391,23 @@
                 setTimeout(()=>{
                     $("#preview").jqprint();
                 })
+
+            },
+            pre_print(paper) {
+                this.dialogFormVisiblePreview=true;
+                this.preview_content = {};
+                this.current=paper;
+                examine_paper_info({id:this.current.id, datika:0}).then((res) => {
+                    if (res.code == this.$store.state.constant.status_success) {
+                    this.preview_content = res.data;
+                } else {
+                    this.$message({
+                        message: res.msg,
+                        type: 'warning'
+                    });
+                }
+            });
+
 
             },
         },

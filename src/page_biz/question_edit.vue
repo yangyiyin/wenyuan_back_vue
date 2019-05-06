@@ -149,7 +149,12 @@
 
                     <el-radio-group v-model="question.answer_option" size="small">
                         <template v-for="(item,index) in question.answer_options">
-                            <p class="option"><el-radio :label="item.label" > {{item.label}}:<el-input placeholder="选项内容" style="width: 100px" v-model="item.text" ></el-input></el-radio><el-tag v-if="item.label==question.answer" type="success">正解</el-tag><el-button type="danger" size="mini" style="margin-left: 10px;" v-on:click="del_option(index)" >x</el-button></p>
+                            <!--<el-input placeholder="选项内容" style="width: 100px" v-model="item.text" ></el-input>-->
+                            <p class="option">
+                                <el-radio :label="item.label" > {{item.label}}:</el-radio>
+                                <el-input placeholder="选项内容" style="width: 100px" v-model="item.text" ></el-input>
+                                <el-tag v-if="item.label==question.answer_option" type="success">正解</el-tag>
+                                <el-button type="danger" size="mini" style="margin-left: 10px;" v-on:click="del_option(index)" >x</el-button></p>
 
                         </template>
 
@@ -168,7 +173,12 @@
 
                     <el-radio-group v-model="question.answer_option" size="small">
                         <template v-for="(item,index) in question.answer_options_2">
-                            <p class="option"><el-radio :label="item.label" > <el-input placeholder="判断内容" style="width: 100px" v-model="item.text" ></el-input></el-radio><el-tag v-if="item.label==question.answer" type="success">正解</el-tag></p>
+                            <p class="option">
+                                <el-radio :label="item.label" >
+                                </el-radio>
+                                <el-input placeholder="判断内容" style="width: 100px" v-model="item.text" ></el-input>
+                                <el-tag v-if="item.label==question.answer_option" type="success">正解</el-tag>
+                            </p>
 
                         </template>
 

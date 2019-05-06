@@ -19,7 +19,7 @@
                     <div v-if="!question.is_show_answer" style="color: rgb(20,200,20);cursor: pointer;padding: 10px;" @click="question.is_show_answer=1" >显示答案</div>
                     <div v-if="question.is_show_answer" style="color: rgb(20,200,20);cursor: pointer;padding: 10px;" @click="question.is_show_answer=0" >隐藏答案</div>
                     <div v-if="question.is_show_answer">
-                        <p>标准答案:{{question.question_answer.answer}}</p>
+                        <p v-html="'标准答案:'+question.question_answer.answer"></p>
                         <p v-html="'答案解析:'+question.question_answer.answer_parse"></p>
                     </div>
                 </div>

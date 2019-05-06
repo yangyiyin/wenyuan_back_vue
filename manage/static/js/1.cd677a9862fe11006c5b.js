@@ -2012,7 +2012,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "label": item.label
       }
-    }, [_vm._v(" " + _vm._s(item.label) + ":"), _c('el-input', {
+    }, [_vm._v(" " + _vm._s(item.label) + ":")]), _vm._v(" "), _c('el-input', {
       staticStyle: {
         "width": "100px"
       },
@@ -2026,11 +2026,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         },
         expression: "item.text"
       }
-    })], 1), (item.label == _vm.question.answer) ? _c('el-tag', {
+    }), _vm._v(" "), (item.label == _vm.question.answer_option) ? _c('el-tag', {
       attrs: {
         "type": "success"
       }
-    }, [_vm._v("正解")]) : _vm._e(), _c('el-button', {
+    }, [_vm._v("正解")]) : _vm._e(), _vm._v(" "), _c('el-button', {
       staticStyle: {
         "margin-left": "10px"
       },
@@ -2081,7 +2081,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "label": item.label
       }
-    }, [_c('el-input', {
+    }), _vm._v(" "), _c('el-input', {
       staticStyle: {
         "width": "100px"
       },
@@ -2095,7 +2095,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         },
         expression: "item.text"
       }
-    })], 1), (item.label == _vm.question.answer) ? _c('el-tag', {
+    }), _vm._v(" "), (item.label == _vm.question.answer_option) ? _c('el-tag', {
       attrs: {
         "type": "success"
       }

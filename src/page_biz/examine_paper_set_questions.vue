@@ -3,6 +3,16 @@
         <head-top></head-top>
 
         <div class="table_container" style="padding:20px">
+            <div class="search_item">
+                <div style="float:right;text-align: right">
+                    <p style="font-weight: bolder;font-size:20px;">
+                        {{data.title}}
+                    </p>
+                    <p style="font-weight: bolder;font-size:14px;">试卷总分:{{scores.total}}</p>
+                </div>
+
+                <div style="clear: both"></div>
+            </div>
 
                     <div class="search_item">
                         <span style="font-size: 16px;">选择题库题目:</span>
@@ -31,82 +41,103 @@
 
                     <div class="search_item">
                         <div class="question_block">
-                            <el-tag>一、选择题</el-tag>
+                            <el-tag>一、选择题[共{{scores.type1}}分]</el-tag>
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==1">
-                                   {{index+1}}.{{item.title}}
-                                    <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
-                                    <p style="margin-right:10px;float: right">
-                                        排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
-                                    </p>
-                                    <p style="margin-right:10px;float: right">
-                                        分值:<el-input size="mini" clearable placeholder="分值" v-model="item.score" style="width: 80px;"></el-input>
-                                    </p>
+                                   <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+
+                                    <div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+                                        <div style="clear: both"></div>
+                                    </div>
                                 </div>
                             </template>
                         </div>
                         <div class="question_block">
-                            <el-tag>二、判断题</el-tag>
+                            <el-tag>二、判断题[共{{scores.type2}}分]</el-tag>
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==2">
-                                    {{index+1}}.{{item.title}}
-                                    <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
-                                    <p style="margin-right:10px;float: right">
-                                        排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
-                                    </p>
-                                    <p style="margin-right:10px;float: right">
-                                        分值:<el-input size="mini" clearable placeholder="分值" v-model="item.score" style="width: 80px;"></el-input>
-                                    </p>
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+
+                                        <div style="clear: both"></div>
+                                    </div>
+
                                 </div>
                             </template>
                         </div>
                         <div class="question_block">
-                            <el-tag>三、填空题</el-tag>
+                            <el-tag>三、填空题[共{{scores.type3}}分]</el-tag>
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==3">
-                                    {{index+1}}.{{item.title}}
-                                    <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
-                                    <p style="margin-right:10px;float: right">
-                                        排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
-                                    </p>
-                                    <p style="margin-right:10px;float: right">
-                                        分值:<el-input size="mini" clearable placeholder="分值" v-model="item.score" style="width: 80px;"></el-input>
-                                    </p>
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <div>
+                                        <div style="clear: both"></div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+                                    </div>
+
                                 </div>
                             </template>
                         </div>
                         <div class="question_block">
-                            <el-tag>四、简答题</el-tag>
+                            <el-tag>四、简答题[共{{scores.type4}}分]</el-tag>
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==4">
-                                    {{index+1}}.{{item.title}}
-                                    <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
-                                    <p style="margin-right:10px;float: right">
-                                        排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
-                                    </p>
-                                    <p style="margin-right:10px;float: right">
-                                        分值:<el-input size="mini" clearable placeholder="分值" v-model="item.score" style="width: 80px;"></el-input>
-                                    </p>
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <div>
+                                        <div style="clear: both"></div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+                                    </div>
+
                                 </div>
                             </template>
                         </div>
                         <div class="question_block">
-                            <el-tag>五、其他题</el-tag>
+                            <el-tag>五、其他题[共{{scores.type5}}分]</el-tag>
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==5">
-                                    {{index+1}}.{{item.title}}
-                                    <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1)">删除</el-button>
-                                    <p style="margin-right:10px;float: right">
-                                        排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
-                                    </p>
-                                    <p style="margin-right:10px;float: right">
-                                        分值:<el-input size="mini" clearable placeholder="分值" v-model="item.score" style="width: 80px;"></el-input>
-                                    </p>
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <div>
+                                        <div style="clear: both"></div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+                                    </div>
+
                                 </div>
                             </template>
                         </div>
@@ -270,7 +301,15 @@
                 useway_ids:[],
                 grade_ids:[],
                 entity:'',
-                question_nums:[0,0,0,0,0]
+                question_nums:[0,0,0,0,0],
+                scores:{
+                    total:0,
+                    type1:0,
+                    type2:0,
+                    type3:0,
+                    type4:0,
+                    type5:0,
+                }
             }
 
         },
@@ -308,6 +347,14 @@
                 this.data = {
                     questions:[]
                 }
+                this.scores = {
+                    total:0,
+                    type1:0,
+                    type2:0,
+                    type3:0,
+                    type4:0,
+                    type5:0,
+                }
             },
             init_grades(){
                 return new Promise(function(resolve,reject){
@@ -331,8 +378,9 @@
                 examine_paper_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.data.questions = res.data.questions;
+                        this.data.title = res.data.title;
                         this.set_question_sort(res.data.questions);
-
+                        this.set_scores();
                     } else {
                         this.$message({
                             message: res.msg,
@@ -389,6 +437,7 @@
 
                 //设置排序值
                 this.set_question_sort(multipleSelectionAll);
+                this.set_scores();
 
             },
             set_question_sort(_multipleSelectionAll){
@@ -403,6 +452,7 @@
                 }
                 //console.log( this.data.questions);
 //                var questions_copy = deepCopy(this.data.questions);
+
                 multipleSelectionAll.forEach((val,index)=>{
 
 //                    questions_copy.forEach((val_old)=>{
@@ -411,7 +461,7 @@
 //                            val.score = val_old.score;
 //                        }
 //                    })
-                    val.sort_value = val.sort_value ? val.sort_value : 99;
+                    val.sort_value = val.sort_value ? val.sort_value : val.hard_level;
                     if (val.type == 1) {
                         questions.type1.push(val);
                     }
@@ -463,6 +513,7 @@
                             if (res.code == this.$store.state.constant.status_success) {
                                 this.data.questions = this.data.questions.concat(res.data);
                                 this.set_question_sort(this.data.questions);
+                                this.set_scores();
 //                                console.log(this.data.questions);
                             } else {
                                 this.$message({
@@ -473,6 +524,38 @@
 
                         }.bind(this));
 
+                    }
+                });
+            },
+            set_scores(){
+                this.scores = {
+                    total:0,
+                    type1:0,
+                    type2:0,
+                    type3:0,
+                    type4:0,
+                    type5:0,
+                }
+                this.data.questions.forEach((val,index)=>{
+                    this.scores.total += Number(val.score);
+                    if (val.type == 1) {
+
+                        this.scores.type1 += Number(val.score);
+                    }
+                    if (val.type == 2) {
+
+                        this.scores.type2 += Number(val.score);
+                    }
+                    if (val.type == 3) {
+
+                        this.scores.type3 += Number(val.score);
+                    }
+                    if (val.type == 4) {
+
+                        this.scores.type4 += Number(val.score);
+                    }
+                    if (val.type == 5) {
+                        this.scores.type5 += Number(val.score);
                     }
                 });
             }
