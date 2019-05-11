@@ -55,6 +55,7 @@ const student_examine_result = r => require.ensure([], () => r(require('@/page_b
 const add_student_examine_result = r => require.ensure([], () => r(require('@/page_biz/add_student_examine_result')), 'add_student_examine_result');
 const examination_examine_paper = r => require.ensure([], () => r(require('@/page_biz/examination_examine_paper')), 'examination_examine_paper');
 const edit_student_examine_result = r => require.ensure([], () => r(require('@/page_biz/edit_student_examine_result')), 'edit_student_examine_result');
+const review_student_examine_question = r => require.ensure([], () => r(require('@/page_biz/review_student_examine_question')), 'review_student_examine_question');
 //{#replace1#}
 
 const routes = [
@@ -255,6 +256,7 @@ const routes = [
 {path: '/examination_examine_paper',component: examination_examine_paper,meta: ['考试', '试卷'],},
 {path: '/student_examine_result',component: student_examine_result,meta: ['考试', '学生试卷'],},
 {path: '/edit_student_examine_result',component: edit_student_examine_result,meta: ['考试', '批阅学生答卷'],},
+{path: '/review_student_examine_question',component: review_student_examine_question,meta: ['考试', '批阅题目'],},
 //{#replace2#}
 		],
 	}

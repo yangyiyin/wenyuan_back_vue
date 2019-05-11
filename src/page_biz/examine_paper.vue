@@ -189,6 +189,22 @@
                                     </div>
 
                                 </template>
+
+                                <template v-if="question.type==6">
+                                    <div style="" v-for="(option,index) in question.question_answer.sub_content">
+                                        <div style="margin-left: 20px;">
+                                            <p>({{index+1}}){{option.title}}</p>
+                                            <template v-if="option.type==1">
+                                                <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option2,index2) in option.answer_options">
+                                                    {{option2.label}}.{{option2.text}}
+                                                </div>
+                                                <div style="clear: both"></div>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                </template>
+
                                 <div style="clear: both"></div>
                             </div>
                         </template>

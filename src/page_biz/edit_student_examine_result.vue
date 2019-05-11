@@ -6,7 +6,7 @@
             <div style="width: 750px;min-height: 20px;" v-for="(item, index) in info.questions_with_types">
                 <p style="margin-top: 20px">{{item.name}}</p>
                 <div v-for="(question, index2) in item.list" style="margin-top: 10px;border-bottom: 1px solid #999">
-                    <p v-html="(index2+1) +'.  ' +question.question_content"></p>
+                    <p style="max-height: 150px;overflow-y: auto" v-html="(index2+1) +'.  ' +question.question_content"></p>
 
                     <p v-if="question.answer" style="background: #fff;">学生答案:{{question.answer}}</p>
                     <p v-if="question.extra_link" style="background: #fff;">学生答案:<img style="vertical-align: middle" :src="question.extra_link"/></p>
@@ -19,7 +19,15 @@
                     <div v-if="!question.is_show_answer" style="color: rgb(20,200,20);cursor: pointer;padding: 10px;" @click="question.is_show_answer=1" >显示答案</div>
                     <div v-if="question.is_show_answer" style="color: rgb(20,200,20);cursor: pointer;padding: 10px;" @click="question.is_show_answer=0" >隐藏答案</div>
                     <div v-if="question.is_show_answer">
-                        <p v-html="'标准答案:'+question.question_answer.answer"></p>
+                        <p v-if="question.type == 3" >
+                            <span>答案:</span>
+                            <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                        </p>
+                        <p v-else-if="question.type == 6" >
+                            <span>答案:</span>
+                            <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">({{index3+1}}){{answer_item}}</span>
+                        </p>
+                        <p v-else v-html="'标准答案:'+question.question_answer.answer"></p>
                         <p v-html="'答案解析:'+question.question_answer.answer_parse"></p>
                     </div>
                 </div>

@@ -11,7 +11,7 @@
             <div class="search_item">
                 <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px">选择课程:</span>
                 <div v-loading="loading_course" style="border-bottom: 1px solid #999;">
-                    <el-checkbox v-model="checkList" @change="change_courses" style="margin-left: 30px;margin-bottom: 10px;" v-for="item in courselist" :disabled="item.disabled" :label="item.courseid">{{item.coursename}}</el-checkbox>
+                    <el-checkbox v-model="checkList" @change="change_courses" style="margin-left: 30px;margin-bottom: 10px;" v-for="(item, index) in courselist" :disabled="item.disabled" :label="item.courseid">{{item.coursename}}</el-checkbox>
 
                 </div>
             </div>
@@ -63,13 +63,13 @@
 
                 </el-input>
             </div>
-            <div v-for="item in courses_data" :key="item.courseid" style="border: 1px dashed #999;margin: 10px;padding-bottom: 10px;">
+            <div v-for="(item, index) in courses_data" :key="item.courseid" style="border: 1px dashed #999;margin: 10px;padding-bottom: 10px;">
                 <el-tag style="font-size: 18px;">{{item.coursename}}</el-tag>
                 <div class="search_item" style="margin-top: 20px">
                     <span  style="font-size: 14px;vertical-align: top;color: red;margin-left: 20px;padding: 10px;">1.选择班级(已筛选-未报满):</span>
                     <div  v-loading="item.loading_class">
                         <template v-if="item.class_list && item.class_list.length">
-                            <el-checkbox v-model="item.classes_ids" @change="change_class(item)" style="margin-left: 30px;margin-bottom: 10px;" v-for="item2 in item.class_list" :label="item2.classid">{{item2.classname}}</el-checkbox>
+                            <el-checkbox v-model="item.classes_ids" @change="change_class(item)" style="margin-left: 30px;margin-bottom: 10px;" v-for="(item2, index) in item.class_list" :label="item2.classid">{{item2.classname}}</el-checkbox>
 
                         </template>
                         <template v-else>

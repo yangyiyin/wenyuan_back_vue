@@ -8,7 +8,7 @@
                 <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>报名类型:</span>
                 <el-select v-model="type" placeholder="类型">
                     <el-option
-                            v-for="item in blocks"
+                            v-for="(item, index) in blocks"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
@@ -20,7 +20,7 @@
                 <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>考试类型:</span>
                 <el-select v-model="form_type" placeholder="类型">
                     <el-option
-                            v-for="item in blocks_form_type"
+                            v-for="(item, index) in blocks_form_type"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">

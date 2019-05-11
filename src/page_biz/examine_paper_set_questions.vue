@@ -141,6 +141,27 @@
                                 </div>
                             </template>
                         </div>
+                        <div class="question_block">
+                            <el-tag>六、阅读题[共{{scores.type6}}分]</el-tag>
+                            <template v-for="(item,index) in data.questions">
+
+                                <div class="question_item" v-if="item.type==6">
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <div>
+                                        <div style="clear: both"></div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+                                        <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
@@ -259,8 +280,57 @@
                         clearable>
                 </el-input>
             </p>
+            <p>
+                阅读题数量:
+                <el-input
+                        style="display: inline-block;width: 120px;"
+                        placeholder=""
+                        v-model="question_nums[5]"
+                        type="number"
+                        clearable>
+                </el-input>
+            </p>
+            <div style="float: left;width: 600px;margin-top: 20px;">
+                知识点:
+                <el-select v-model="knowledge_grade" placeholder="年级" clearable >
+                    <el-option
+                            v-for="item in grades"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item">
+                    </el-option>
+                </el-select>
+
+                <el-select v-model="knowledge_entity" placeholder="科目" clearable >
+                    <el-option
+                            v-for="item in [{label:'语文',value:1},{label:'数学',value:2},{label:'英语',value:3}]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item">
+                    </el-option>
+                </el-select>
+                <el-button type="primary" @click="search_knowledge()">搜索</el-button>
+
+                <p>
+                    <el-tag style="cursor: pointer;margin: 5px;" @click.native="add_point(knowledge)" v-for="(knowledge, index) in search_knowledge_ret">{{knowledge.name}}</el-tag>
+                </p>
+            </div>
+            <div style="float: left;margin-left: 10px;width: 300px;border: 1px solid #eee;padding: 20px;margin-top: 0px;">
+                <p v-for="(point, index) in knowledge_points_set">
+                    <el-tag closable @close="del_point(index)">{{point.name}}</el-tag>
+                    数量:
+                    <el-input
+                            style="display: inline-block;width: 120px;"
+                            placeholder=""
+                            v-model="point.num"
+                            type="number"
+                            clearable>
+                    </el-input>
+                </p>
+            </div>
+            <div style="clear: both"></div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="rand_questions()">随 机</el-button>
+                <el-button type="primary" @click="rand_questions()" v-loading="loading2">随 机</el-button>
                 <el-button @click="dialogFormVisibleQuestionsRand = false">关 闭</el-button>
             </div>
         </el-dialog>
@@ -275,12 +345,15 @@
     import {deepCopy, sortByKey} from '../config/mUtils'
     import {get_grades, rand_questions} from '@/api/getDataEarth'
     import {examine_paper_info,examine_paper_set_questions} from '@/api/getDataexamine_paper'
+    import {knowledge_point_all_list} from '@/api/getDataknowledge_point'
+
 
     export default {
         data(){
             return {
                 id:0,
                 loading:false,
+                loading2:false,
                 name:'',
                 data:{
                     questions:[]
@@ -301,7 +374,10 @@
                 useway_ids:[],
                 grade_ids:[],
                 entity:'',
-                question_nums:[0,0,0,0,0],
+                knowledge_grade:{},
+                knowledge_entity:{},
+                search_knowledge_ret:[],
+                question_nums:[0,0,0,0,0,0],
                 scores:{
                     total:0,
                     type1:0,
@@ -309,7 +385,9 @@
                     type3:0,
                     type4:0,
                     type5:0,
-                }
+                    type6:0,
+                },
+                knowledge_points_set:[]
             }
 
         },
@@ -354,6 +432,7 @@
                     type3:0,
                     type4:0,
                     type5:0,
+                    type6:0,
                 }
             },
             init_grades(){
@@ -449,6 +528,7 @@
                     type3:[],
                     type4:[],
                     type5:[],
+                    type6:[],
                 }
                 //console.log( this.data.questions);
 //                var questions_copy = deepCopy(this.data.questions);
@@ -477,6 +557,9 @@
                     if (val.type == 5) {
                         questions.type5.push(val);
                     }
+                    if (val.type == 6) {
+                        questions.type6.push(val);
+                    }
                 });
                 //console.log(questions);
                 //整体排序
@@ -486,6 +569,7 @@
                 questions.type3 = sortByKey(questions.type3, 'sort_value');
                 questions.type4 = sortByKey(questions.type4, 'sort_value');
                 questions.type5 = sortByKey(questions.type5, 'sort_value');
+                questions.type6 = sortByKey(questions.type6, 'sort_value');
 
                 this.data.questions = [];
                 questions.type1.forEach((val) => {
@@ -503,29 +587,107 @@
                 questions.type5.forEach((val) =>{
                     this.data.questions.push(val);
                 });
-
+                questions.type6.forEach((val) =>{
+                    this.data.questions.push(val);
+                });
             },
             rand_questions(){
                 this.data.questions = [];
-                this.question_nums.forEach((val, index)=>{
-                    if (val > 0) {
-                        rand_questions({num:val,type:(index+1),entity:this.entity,grade_ids:this.grade_ids,hard_level:[this.hard_level_min,this.hard_level_max],useway_ids:this.useway_ids}).then(function (res) {
+                this.gen_knowledge_points_set_arr();
+                this.question_nums_objs.forEach((val, index)=>{
+
+                    if (val.num > 0) {
+                        var left_num = val.num;
+                        this.knowledge_points_set.forEach((val2)=>{
+                            if (val2.num > 0 && val[val2.id] && val[val2.id].num > 0)
+                                {
+                                    left_num -= val[val2.id].num;
+                                    this.loading2 = true;
+                                    rand_questions({
+                                        knowledge_point: val2.id,
+                                        num: val[val2.id].num,
+                                        type: (index + 1),
+                                        entity: this.entity,
+                                        grade_ids: this.grade_ids,
+                                        hard_level: [this.hard_level_min, this.hard_level_max],
+                                        useway_ids: this.useway_ids
+                                    }).then(function (res) {
+                                        if (res.code == this.$store.state.constant.status_success) {
+                                            this.data.questions = this.data.questions.concat(res.data);
+                                            this.set_question_sort(this.data.questions);
+                                            this.set_scores();
+                                            //                                console.log(this.data.questions);
+                                        } else {
+//                                            this.$message({
+//                                                message: res.msg,
+//                                                type: 'warning'
+//                                            });
+                                        }
+                                        this.loading2 = false;
+                                    }.bind(this));
+                                }
+                        });
+                    };
+                    if (left_num > 0) {
+                        this.loading2 = true;
+                        rand_questions({
+                            num: left_num,
+                            type: (index + 1),
+                            entity: this.entity,
+                            grade_ids: this.grade_ids,
+                            hard_level: [this.hard_level_min, this.hard_level_max],
+                            useway_ids: this.useway_ids
+                        }).then(function (res) {
                             if (res.code == this.$store.state.constant.status_success) {
                                 this.data.questions = this.data.questions.concat(res.data);
                                 this.set_question_sort(this.data.questions);
                                 this.set_scores();
-//                                console.log(this.data.questions);
+                                //                                console.log(this.data.questions);
                             } else {
-                                this.$message({
-                                    message: res.msg,
-                                    type: 'warning'
-                                });
+//                                this.$message({
+//                                    message: res.msg,
+//                                    type: 'warning'
+//                                });
                             }
-
+                            this.loading2 = false;
                         }.bind(this));
-
                     }
                 });
+            },
+            gen_knowledge_points_set_arr(){
+                this.question_nums_objs = [];
+                var all_count = 0;
+                this.question_nums.forEach((val, index)=>{
+                    this.question_nums_objs[index] = {
+                        num:val
+                    };
+                    all_count += parseInt(val);
+                });
+
+                this.knowledge_points_set.forEach((val)=>{
+                    var left_num = val.num ;
+                    this.question_nums_objs.forEach((val2, index2)=>{
+                        if (val.num > 0) {
+                            val2[val.id] = val2[val.id] ? val2[val.id] : {};
+                            val2[val.id].num = Math.floor((val2.num/all_count) * val.num);
+                            left_num -= val2[val.id].num;
+                        }
+                    });
+                    if (left_num > 0) {
+                        this.question_nums_objs.forEach((val2, index2)=>{
+                            if (val.num > 0 && left_num > 0) {
+                                val2[val.id].num ++;
+                                left_num --;
+                                if (left_num <=0) {
+                                    return;
+                                }
+                            }
+                        });
+                    }
+
+                });
+                //console.log(this.question_nums_objs);
+
             },
             set_scores(){
                 this.scores = {
@@ -535,6 +697,7 @@
                     type3:0,
                     type4:0,
                     type5:0,
+                    type6:0,
                 }
                 this.data.questions.forEach((val,index)=>{
                     this.scores.total += Number(val.score);
@@ -557,9 +720,38 @@
                     if (val.type == 5) {
                         this.scores.type5 += Number(val.score);
                     }
+                    if (val.type == 6) {
+                        this.scores.type6 += Number(val.score);
+                    }
                 });
+            },
+            search_knowledge() {
+                knowledge_point_all_list({group:this.knowledge_grade,group_subject:this.knowledge_entity}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.search_knowledge_ret = res.data;
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+            },
+            add_point(point){
+                for(var i in this.knowledge_points_set) {
+                    if (this.knowledge_points_set[i].id == point.id) {
+                        return ;
+                    }
+                }
+                this.knowledge_points_set.push({
+                    num:0,
+                    name:point.name,
+                    id:point.id
+                });
+            },
+            del_point(index){
+                this.knowledge_points_set.splice(index, 1);
             }
-
         }
     }
 </script>

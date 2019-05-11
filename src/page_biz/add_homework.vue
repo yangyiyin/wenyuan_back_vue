@@ -325,9 +325,9 @@
 </template>
 
 <script>
-    import headTop from '../components/headTop'
-    import questions from '../components/questions'
-    import classes from '../components/classes'
+    import headTop from '@/components/headTop'
+    import questions from '@/components/questions'
+    import classes from '@/components/classes'
     import {homework_edit,homework_info} from '@/api/getDatahomework'
     import {admin_user_all_list} from '@/api/getDataEarth'
     import html2canvas from 'html2canvas';

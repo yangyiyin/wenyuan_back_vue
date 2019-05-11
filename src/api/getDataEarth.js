@@ -38,6 +38,8 @@ export const examination_sort = data => fetch('/wenyuanjiaoyu/examination/sort',
 export const get_examine_papers = data => fetch('/wenyuanjiaoyu/examination/get_examine_papers', data, 'POST').then(check_login);
 export const set_examine_paper = data => fetch('/wenyuanjiaoyu/examination/set_examine_paper', data, 'POST').then(check_login);
 export const set_publish_examine_paper_result = data => fetch('/wenyuanjiaoyu/examination/set_publish_examine_paper_result', data, 'POST').then(check_login);
+export const set_examine_paper_status = data => fetch('/wenyuanjiaoyu/examination/set_examine_paper_status', data, 'POST').then(check_login);
+export const get_examine_paper_status = data => fetch('/wenyuanjiaoyu/examination/get_examine_paper_status', data, 'POST').then(check_login);
 export const get_examine_paper_data_url = data => fetch('/wenyuanjiaoyu/examination/get_examine_paper_data_url', data, 'POST').then(check_login);
 export const examination_excel_out = data => fetch('/wenyuanjiaoyu/examination_signs/excel_out', data, 'POST').then(check_login);
 export const examination_gen_ticket = data => fetch('/wenyuanjiaoyu/examination_signs/gen_ticket', data, 'POST').then(check_login);

@@ -14,6 +14,7 @@ export const parse_zip = data => fetch('/wenyuanjiaoyu/student_examine_result/pa
 export const get_parse_zip_process = data => fetch('/wenyuanjiaoyu/student_examine_result/get_parse_zip_process', data, 'POST').then(check_login);
 export const reckon_result = data => fetch('/wenyuanjiaoyu/student_examine_result/reckon_result', data, 'POST').then(check_login);
 export const submit_result = data => fetch('/wenyuanjiaoyu/question_student_result/submit_result_examine', data, 'POST').then(check_login);
+export const reckon_result_batch = data => fetch('/wenyuanjiaoyu/student_examine_result/reckon_result_batch', data, 'POST').then(check_login);
 
 
 

@@ -21,6 +21,7 @@
                     <el-radio label="3" border >填空题</el-radio>
                     <el-radio label="4" border >简答题</el-radio>
                     <el-radio label="5" border >其他题</el-radio>
+                    <el-radio label="6" border >阅读题</el-radio>
                 </el-radio-group>
             </div>
 
@@ -216,6 +217,61 @@
                     <script id="editor2" type="text/plain" ></script>
                 </div>
             </div>
+
+            <div v-show="question.type==6" class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>子题:</span>
+                <div style="display: inline-block;vertical-align: top">
+                <p v-for="(sub, index) in question.answer_subs" style="margin-bottom:10px;border: 1px solid #eee;padding: 10px;padding-right:30px;position: relative">
+                    <span style="position: absolute;top: 0;right: 0;background: #f56c6c;cursor:pointer;color: #fff;width: 20px;height: 20px;text-align: center;line-height: 20px" @click="question.answer_subs.splice(index, 1)">x</span>
+
+                    {{index+1}}、<el-input placeholder="题目内容" style="width: 600px" v-model="sub.title" ></el-input>
+
+                    <template>
+                        <div style="margin-bottom: 10px;">
+                            <el-radio-group style="display: block;margin-top: 10px;float: right" v-model="sub.type" size="small" @change="change_sub_type(sub)">
+                                <el-radio label="1" border>单选</el-radio>
+                                <el-radio label="3" border >填空</el-radio>
+
+                            </el-radio-group>
+                            <div style="clear: both"></div>
+                        </div>
+                    </template>
+                    <template v-if="sub.type == 1">
+                        <div style="vertical-align: top;;">
+
+                            <el-radio-group v-model="sub.answer" size="small">
+                                <template v-for="(item,index) in sub.answer_options">
+                                <p class="option">
+                                    <el-radio :label="item.label" > {{item.label}}:</el-radio>
+                                    <el-input placeholder="选项内容" style="width: 100px" v-model="item.text" ></el-input>
+                                    <el-tag v-if="item.label==sub.answer" type="success">正解</el-tag>
+                                    <el-button type="danger" size="mini" style="margin-left: 10px;" v-on:click="del_sub_option(sub.answer_options, index)" >x</el-button></p>
+
+                                </template>
+
+                            </el-radio-group>
+
+                            <br/>
+                            <el-button type="primary" style="margin-bottom: 10px;" size="mini" v-on:click="add_sub_option(sub.answer_options)" >增加选项</el-button>
+                        </div>
+                    </template>
+                    <template v-if="sub.type==3">
+                        <div>
+                            答案:<el-input placeholder="答案" style="width: 600px" v-model="sub.answer" ></el-input>
+
+                        </div>
+                    </template>
+                    <!--<el-button @click="question.answer_subs.splice(index, 1)">删除</el-button>-->
+                </p>
+                <p>
+                    <el-button @click="add_sub()" type="primary">添加子题</el-button>
+                </p>
+            </div>
+            </div>
+
+
+
+
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;">答案解析:</span>
                 <!--<quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor3" :content="question.answer_parse" :options = "editorOption" @change="onEditorChange($event,'answer_parse')"></quill-editor>-->
@@ -240,8 +296,8 @@
             <!--<div class="editor-container">-->
                 <!--<UE :defaultMsg=defaultMsg :config=config ref="ue"></UE>-->
             <!--</div>-->
-            <el-button @click="getUEContent()">获取内容</el-button>
-            <el-button @click="getUEText()">获取text</el-button>
+            <!--<el-button @click="getUEContent()">获取内容</el-button>-->
+            <!--<el-button @click="getUEText()">获取text</el-button>-->
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">录入</el-button>
 
 
@@ -288,7 +344,16 @@
                     fill_num:'1',
                     knowledge_group_subject:{id:1,name:'语文'},
                     knowledge_group:{id:1,name:'一年级'},
-
+                    answer_subs:[{
+                        type:'1',
+                        title:'',
+                        answer:'A',
+                        answer_options:[
+                            {label:'A',text:''},
+                            {label:'B',text:''},
+                            {label:'C',text:''}
+                        ]
+                    }]
 
                 },
                 knowledge_points:[],
@@ -600,6 +665,17 @@
                     fill_num:'1',
                     knowledge_group_subject:{id:1,name:'语文'},
                     knowledge_group:{id:1,name:'一年级'},
+                    answer_subs:[{
+                        type:'1',
+                        title:'',
+                        answer:'A',
+                        answer_options:[
+                            {label:'A',text:''},
+                            {label:'B',text:''},
+                            {label:'C',text:''}
+                        ]
+                    }]
+
                 }
             },
 
@@ -724,6 +800,63 @@
 
 
             },
+
+            add_sub_option(options){
+
+                var option_labels = ['A','B','C','D','E','F','G'];
+                if (option_labels.length < (options.length+1)) {
+                    this.$message({
+                        message: '对不起,最多只支持7个选项',
+                        type: 'warning'
+                    });
+                    return ;
+                }
+
+                var option = {
+                    label:'A',
+                    text:''
+                }
+
+                options.push(option);
+                this.gen_sub_options(options);
+            },
+            del_sub_option(options, index){
+                if (options.length<=1) {
+
+                    this.$message({
+                        message: '对不起,至少含有一个选项',
+                        type: 'warning'
+                    });
+                    return ;
+
+                }
+                options.splice(index,1);
+                this.gen_sub_options(options);
+            },
+
+            gen_sub_options(options){
+                var option_labels = ['A','B','C','D','E','F','G'];
+                if (option_labels.length < options.length) {
+                    this.$message({
+                        message: '对不起,最多只支持7个选项',
+                        type: 'warning'
+                    });
+                    return ;
+                }
+                options.forEach(function(val,index){
+                    val.label = option_labels[index];
+                })
+
+
+            },
+
+            change_sub_type(sub){
+                if (sub.type==1 ) {
+                    sub.answer = 'A';
+                } else {
+                    sub.answer = '';
+                }
+            },
             change_type(){
                 if (this.question.type==1 || this.question.type==2) {
                     this.question.answer_option = 'A';
@@ -757,6 +890,18 @@
                     }
                 }.bind(this));
             },
+            add_sub(){
+                this.question.answer_subs.push({
+                    type:'1',
+                    title:'',
+                    answer:'A',
+                    answer_options:[
+                        {label:'A',text:''},
+                        {label:'B',text:''},
+                        {label:'C',text:''}
+                    ]
+                });
+            }
 //            getUEContent() {
 //                let content = this.editor1.getContent();
 //                console.log(content)

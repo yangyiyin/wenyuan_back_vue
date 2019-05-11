@@ -126,7 +126,7 @@
 </template>
 
 <script>
-    import headTop from '../components/headTop'
+    import headTop from '@/components/headTop'
     import {homework_list,homework_del,homework_verify,homework_sort} from '@/api/getDataHomework'
     import {class_list} from '@/api/getDataEarth'
     export default {
