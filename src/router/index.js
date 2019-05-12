@@ -56,6 +56,7 @@ const add_student_examine_result = r => require.ensure([], () => r(require('@/pa
 const examination_examine_paper = r => require.ensure([], () => r(require('@/page_biz/examination_examine_paper')), 'examination_examine_paper');
 const edit_student_examine_result = r => require.ensure([], () => r(require('@/page_biz/edit_student_examine_result')), 'edit_student_examine_result');
 const review_student_examine_question = r => require.ensure([], () => r(require('@/page_biz/review_student_examine_question')), 'review_student_examine_question');
+const minipro_qrcode = r => require.ensure([], () => r(require('@/page_biz/minipro_qrcode')), 'minipro_qrcode');
 //{#replace1#}
 
 const routes = [
@@ -257,6 +258,7 @@ const routes = [
 {path: '/student_examine_result',component: student_examine_result,meta: ['考试', '学生试卷'],},
 {path: '/edit_student_examine_result',component: edit_student_examine_result,meta: ['考试', '批阅学生答卷'],},
 {path: '/review_student_examine_question',component: review_student_examine_question,meta: ['考试', '批阅题目'],},
+{path: '/minipro_qrcode',component: minipro_qrcode,meta: ['系统', '小程序二维码'],},
 //{#replace2#}
 		],
 	}
