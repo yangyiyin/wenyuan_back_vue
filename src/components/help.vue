@@ -8,7 +8,8 @@
         <p style="line-height: 22px;">4.增加人工审批试卷可选择某一题进行审批的功能</p>
         <p style="line-height: 22px;">5.增加试卷(含答案)打印</p>
         <p style="line-height: 22px;">6.增加考试卷批阅完，成绩可同步至考试报名信息中的功能</p>
-        <p style="line-height: 22px;">7.其他:修复已知bug</p>
+        <p style="line-height: 22px;">7.增加系统>小程序页面二维码的功能,可配置二维码跳转到指定页面</p>
+        <p style="line-height: 22px;">8.其他:修复已知bug</p>
 
     </div>
 </template>
