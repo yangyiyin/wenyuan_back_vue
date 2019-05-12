@@ -22,14 +22,32 @@
                 <el-table-column label="输入得分">
                     <template slot-scope="scope">
 
-                        <el-input
-                                style="width: 100px;"
-                                type="number"
-                                placeholder="得分"
-                                v-model="scope.row.question_data.result"
-                                @change="set_question_score(scope.row)"
-                                clearable>
-                        </el-input>
+                        <template v-if="scope.row.question_data.type == 6">
+                            <template v-for="(_sub_result,index) in scope.row.question_data.result.sub_result">
+                                <p>
+                                    ({{index+1}})<el-input
+                                        style="width: 100px;"
+                                        type="number"
+                                        placeholder="得分"
+                                        v-model="scope.row.question_data.result.sub_result[index]"
+                                        @change="set_question_score(scope.row)"
+                                        clearable>
+                                </el-input>
+                                </p>
+                            </template>
+
+                        </template>
+                        <template v-else>
+                            <el-input
+                                    style="width: 100px;"
+                                    type="number"
+                                    placeholder="得分"
+                                    v-model="scope.row.question_data.result"
+                                    @change="set_question_score(scope.row)"
+                                    clearable>
+                            </el-input>
+                        </template>
+
 
                     </template>
                 </el-table-column>
