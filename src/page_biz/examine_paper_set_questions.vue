@@ -45,7 +45,8 @@
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==1">
-                                   <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                   <span style="font-weight: bolder;color:#000">{{index+1}}.</span>
+                                       <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
 
                                     <div>
                                         <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
@@ -60,12 +61,13 @@
                                 </div>
                             </template>
                         </div>
+
                         <div class="question_block">
                             <el-tag>二、判断题[共{{scores.type2}}分]</el-tag>
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==2">
-                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>   <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
                                     <div>
                                         <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
                                         <p style="margin-right:10px;float: right">
@@ -86,7 +88,7 @@
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==3">
-                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>   <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
                                     <div>
                                         <div style="clear: both"></div>
                                         <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
@@ -106,7 +108,7 @@
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==4">
-                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>   <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
                                     <div>
                                         <div style="clear: both"></div>
                                         <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
@@ -126,7 +128,7 @@
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==5">
-                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>   <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
                                     <div>
                                         <div style="clear: both"></div>
                                         <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
@@ -146,7 +148,7 @@
                             <template v-for="(item,index) in data.questions">
 
                                 <div class="question_item" v-if="item.type==6">
-                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>{{item.title}}
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>   <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
                                     <div>
                                         <div style="clear: both"></div>
                                         <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
@@ -334,6 +336,17 @@
                 <el-button @click="dialogFormVisibleQuestionsRand = false">关 闭</el-button>
             </div>
         </el-dialog>
+        <!--<script id="editor1" type="text/plain" ></script>-->
+        <el-dialog title="修改内容" :visible.sync="dialogFormVisibleEditContent" width="80%">
+
+            <p>
+                <script id="editor1" type="text/plain" ></script>
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="confirm_edit_content">确 认</el-button>
+                <el-button @click="dialogFormVisibleEditContent = false">关 闭</el-button>
+            </div>
+        </el-dialog>
 
 </div>
 
@@ -366,6 +379,7 @@
                 upload_url:this.$store.state.constant.upload_url_local,
                 dialogFormVisibleQuestions:false,
                 dialogFormVisibleQuestionsRand:false,
+                dialogFormVisibleEditContent:false,
                 deepCopy:deepCopy,
                 grade:{},
                 grades:[],
@@ -387,18 +401,39 @@
                     type5:0,
                     type6:0,
                 },
-                knowledge_points_set:[]
+                knowledge_points_set:[],
+                config: {
+                    initialFrameWidth: null,
+                    initialFrameHeight: 250,
+                    initialFrameWidth: 600,
+                    toolbars: [[
+                        'fullscreen', 'source', '|',
+                        'bold', 'italic', 'underline', '|', 'fontsize', 'insertimage', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'kityformula',
+                        'preview'
+                    ]]
+                },
+                editor1:null,
+                current_edit_item:{},
+                current_edit_item_index:-1
             }
 
         },
         components: {
             headTop,
-            questions
+            questions,
         },
         created(){
-
         },
         mounted(){
+
+//            setTimeout(()=>{
+//                var _this = this;
+//            this.editor1 = UE.getEditor('editor1', this.config); // 初始化UE
+//            this.editor1.addListener("ready", function () {
+//                //_this.editor1.setContent(_this.current_edit_item.question_content); // 确保UE加载完成后，放入内容。
+//            });
+//            },3000);
+
         },
 
         beforeRouteEnter (to, from, next) {
@@ -541,7 +576,7 @@
 //                            val.score = val_old.score;
 //                        }
 //                    })
-                    val.sort_value = val.sort_value ? val.sort_value : val.hard_level;
+                    val.sort_value = val.sort_value ? val.sort_value : val.hard_level * (100 + parseInt(index));
                     if (val.type == 1) {
                         questions.type1.push(val);
                     }
@@ -751,6 +786,32 @@
             },
             del_point(index){
                 this.knowledge_points_set.splice(index, 1);
+            },
+            edit_content(index) {
+                var _this = this;
+                this.current_edit_item = this.data.questions[index];
+                this.current_edit_item_index = index;
+                this.dialogFormVisibleEditContent = true;
+                setTimeout(()=>{
+                    if (this.editor1) {
+                        UE.delEditor('editor1');
+                    } else {
+
+                    }
+
+                    this.editor1 = UE.getEditor('editor1', this.config); // 初始化UE
+                    this.editor1.addListener("ready", function () {
+                        _this.editor1.setContent(_this.current_edit_item.question_content); // 确保UE加载完成后，放入内容。
+                    });
+                })
+
+            },
+            confirm_edit_content(){
+                if (this.data.questions[this.current_edit_item_index]) {
+                    this.data.questions[this.current_edit_item_index].question_content2 = this.editor1.getContent();
+                }
+
+                this.dialogFormVisibleEditContent = false;
             }
         }
     }
