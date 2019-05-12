@@ -21,7 +21,7 @@
             </div>
 
 
-            <el-button type="success" style="margin-top: 20px;" v-on:click="submit" >生成地址</el-button>
+            <el-button type="success" style="margin-top: 20px;" v-on:click="submit" >生成二维码</el-button>
 
             <div class="search_item" v-if="qrcode_url">
 
