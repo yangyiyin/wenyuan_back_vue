@@ -30,8 +30,8 @@
                     <el-button type="warning" size="mini"  @click="pre_print(2, paper)">打印答题卡</el-button>
                     <el-button type="primary" size="mini"  @click="goto_review_examine_paper(paper)">学生答卷</el-button>
                     <el-button type="primary" size="mini"  @click="review_examine_question(paper)">批阅题目</el-button>
-                    <el-button type="primary" size="mini" v-loading="loading1"  @click="reckon_result_batch(paper)">计算成绩</el-button>
-                    <el-button type="primary" size="mini" v-loading="loading2" @click="set_publish_examine_paper_result(paper)">发布成绩</el-button>
+                    <el-button type="primary" size="mini" :loading="loading1===index"  @click="reckon_result_batch(paper,index)">计算成绩</el-button>
+                    <el-button type="primary" size="mini" :loading="loading2===index" @click="set_publish_examine_paper_result(paper,index)">发布成绩</el-button>
                     <el-button type="danger" size="mini"  @click="del(paper)">删除</el-button>
                 </p>
 
@@ -157,11 +157,11 @@
 
                         <template v-for="(_question,index) in question_position.questions">
                             <div v-if="(_question.type==1 || _question.type==2) && _question.is_sub_title" :style="'font-size: 12px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;text-align: center;width: 22px;'">{{_question.text}}</div>
-                            <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}、</div>
+                            <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6|| _question.type==7) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}、</div>
                             <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && _question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}</div>
 
                             <div v-if="(_question.type==1 || _question.type==2) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;'">{{_question.text}}</div>
-                            <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
+                            <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
 
 
                         </template>
@@ -290,11 +290,11 @@
 
                 <template v-for="(_question,index) in question_position.questions">
                     <div v-if="(_question.type==1 || _question.type==2) && _question.is_sub_title" :style="'font-size: 12px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;text-align: center;width: 22px;'">{{_question.text}}</div>
-                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}、</div>
+                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6|| _question.type==7) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}、</div>
                     <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && _question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}</div>
 
                     <div v-if="(_question.type==1 || _question.type==2) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;'">{{_question.text}}</div>
-                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
+                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
 
 
                 </template>
@@ -545,8 +545,8 @@
 
 
             },
-            reckon_result_batch(paper){
-                this.loading1 = true;
+            reckon_result_batch(paper, i){
+                this.loading1 = i;
                 reckon_result_batch({examine_paper_id:paper.id, examine_id:this.id}).then((res) => {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.$message({
@@ -563,8 +563,8 @@
                     this.loading1 = false
                 });
             },
-            set_publish_examine_paper_result(paper){
-                this.loading2 = true;
+            set_publish_examine_paper_result(paper,i){
+                this.loading2 = i;
                 set_publish_examine_paper_result({examine_paper_id:paper.id, examine_id:this.id, is_publish:1}).then((res) => {
                     if (res.code == this.$store.state.constant.status_success) {
                     this.$message({

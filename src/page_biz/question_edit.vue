@@ -22,6 +22,7 @@
                     <el-radio label="4" border >简答题</el-radio>
                     <el-radio label="5" border >其他题</el-radio>
                     <el-radio label="6" border >阅读题</el-radio>
+                    <el-radio label="7" border >计算题</el-radio>
                 </el-radio-group>
             </div>
 
@@ -210,7 +211,7 @@
 
             </div>
 
-            <div v-show="question.type==4 || question.type==5" class="search_item">
+            <div v-show="question.type==4 || question.type==5 || question.type==7" class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;">*</i>答案:</span>
                 <!--<quill-editor style="display:inline-block;width: 600px;vertical-align: top" ref="myQuillEditor2" :content="question.answer" :options = "editorOption" @change="onEditorChange($event,'answer')"></quill-editor>-->
                 <div class="editor-container">

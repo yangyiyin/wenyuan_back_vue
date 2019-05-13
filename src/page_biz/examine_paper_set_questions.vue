@@ -98,6 +98,7 @@
                                         <p style="margin-right:10px;float: right">
                                             分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
                                         </p>
+                                        <div style="clear: both"></div>
                                     </div>
 
                                 </div>
@@ -118,6 +119,7 @@
                                         <p style="margin-right:10px;float: right">
                                             分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
                                         </p>
+                                        <div style="clear: both"></div>
                                     </div>
 
                                 </div>
@@ -138,6 +140,7 @@
                                         <p style="margin-right:10px;float: right">
                                             分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
                                         </p>
+                                        <div style="clear: both"></div>
                                     </div>
 
                                 </div>
@@ -164,6 +167,29 @@
                                 </div>
                             </template>
                         </div>
+
+                        <div class="question_block">
+                            <el-tag>七、计算题[共{{scores.type7}}分]</el-tag>
+                            <template v-for="(item,index) in data.questions">
+
+                                <div class="question_item" v-if="item.type==7">
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>   <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
+                                    <div>
+                                        <div style="clear: both"></div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+                                        <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </template>
+                        </div>
+
                     </div>
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
@@ -292,6 +318,16 @@
                         clearable>
                 </el-input>
             </p>
+            <p>
+                计算题数量:
+                <el-input
+                        style="display: inline-block;width: 120px;"
+                        placeholder=""
+                        v-model="question_nums[6]"
+                        type="number"
+                        clearable>
+                </el-input>
+            </p>
             <div style="float: left;width: 600px;margin-top: 20px;">
                 知识点:
                 <el-select v-model="knowledge_grade" placeholder="年级" clearable >
@@ -391,7 +427,7 @@
                 knowledge_grade:{},
                 knowledge_entity:{},
                 search_knowledge_ret:[],
-                question_nums:[0,0,0,0,0,0],
+                question_nums:[0,0,0,0,0,0,0],
                 scores:{
                     total:0,
                     type1:0,
@@ -400,6 +436,7 @@
                     type4:0,
                     type5:0,
                     type6:0,
+                    type7:0,
                 },
                 knowledge_points_set:[],
                 config: {
@@ -468,6 +505,7 @@
                     type4:0,
                     type5:0,
                     type6:0,
+                    type7:0,
                 }
             },
             init_grades(){
@@ -564,6 +602,7 @@
                     type4:[],
                     type5:[],
                     type6:[],
+                    type7:[],
                 }
                 //console.log( this.data.questions);
 //                var questions_copy = deepCopy(this.data.questions);
@@ -595,6 +634,9 @@
                     if (val.type == 6) {
                         questions.type6.push(val);
                     }
+                    if (val.type == 7) {
+                        questions.type7.push(val);
+                    }
                 });
                 //console.log(questions);
                 //整体排序
@@ -605,6 +647,7 @@
                 questions.type4 = sortByKey(questions.type4, 'sort_value');
                 questions.type5 = sortByKey(questions.type5, 'sort_value');
                 questions.type6 = sortByKey(questions.type6, 'sort_value');
+                questions.type7 = sortByKey(questions.type7, 'sort_value');
 
                 this.data.questions = [];
                 questions.type1.forEach((val) => {
@@ -623,6 +666,9 @@
                     this.data.questions.push(val);
                 });
                 questions.type6.forEach((val) =>{
+                    this.data.questions.push(val);
+                });
+                questions.type7.forEach((val) =>{
                     this.data.questions.push(val);
                 });
             },
@@ -733,6 +779,7 @@
                     type4:0,
                     type5:0,
                     type6:0,
+                    type7:0,
                 }
                 this.data.questions.forEach((val,index)=>{
                     this.scores.total += Number(val.score);
@@ -757,6 +804,9 @@
                     }
                     if (val.type == 6) {
                         this.scores.type6 += Number(val.score);
+                    }
+                    if (val.type == 7) {
+                        this.scores.type7 += Number(val.score);
                     }
                 });
             },

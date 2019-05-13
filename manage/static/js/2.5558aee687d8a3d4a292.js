@@ -1816,7 +1816,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "label": "6",
       "border": ""
     }
-  }, [_vm._v("阅读题")])], 1)], 1), _vm._v(" "), _c('div', {
+  }, [_vm._v("阅读题")]), _vm._v(" "), _c('el-radio', {
+    attrs: {
+      "label": "7",
+      "border": ""
+    }
+  }, [_vm._v("计算题")])], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "search_item"
   }, [_vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _c('el-upload', {
     ref: "upload",
@@ -2269,8 +2274,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: (_vm.question.type == 4 || _vm.question.type == 5),
-      expression: "question.type==4 || question.type==5"
+      value: (_vm.question.type == 4 || _vm.question.type == 5 || _vm.question.type == 7),
+      expression: "question.type==4 || question.type==5 || question.type==7"
     }],
     staticClass: "search_item"
   }, [_vm._m(13), _vm._v(" "), _vm._m(14)]), _vm._v(" "), _c('div', {
