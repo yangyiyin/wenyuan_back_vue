@@ -6,7 +6,8 @@
 
             <p>
                 <template v-for="(paper, key, index) in info.papers">
-                    <a href="javascript:;" v-if="key < 0" @click="current_img=paper;showimg=true">答题卡{{-key}}</a>
+                    <a href="javascript:;" v-if="key < 0" @click="current_img=paper;showimg=true" style="margin-left:10px">答题卡{{-key}}</a>
+
                 </template>
 
             </p>

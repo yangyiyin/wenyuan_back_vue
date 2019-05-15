@@ -10,7 +10,7 @@
                     :data="tableData"
                     style="width: 100%">
                 <el-table-column label="学生序号" prop="id"></el-table-column>
-                <el-table-column label="学生答案" style="width: 750px;" >
+                <el-table-column label="学生答案" width="750" >
                     <template slot-scope="scope">
 
                         <p v-if="scope.row.question_data.answer">{{scope.row.question_data.answer}}</p>

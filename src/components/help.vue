@@ -2,11 +2,17 @@
     <div style="height: 500px;overflow-y: auto">
         <el-scrollbar style="height: 100%;">
 
+            <p style="font-size: 16px;font-weight: bolder">2019.5.15重要更新内容:</p>
+            <p style="line-height: 22px;">1.修改答题卡解析参数,是解析器更加适合实际情况</p>
+            <p style="line-height: 22px;">2.增加学生批阅界面序号和原答卷链接</p>
+            <p style="height: 20px;"></p>
+
             <p style="font-size: 16px;font-weight: bolder">2019.5.13重要更新内容:</p>
             <p style="line-height: 22px;">1.修复打印答卷不显示bug</p>
             <p style="line-height: 22px;">2.题库增加计算题题型</p>
             <p style="line-height: 22px;">3.题库题型在考卷中的排序逻辑修改</p>
             <p style="height: 20px;"></p>
+
             <p style="font-size: 16px;font-weight: bolder">2019.5.12重要更新内容:</p>
             <p style="line-height: 22px;">1.试题增加了阅读题。阅读题也可以理解为一个主题干下,有多个小题,小题的形式目前支持单选和填空。
                 只支持在考试卷中使用,且需人工审批。在考试卷人工审批过程中,阅读题的给分以每个小题分别给分的形式给分。</p>
