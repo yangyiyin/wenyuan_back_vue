@@ -39,6 +39,7 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
+                <el-table-column label="考生序号" prop="examination.id"></el-table-column>
                 <el-table-column label="考试" prop="examination.title"></el-table-column>
                 <el-table-column label="试卷" prop="examine_paper_info.title"></el-table-column>
                 <el-table-column label="班级" prop="class_info.classname"></el-table-column>

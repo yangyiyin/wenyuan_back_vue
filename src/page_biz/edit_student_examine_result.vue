@@ -3,6 +3,13 @@
         <head-top></head-top>
         <div class="table_container" style="background: #fff5d4" v-if="info">
             <p style="margin: 0 auto;font-size: 20px;text-align: center;font-weight: bolder">{{info.examine_paper_info.title}}</p>
+
+            <p>
+                <template v-for="(paper, key, index) in info.papers">
+                    <a href="javascript:;" v-if="key < 0" @click="current_img=paper;showimg=true">答题卡{{-key}}</a>
+                </template>
+
+            </p>
             <div style="width: 750px;min-height: 20px;" v-for="(item, index) in info.questions_with_types">
                 <p style="margin-top: 20px">{{item.name}}</p>
                 <div v-for="(question, index2) in item.list" style="margin-top: 10px;border-bottom: 1px solid #999">
@@ -38,17 +45,11 @@
             </div>
 
         </div>
-        <!--<el-dialog title="修改排序" :visible.sync="dialogFormVisible" width="30%">-->
-            <!--<el-form :model="current">-->
-                <!--<el-form-item label="排序值(越大越靠前)">-->
-                    <!--<el-input v-model="current.sort" auto-complete="off"></el-input>-->
-                <!--</el-form-item>-->
-            <!--</el-form>-->
-            <!--<div slot="footer" class="dialog-footer">-->
-                <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-                <!--<el-button type="primary" @click="sort">确 定</el-button>-->
-            <!--</div>-->
-        <!--</el-dialog>-->
+        <el-dialog title="答题卡" :visible.sync="showimg" width="80%">
+
+            <img style="width: 100%" :src="'https://api.yixsu.com/static/' + current_img.replace('/data/', '')"/>
+
+        </el-dialog>
     </div>
 </template>
 
@@ -62,7 +63,9 @@
                 dialogFormVisible:false,
                 current:{},
                 title:'',
-                loadingBtn:false
+                loadingBtn:false,
+                current_img:'',
+                showimg:false
             }
         },
         components: {

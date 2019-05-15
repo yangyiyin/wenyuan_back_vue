@@ -10,11 +10,11 @@
                     :data="tableData"
                     style="width: 100%">
                 <el-table-column label="学生序号" prop="id"></el-table-column>
-                <el-table-column label="学生答案" >
+                <el-table-column label="学生答案" style="width: 750px;" >
                     <template slot-scope="scope">
 
                         <p v-if="scope.row.question_data.answer">{{scope.row.question_data.answer}}</p>
-                        <p v-if="scope.row.question_data.extra_link"><img :src="scope.row.question_data.extra_link"/></p>
+                        <p v-if="scope.row.question_data.extra_link"><img style="width: 750px" :src="scope.row.question_data.extra_link"/></p>
 
                     </template>
                 </el-table-column>
