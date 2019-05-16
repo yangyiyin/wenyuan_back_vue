@@ -39,6 +39,15 @@
                 </el-option>
             </el-select>
 
+            <el-select v-model="label_ids" placeholder="标签" multiple clearable>
+                <el-option
+                        v-for="item in labels"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+
             <el-input
                     style="display: inline-block;width: 250px;"
                     placeholder="题干关键词"
@@ -180,7 +189,7 @@
 </template>
 
 <script>
-    import {question_list,get_grades} from '@/api/getDataEarth'
+    import {question_list,get_grades,label_all_list} from '@/api/getDataEarth'
     import {knowledge_point_all_list} from '@/api/getDataknowledge_point'
     import {deepCopy} from '@/config/mUtils'
     export default {
@@ -202,6 +211,8 @@
                 useway_ids:[],
                 knowledge_point_ids:[],
                 knowledge_points:[],
+                label_ids:[],
+                labels:[],
 
                 dialogFormVisible:false,
                 dialogFormVisibleDaoru:false,
@@ -221,6 +232,7 @@
             this.multipleSelectionAll = this.checked;
             this.init_grades().then(function(){
                 this.get_knowledge_points();
+                this.get_labels();
                 this.list();
             }.bind(this))
         },
@@ -249,7 +261,7 @@
             list() {
                 question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,
                     type:this.type,tag:this.tag,hard_level:this.hard_level,grade:this.grade,useway_ids:this.useway_ids,
-                    knowledge_point_ids:this.knowledge_point_ids}).then(function(res){
+                    knowledge_point_ids:this.knowledge_point_ids,label_ids:this.label_ids}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -320,6 +332,21 @@
                 knowledge_point_all_list({group_subject:group_subject,group:this.grade}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.knowledge_points = res.data;
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+            },
+            get_labels() {
+                this.labels = [];
+                this.label_ids = [];
+
+                label_all_list({}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.labels = res.data;
                     } else {
                         this.$message({
                             message: res.msg,

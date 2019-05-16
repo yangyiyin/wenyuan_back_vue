@@ -2,6 +2,13 @@
     <div style="height: 500px;overflow-y: auto">
         <el-scrollbar style="height: 100%;">
 
+            <p style="font-size: 16px;font-weight: bolder">2019.5.16重要更新内容:</p>
+            <p style="line-height: 22px;">1.增加后台考试卷相关权限</p>
+            <p style="line-height: 22px;">2.增加考试卷相关操作日志</p>
+            <p style="line-height: 22px;">3.增加题目标签筛选</p>
+            <p style="line-height: 22px;">4.增加作文题</p>
+            <p style="height: 20px;"></p>
+
             <p style="font-size: 16px;font-weight: bolder">2019.5.15重要更新内容:</p>
             <p style="line-height: 22px;">1.修改答题卡解析参数,是解析器更加适合实际情况</p>
             <p style="line-height: 22px;">2.增加学生批阅界面序号和原答卷链接</p>

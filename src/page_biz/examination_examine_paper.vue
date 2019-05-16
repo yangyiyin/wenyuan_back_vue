@@ -28,11 +28,11 @@
                     <el-button type="warning" size="mini"  @click="pre_print(1, paper)">打印试卷</el-button>
                     <el-button type="warning" size="mini"  @click="pre_print(1, paper, true)">打印试卷(含答案)</el-button>
                     <el-button type="warning" size="mini"  @click="pre_print(2, paper)">打印答题卡</el-button>
-                    <el-button type="primary" size="mini"  @click="goto_review_examine_paper(paper)">学生答卷</el-button>
+                    <el-button type="primary" size="mini"  @click="goto_review_examine_paper(paper)" v-if="has_gaoquanxian">学生答卷</el-button>
                     <el-button type="primary" size="mini"  @click="review_examine_question(paper)">批阅题目</el-button>
-                    <el-button type="primary" size="mini" :loading="loading1===index"  @click="reckon_result_batch(paper,index)">计算成绩</el-button>
-                    <el-button type="primary" size="mini" :loading="loading2===index" @click="set_publish_examine_paper_result(paper,index)">发布成绩</el-button>
-                    <el-button type="danger" size="mini"  @click="del(paper)">删除</el-button>
+                    <el-button type="primary" size="mini" :loading="loading1===index"  @click="reckon_result_batch(paper,index)" v-if="has_gaoquanxian">计算成绩</el-button>
+                    <el-button type="primary" size="mini" :loading="loading2===index" @click="set_publish_examine_paper_result(paper,index)" v-if="has_gaoquanxian">发布成绩</el-button>
+                    <el-button type="danger" size="mini"  @click="del(paper)" v-if="has_gaoquanxian">删除</el-button>
                 </p>
 
             </div>
@@ -368,7 +368,8 @@
                 show_answer:false,
 
                 current:{},
-                current_paper:{}
+                current_paper:{},
+                has_gaoquanxian:false
             }
 
         },
@@ -408,11 +409,13 @@
 
                 }
                 this.add_paper = {};
+                this.has_gaoquanxian = false;
             },
             get_info() {
                 get_examine_papers({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
-                        this.data.papers = res.data;
+                        this.data.papers = res.data.papers;
+                        this.has_gaoquanxian = res.data.has_gaoquanxian;
 
                     } else {
                         this.$message({
