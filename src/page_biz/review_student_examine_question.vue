@@ -27,7 +27,6 @@
                                 <p>
                                     ({{index+1}})<el-input
                                         style="width: 100px;"
-                                        type="number"
                                         placeholder="得分"
                                         v-model="scope.row.question_data.result.sub_result[index]"
                                         @change="set_question_score(scope.row)"
@@ -35,17 +34,17 @@
                                 </el-input>
                                 </p>
                             </template>
-
+                            <span>总分:{{scope.row.examine_paper_question_data.score}}</span>
                         </template>
                         <template v-else>
                             <el-input
                                     style="width: 100px;"
-                                    type="number"
                                     placeholder="得分"
                                     v-model="scope.row.question_data.result"
                                     @change="set_question_score(scope.row)"
                                     clearable>
                             </el-input>
+                            <span>总分:{{scope.row.examine_paper_question_data.score}}</span>
                         </template>
 
 

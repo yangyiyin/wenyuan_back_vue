@@ -68,7 +68,7 @@
                                 <div style="float: left;vertical-align:top;width: 20px;" v-html="'<p style=\'display:inline-block\'>'+(index+1)+'、</p>'"></div>
                                 <div style="float: right;vertical-align:top;width: 50px;" v-html="'<p style=\'display:inline-block\'>['+question.score+'分]</p>'"></div>
                                 <div style="float: left;vertical-align:top;width: 670px;" v-html="question.question_content"></div>
-
+                                <div style="clear: both"></div>
                                 <template v-if="question.type==1">
                                     <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options">
                                         {{option.label}}.{{option.text}}
@@ -162,6 +162,9 @@
 
                             <div v-if="(_question.type==1 || _question.type==2) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;'">{{_question.text}}</div>
                             <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
+                            <div v-if="(_question.type==8) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'">
+                                <div style="border-bottom: 1px dashed #333;height:28px;" v-for="(line, index) in lines"></div>
+                            </div>
 
 
                         </template>
@@ -196,7 +199,7 @@
                                 <div style="float: left;vertical-align:top;width: 20px;" v-html="'<p style=\'display:inline-block\'>'+(index+1)+'、</p>'"></div>
                                 <div style="float: right;vertical-align:top;width: 50px;" v-html="'<p style=\'display:inline-block\'>['+question.score+'分]</p>'"></div>
                                 <div style="float: left;vertical-align:top;width: 670px;" v-html="question.question_content"></div>
-
+                                <div style="clear: both"></div>
                                 <template v-if="question.type==1">
                                     <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options">
                                         {{option.label}}.{{option.text}}
@@ -295,6 +298,10 @@
 
                     <div v-if="(_question.type==1 || _question.type==2) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;'">{{_question.text}}</div>
                     <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
+                    <div v-if="(_question.type==8) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'">
+                        <div style="border-bottom: 1px dashed #333;height:28px;" v-for="(line, index) in lines"></div>
+
+                    </div>
 
 
                 </template>
@@ -344,6 +351,7 @@
                 loading1:false,
                 loading2:false,
                 name:'',
+                lines:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],
                 data:{
                     papers:[],
                     all_papers:[]

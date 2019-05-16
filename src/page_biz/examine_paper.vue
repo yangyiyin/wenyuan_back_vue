@@ -175,7 +175,7 @@
                                 <div style="float: left;vertical-align:top;width: 20px;" v-html="'<p style=\'display:inline-block\'>'+(index+1)+'、</p>'"></div>
                                 <div style="float: right;vertical-align:top;width: 50px;" v-html="'<p style=\'display:inline-block\'>['+question.score+'分]</p>'"></div>
                                 <div style="float: left;vertical-align:top;width: 670px;" v-html="question.question_content"></div>
-
+                                <div style="clear: both"></div>
                                 <template v-if="question.type==1">
                                     <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options">
                                         {{option.label}}.{{option.text}}

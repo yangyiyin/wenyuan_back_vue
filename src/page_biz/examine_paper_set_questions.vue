@@ -190,6 +190,27 @@
                             </template>
                         </div>
 
+                        <div class="question_block">
+                            <el-tag>八、作文题[共{{scores.type8}}分]</el-tag>
+                            <template v-for="(item,index) in data.questions">
+
+                                <div class="question_item" v-if="item.type==8">
+                                    <span style="font-weight: bolder;color:#000">{{index+1}}.</span>   <a href="javascript:;" style="color: #333"><span @click="edit_content(index)" v-html="item.question_content2?item.question_content2:item.question_content"></span></a>
+                                    <div>
+                                        <div style="clear: both"></div>
+                                        <el-button style="float: right" type="danger" size="mini" @click="data.questions.splice(index, 1);set_scores()">删除</el-button>
+                                        <p style="margin-right:10px;float: right">
+                                            排序:<el-input size="mini" type="number" @change="set_question_sort()" clearable placeholder="排序值" v-model="item.sort_value" style="width: 80px;"></el-input>
+                                        </p>
+                                        <p style="margin-right:10px;float: right">
+                                            分值:<el-input size="mini" clearable placeholder="分值" @change="set_scores()" v-model="item.score" style="width: 80px;"></el-input>
+                                        </p>
+                                        <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
@@ -437,6 +458,7 @@
                     type5:0,
                     type6:0,
                     type7:0,
+                    type8:0,
                 },
                 knowledge_points_set:[],
                 config: {
@@ -506,6 +528,7 @@
                     type5:0,
                     type6:0,
                     type7:0,
+                    type8:0,
                 }
             },
             init_grades(){
@@ -603,6 +626,7 @@
                     type5:[],
                     type6:[],
                     type7:[],
+                    type8:[],
                 }
                 //console.log( this.data.questions);
 //                var questions_copy = deepCopy(this.data.questions);
@@ -637,6 +661,9 @@
                     if (val.type == 7) {
                         questions.type7.push(val);
                     }
+                    if (val.type == 8) {
+                        questions.type8.push(val);
+                    }
                 });
                 //console.log(questions);
                 //整体排序
@@ -648,6 +675,7 @@
                 questions.type5 = sortByKey(questions.type5, 'sort_value');
                 questions.type6 = sortByKey(questions.type6, 'sort_value');
                 questions.type7 = sortByKey(questions.type7, 'sort_value');
+                questions.type8 = sortByKey(questions.type8, 'sort_value');
 
                 this.data.questions = [];
                 questions.type1.forEach((val) => {
@@ -669,6 +697,9 @@
                     this.data.questions.push(val);
                 });
                 questions.type7.forEach((val) =>{
+                    this.data.questions.push(val);
+                });
+                questions.type8.forEach((val) =>{
                     this.data.questions.push(val);
                 });
             },
@@ -780,6 +811,7 @@
                     type5:0,
                     type6:0,
                     type7:0,
+                    type8:0,
                 }
                 this.data.questions.forEach((val,index)=>{
                     this.scores.total += Number(val.score);
@@ -807,6 +839,9 @@
                     }
                     if (val.type == 7) {
                         this.scores.type7 += Number(val.score);
+                    }
+                    if (val.type == 8) {
+                        this.scores.type8 += Number(val.score);
                     }
                 });
             },

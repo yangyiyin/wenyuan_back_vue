@@ -5,7 +5,7 @@
 
             <el-select v-model="type" placeholder="类型" clearable>
                 <el-option
-                        v-for="item in [{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4},{label:'其他题',value:5},{label:'阅读题',value:6},{label:'计算题',value:7}]"
+                        v-for="item in [{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4},{label:'其他题',value:5},{label:'阅读题',value:6},{label:'计算题',value:7},{label:'作文题',value:8}]"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">

@@ -1821,7 +1821,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "label": "7",
       "border": ""
     }
-  }, [_vm._v("计算题")])], 1)], 1), _vm._v(" "), _c('div', {
+  }, [_vm._v("计算题")]), _vm._v(" "), _c('el-radio', {
+    attrs: {
+      "label": "8",
+      "border": ""
+    }
+  }, [_vm._v("作文题")])], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "search_item"
   }, [_vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _c('el-upload', {
     ref: "upload",

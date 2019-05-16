@@ -23,6 +23,7 @@
                     <el-radio label="5" border >其他题</el-radio>
                     <el-radio label="6" border >阅读题</el-radio>
                     <el-radio label="7" border >计算题</el-radio>
+                    <el-radio label="8" border >作文题</el-radio>
                 </el-radio-group>
             </div>
 
