@@ -25,9 +25,9 @@
             <div v-for="(paper, index) in data.papers" style="width: 900px;margin: 0 auto;padding:5px;margin-top: 20px;text-align: center;border-bottom: 1px solid #ddd">
                 <p style="display: inline-block;margin-top: 10px;">试卷:{{paper.title}}</p>
                 <p>
-                    <el-button type="warning" size="mini"  @click="pre_print(1, paper)">打印试卷</el-button>
-                    <el-button type="warning" size="mini"  @click="pre_print(1, paper, true)">打印试卷(含答案)</el-button>
-                    <el-button type="warning" size="mini"  @click="pre_print(2, paper)">打印答题卡</el-button>
+                    <el-button type="warning" size="mini"  @click="pre_print(1, paper)" v-if="has_gaoquanxian">打印试卷</el-button>
+                    <el-button type="warning" size="mini"  @click="pre_print(1, paper, true)" v-if="has_gaoquanxian">打印试卷(含答案)</el-button>
+                    <el-button type="warning" size="mini"  @click="pre_print(2, paper)" v-if="has_gaoquanxian">打印答题卡</el-button>
                     <el-button type="primary" size="mini"  @click="goto_review_examine_paper(paper)" v-if="has_gaoquanxian">学生答卷</el-button>
                     <el-button type="primary" size="mini"  @click="review_examine_question(paper)">批阅题目</el-button>
                     <el-button type="primary" size="mini" :loading="loading1===index"  @click="reckon_result_batch(paper,index)" v-if="has_gaoquanxian">计算成绩</el-button>
