@@ -14,7 +14,7 @@
                     <template slot-scope="scope">
 
                         <p v-if="scope.row.question_data.answer">{{scope.row.question_data.answer}}</p>
-                        <p v-if="scope.row.question_data.extra_link"><img style="width: 720px" :src="scope.row.question_data.extra_link"/></p>
+                        <p v-if="scope.row.question_data.extra_link"><img style="max-width: 720px" :src="scope.row.question_data.extra_link"/></p>
 
                     </template>
                 </el-table-column>

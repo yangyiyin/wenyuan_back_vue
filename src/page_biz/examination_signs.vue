@@ -167,6 +167,11 @@
                 <el-input clearable placeholder="" v-model="current_data.content.remark_luqu3" style="width: 60%;display: inline-block"></el-input>
             </div>
 
+            <div>
+                <span>考试卷成绩:(仅超级管理员可改)</span>
+                <el-input clearable placeholder="" v-model="current_data.content.paper_result" style="width: 60%;display: inline-block"></el-input>
+            </div>
+
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleData = false">取 消</el-button>
                 <el-button type="primary" @click="change_data()" :loading="loadingBtn == 'data'">修改</el-button>
@@ -332,6 +337,7 @@
                     A2_place:this.current_data.content.A2_place,
                     place:this.current_data.content.place,
                     time1:this.current_data.content.time1,
+                    paper_result:this.current_data.content.paper_result,
                 }).then(function(res){
                     this.loadingBtn = '-1';
                     if (res.code == this.$store.state.constant.status_success) {
