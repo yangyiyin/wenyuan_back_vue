@@ -22,6 +22,7 @@
 
                     <p style="float: right">
                         得分:<el-input style="width: 140px;" :max="question.score" type="number" v-model="question.result"  auto-complete="off"></el-input><span>共{{question.score}}分</span>
+                        <el-button v-if="question.type == 1 || question.type==2" size="mini" @click="dialogFormVisibleedit_answer=true;current = question">修正答案</el-button>
                     </p>
                     <div style="clear: both"></div>
                     <div v-if="!question.is_show_answer" style="color: rgb(20,200,20);cursor: pointer;padding: 10px;" @click="question.is_show_answer=1" >显示答案</div>
@@ -51,17 +52,52 @@
             <img style="width: 100%" :src="'https://api.yixsu.com/static/' + current_img.replace('/data/', '')"/>
 
         </el-dialog>
+        <el-dialog title="修正答案和得分" :visible.sync="dialogFormVisibleedit_answer" width="50%">
+
+            <p>
+                <el-input
+                        style="display: inline-block;width: 250px;"
+                        placeholder="答案"
+                        v-model="current.answer"
+                        clearable>
+                </el-input>
+            </p>
+
+            <!--<p>-->
+                <!--<el-input-->
+                        <!--style="display: inline-block;width: 250px;"-->
+                        <!--placeholder="答案图片地址"-->
+                        <!--v-model="current.extra_link"-->
+                        <!--clearable>-->
+                <!--</el-input>-->
+            <!--</p>-->
+
+            <p>
+                <el-input
+                        style="display: inline-block;width: 250px;"
+                        placeholder="得分"
+                        v-model="current.result"
+                        clearable>
+                </el-input>
+            </p>
+            <div slot="footer" class="dialog-footer" >
+                <el-button @click="set_student_question_answer_result">确 认</el-button>
+                <el-button @click="dialogFormVisibleedit_answer = false">关 闭</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {student_examine_result_info, reckon_result, submit_result} from '@/api/getDatastudent_examine_result'
+    import {student_examine_result_info, reckon_result, submit_result, set_student_question_answer_result} from '@/api/getDatastudent_examine_result'
     export default {
         data(){
             return {
                 info: null,
                 dialogFormVisible:false,
+                dialogFormVisibleedit_answer:false,
                 current:{},
                 title:'',
                 loadingBtn:false,
@@ -148,6 +184,25 @@
             back() {
                 history.go(-1);
             },
+            set_student_question_answer_result(){
+                set_student_question_answer_result({examine_id:this.info.examine_id,examine_paper_id:this.info.examine_paper_id,ticket_id:this.info.ticket_id,
+                    qid:this.current.id,answer:this.current.answer,extra_link:this.current.extra_link,result:this.current.result}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.msg
+                        });
+                    }
+                    this.dialogFormVisibleedit_answer = false;
+                }.bind(this)).finally(function(){
+
+                }.bind(this));
+            }
 
         },
     }

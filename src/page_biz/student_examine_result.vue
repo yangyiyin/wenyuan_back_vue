@@ -72,6 +72,7 @@
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
+                        <el-button  size="mini" @click="dialogFormVisibleset_ticket_id=true;current = scope.row">修正考号</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -116,12 +117,30 @@
             </div>
         </el-dialog>
 
+
+        <el-dialog title="修正准考证" :visible.sync="dialogFormVisibleset_ticket_id" width="80%">
+
+            <p style="margin-top: 20px;">
+                <el-input
+                        style="display: inline-block;width: 250px;"
+                        placeholder="输入准考证"
+                        v-model="current.modify_ticket_id"
+                        clearable>
+                </el-input>
+            </p>
+
+            <div slot="footer" class="dialog-footer" >
+                <el-button @click="set_ticket_id">确 认</el-button>
+                <el-button @click="dialogFormVisibleset_ticket_id = false">关 闭</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {student_examine_result_list,student_examine_result_del,student_examine_result_verify,parse_zip,get_parse_zip_process,reckon_result} from '@/api/getDatastudent_examine_result'
+    import {student_examine_result_list,student_examine_result_del,student_examine_result_verify,parse_zip,get_parse_zip_process,reckon_result,set_ticket_id} from '@/api/getDatastudent_examine_result'
     import {get_examine_paper_data_url} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
@@ -134,6 +153,7 @@
                 dialogFormVisible:false,
                 dialogFormVisibleExcelin:false,
                 dialogFormVisibleError:false,
+                dialogFormVisibleset_ticket_id:false,
                 error_info:'',
                 current:{},
 //                remark:'',
@@ -197,8 +217,9 @@
             })
 // 单个文件上传成功
             this.uploader.on('fileSuccess',  (rootFile, file, message) => {
-                console.log(rootFile, file, message);
-                this.list();
+//                console.log(rootFile, file, message);
+
+                this.get_examine_paper_data_url();
             })
 // 根下的单个文件（文件夹）上传完成
             this.uploader.on('fileComplete', function (rootFile) {
@@ -252,7 +273,8 @@
                 }
                 get_examine_paper_data_url({examine_id:this.examine_id,examine_paper_id:this.examine_paper_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
-                        this.zip_url = res.data;
+                        this.zip_url = res.data.url;
+                        this.error_info = res.data.error_info;
                     }
                 }.bind(this));
 
@@ -423,6 +445,25 @@
 
                 }.bind(this));
             },
+            set_ticket_id(){
+                set_ticket_id({examine_id:this.examine_id,examine_paper_id:this.examine_paper_id,ticket_id:this.current.ticket_id,modify_ticket_id:this.current.modify_ticket_id}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.$message({
+                            type: 'success',
+                            message: '修正成功'
+                        });
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.msg
+                        });
+                    }
+                    this.list();
+                    this.dialogFormVisibleset_ticket_id = false;
+                }.bind(this)).finally(function(){
+
+                }.bind(this));
+            }
         },
     }
 </script>

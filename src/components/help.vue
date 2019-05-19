@@ -2,6 +2,12 @@
     <div style="height: 500px;overflow-y: auto">
         <el-scrollbar style="height: 100%;">
 
+            <p style="font-size: 16px;font-weight: bolder">答卷异常处理:</p>
+            <p style="line-height: 22px;">1.查看冲突或错误日志,对于解析头不出来的,需重新扫描,或人工登分,做好记录。对于冲突的,查看双方答卷,并人工逐一解决</p>
+            <p style="line-height: 22px;">2.查询student_examine_result表papers少于额定数量的,进行人工修复。如果有其他冲突考号,或不存在考号,人工修复</p>
+            <p style="line-height: 22px;">3.查询客观题答案缺少的学生,进行人工给答案和给分</p>
+            <p style="height: 20px;"></p>
+
             <p style="font-size: 16px;font-weight: bolder">2019.5.16重要更新内容:</p>
             <p style="line-height: 22px;">1.增加后台考试卷相关权限</p>
             <p style="line-height: 22px;">2.增加考试卷相关操作日志</p>
