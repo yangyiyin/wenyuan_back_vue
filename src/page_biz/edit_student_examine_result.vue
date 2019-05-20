@@ -27,7 +27,7 @@
                     <div style="clear: both"></div>
                     <div v-if="!question.is_show_answer" style="color: rgb(20,200,20);cursor: pointer;padding: 10px;" @click="question.is_show_answer=1" >显示答案</div>
                     <div v-if="question.is_show_answer" style="color: rgb(20,200,20);cursor: pointer;padding: 10px;" @click="question.is_show_answer=0" >隐藏答案</div>
-                    <div v-if="question.is_show_answer">
+                    <div v-if="!question.is_show_answer">
                         <p v-if="question.type == 3" >
                             <span>答案:</span>
                             <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
