@@ -16,6 +16,7 @@ export const reckon_result = data => fetch('/wenyuanjiaoyu/student_examine_resul
 export const submit_result = data => fetch('/wenyuanjiaoyu/question_student_result/submit_result_examine', data, 'POST').then(check_login);
 export const reckon_result_batch = data => fetch('/wenyuanjiaoyu/student_examine_result/reckon_result_batch', data, 'POST').then(check_login);
 export const set_ticket_id = data => fetch('/wenyuanjiaoyu/student_examine_result/set_ticket_id', data, 'POST').then(check_login);
+export const set_ticket_id_replace = data => fetch('/wenyuanjiaoyu/student_examine_result/set_ticket_id_replace', data, 'POST').then(check_login);
 export const set_student_question_answer_result = data => fetch('/wenyuanjiaoyu/student_examine_result/set_student_question_answer_result', data, 'POST').then(check_login);
 
 

@@ -120,19 +120,44 @@
 
         <el-dialog title="修正准考证" :visible.sync="dialogFormVisibleset_ticket_id" width="80%">
 
-            <p style="margin-top: 20px;">
-                <el-input
-                        style="display: inline-block;width: 250px;"
-                        placeholder="输入准考证"
-                        v-model="current.modify_ticket_id"
-                        clearable>
-                </el-input>
-            </p>
 
-            <div slot="footer" class="dialog-footer" >
-                <el-button @click="set_ticket_id">确 认</el-button>
-                <el-button @click="dialogFormVisibleset_ticket_id = false">关 闭</el-button>
+            <div>
+                <p style="margin-top: 20px;">
+                    <el-input
+                            style="display: inline-block;width: 250px;"
+                            placeholder="输入准考证"
+                            v-model="current.modify_ticket_id"
+                            clearable>
+                    </el-input>
+                </p>
+
+                <div slot="footer" class="dialog-footer" >
+                    <el-button @click="set_ticket_id">确 认</el-button>
+                    <el-button @click="dialogFormVisibleset_ticket_id = false">关 闭</el-button>
+                </div>
             </div>
+
+
+            <template v-if="replaces">
+                <div>
+                    <img v-for="(replace, key, index) in replaces" v-if="key<0" :src="replace.url">
+                    <p style="margin-top: 20px;">
+                        <el-input
+                                style="display: inline-block;width: 250px;"
+                                placeholder="输入准考证"
+                                v-model="replace_ticket_id"
+                                clearable>
+                        </el-input>
+                    </p>
+                    <div slot="footer" class="dialog-footer" >
+                        <el-button @click="set_ticket_id_replace">确 认</el-button>
+                        <el-button @click="dialogFormVisibleset_ticket_id = false">关 闭</el-button>
+                    </div>
+                </div>
+
+            </template>
+
+
         </el-dialog>
 
     </div>
@@ -140,7 +165,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {student_examine_result_list,student_examine_result_del,student_examine_result_verify,parse_zip,get_parse_zip_process,reckon_result,set_ticket_id} from '@/api/getDatastudent_examine_result'
+    import {student_examine_result_list,student_examine_result_del,student_examine_result_verify,parse_zip,get_parse_zip_process,reckon_result,set_ticket_id,set_ticket_id_replace} from '@/api/getDatastudent_examine_result'
     import {get_examine_paper_data_url} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
@@ -180,7 +205,9 @@
                     accept:'application/zip'
                 },
                 zip_url:'',
-                process_num:0
+                process_num:0,
+                replaces:'',
+                replace_ticket_id:'',
             }
         },
         components: {
@@ -448,10 +475,36 @@
             set_ticket_id(){
                 set_ticket_id({examine_id:this.examine_id,examine_paper_id:this.examine_paper_id,ticket_id:this.current.ticket_id,modify_ticket_id:this.current.modify_ticket_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
+                        if (res.data) {
+                            //显示图片
+                            this.replaces = res.data;
+                        } else {
+                            this.$message({
+                                type: 'success',
+                                message: '修正成功'
+                            });
+                        }
+
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.msg
+                        });
+                    }
+                    this.list();
+                   // this.dialogFormVisibleset_ticket_id = false;
+                }.bind(this)).finally(function(){
+
+                }.bind(this));
+            },
+            set_ticket_id_replace(){
+                set_ticket_id_replace({examine_id:this.examine_id,examine_paper_id:this.examine_paper_id,ticket_id:this.replace_ticket_id,replaces:this.replaces}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
                         this.$message({
                             type: 'success',
                             message: '修正成功'
                         });
+
                     } else {
                         this.$message({
                             type: 'warning',
@@ -460,10 +513,11 @@
                     }
                     this.list();
                     this.dialogFormVisibleset_ticket_id = false;
+                    this.replaces = false;
                 }.bind(this)).finally(function(){
 
                 }.bind(this));
-            }
+            },
         },
     }
 </script>
