@@ -4,6 +4,7 @@
         <div class="table_container" style="padding-bottom: 0">
             <el-button @click="back">返回列表</el-button>
             <el-button type="warning" @click="set_examine_paper_status">批阅完毕</el-button>
+            <a target="_blank" :href="'http://api.yixsu.com/index.php/wenyuanjiaoyu/student_examine_result/get_unsign_questions?from_main_id='+examine_id+'&from_sub_id='+examine_paper_id+'&qid='+question_id">查看未批阅</a>
         </div>
         <div class="table_container">
             <el-table
