@@ -49,7 +49,7 @@
                         </template>
 
 
-                        <span v-if="!scope.row.question_data.is_manualed" style="width: 8px;height:8px;border-radius: 8px;background: #dcac6c;display: inline-block"></span>
+                        <span v-if="scope.row.question_data.is_manualed == '0'" style="width: 8px;height:8px;border-radius: 8px;background: #dcac6c;display: inline-block"></span>
                     </template>
                 </el-table-column>
 
