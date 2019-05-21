@@ -264,4 +264,7 @@
         margin-bottom: 0;
         width: 50%;
     }
+    .el-table--enable-row-hover .el-table__body tr:hover>td{
+        background-color: #62666B !important;
+    }
 </style>
