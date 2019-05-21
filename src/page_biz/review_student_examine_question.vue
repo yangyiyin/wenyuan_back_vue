@@ -48,6 +48,7 @@
                         </template>
 
 
+                        <span v-if="!scope.row.question_data.is_manualed" style="width: 8px;height:8px;border-radius: 8px;background: #dcac6c;display: inline-block"></span>
                     </template>
                 </el-table-column>
 
@@ -203,6 +204,7 @@
                     result:row.question_data.result,
                     answer:row.question_data.answer,
                     extra_link:row.question_data.extra_link,
+                    is_manualed:1
                 }
 
                 submit_result({student_examine_result_status:2,result:result,from_type:2, main_id:this.examine_id,sub_id:this.examine_paper_id,ticket_id:row.ticket_id}).then(function(res){
