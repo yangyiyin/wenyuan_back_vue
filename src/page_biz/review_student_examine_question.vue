@@ -247,7 +247,7 @@
     }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
     @import '../style/mixin';
     .table_container{
         padding: 20px;
