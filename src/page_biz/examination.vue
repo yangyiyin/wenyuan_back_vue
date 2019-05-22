@@ -57,6 +57,8 @@
                         <!--<el-button size="mini" v-if="!scope.row.has_send_mail || scope.row.has_send_mail == 0"  type="warning" @click="handleSendEmail(scope.row)">发送邮箱</el-button>-->
                         <!--<el-button size="mini" v-if="scope.row.has_send_mail > 0"  type="info" >已发送邮箱</el-button>-->
                         <el-button size="mini" @click="sign_offline(scope.row.id)"  type="warning" >线下报名</el-button>
+                        <el-button v-if="scope.row.is_publish_examine_paper_result == 0" size="mini" @click="set_publish(scope.row.id, 1)"  type="warning" >发布考试卷成绩</el-button>
+                        <el-button v-if="scope.row.is_publish_examine_paper_result != 0" size="mini" @click="set_publish(scope.row.id, 0)"  >取消发布考试卷成绩</el-button>
 
                     </template>
                 </el-table-column>
@@ -173,7 +175,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_list,examination_del,examination_verify,examination_sort,examination_excel_out, examination_gen_ticket, examination_send_mail} from '@/api/getDataEarth'
+    import {examination_list,examination_del,examination_verify,examination_sort,examination_excel_out, examination_gen_ticket, examination_send_mail,set_publish} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -353,6 +355,32 @@
                 }.bind(this))
 
             },
+
+            set_publish(id, status) {
+
+                this.$confirm('确认此操作, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    set_publish({id:id,status:status}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.list();
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                }.bind(this))
+
+            },
+
             handleSort(row){
                 this.dialogFormVisible = true;
                 this.current = row;

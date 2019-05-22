@@ -31,7 +31,7 @@
                     <el-button type="primary" size="mini"  @click="goto_review_examine_paper(paper)" v-if="has_gaoquanxian">学生答卷</el-button>
                     <el-button type="primary" size="mini"  @click="review_examine_question(paper)">批阅题目</el-button>
                     <el-button type="primary" size="mini" :loading="loading1===index"  @click="reckon_result_batch(paper,index)" v-if="has_gaoquanxian">计算成绩</el-button>
-                    <el-button type="primary" size="mini" :loading="loading2===index" @click="set_publish_examine_paper_result(paper,index)" v-if="has_gaoquanxian">发布成绩</el-button>
+                    <el-button type="primary" size="mini" :loading="loading2===index" @click="set_publish_examine_paper_result(paper,index)" v-if="has_gaoquanxian">同步成绩</el-button>
                     <el-button type="danger" size="mini"  @click="del(paper)" v-if="has_gaoquanxian">删除</el-button>
                 </p>
 
