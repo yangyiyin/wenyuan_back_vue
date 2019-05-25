@@ -52,6 +52,8 @@
                         <el-button size="mini" @click="goto_edit_course(scope.row.id,scope.row.title)">修改课程</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
+                        <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 2)" :loading="loadingBtn == scope.$index">发布测试</el-button>
+                        <el-button size="mini" v-if="scope.row.status == 2" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">取消测试</el-button>
                         <el-button size="mini"   @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
