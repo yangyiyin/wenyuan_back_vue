@@ -115,7 +115,9 @@
                         </el-form>
                         <el-form label-position="left" inline class="demo-table-expand">
                             <el-form-item label="答案" v-if="props.row.type != 3">
-                                <p >{{ props.row.question_answer.answer}}</p>
+
+                                <span v-html="props.row.question_answer.answer"></span>
+
                             </el-form-item>
                             <el-form-item label="答案" v-if="props.row.type == 3">
                                 <template v-for="(item, index) in props.row.question_answer.answer">
@@ -123,7 +125,7 @@
                                 </template>
                             </el-form-item>
                             <el-form-item label="答案解析" >
-                                <span v-html="props.row.question_answer.answer_parse">{{ props.row.question_answer.answer_parse}}</span>
+                                <span v-html="props.row.question_answer.answer_parse"></span>
                             </el-form-item>
                         </el-form>
 

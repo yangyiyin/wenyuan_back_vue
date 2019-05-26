@@ -57,6 +57,8 @@ const examination_examine_paper = r => require.ensure([], () => r(require('@/pag
 const edit_student_examine_result = r => require.ensure([], () => r(require('@/page_biz/edit_student_examine_result')), 'edit_student_examine_result');
 const review_student_examine_question = r => require.ensure([], () => r(require('@/page_biz/review_student_examine_question')), 'review_student_examine_question');
 const minipro_qrcode = r => require.ensure([], () => r(require('@/page_biz/minipro_qrcode')), 'minipro_qrcode');
+const user_notice_agreement = r => require.ensure([], () => r(require('@/page_biz/user_notice_agreement')), 'user_notice_agreement');
+const add_user_notice_agreement = r => require.ensure([], () => r(require('@/page_biz/add_user_notice_agreement')), 'add_user_notice_agreement');
 //{#replace1#}
 
 const routes = [
@@ -259,6 +261,8 @@ const routes = [
 {path: '/edit_student_examine_result',component: edit_student_examine_result,meta: ['考试', '批阅学生答卷'],},
 {path: '/review_student_examine_question',component: review_student_examine_question,meta: ['考试', '批阅题目'],},
 {path: '/minipro_qrcode',component: minipro_qrcode,meta: ['系统', '小程序二维码'],},
+{path: '/user_notice_agreement',component: user_notice_agreement,meta: ['学校管理', '同意书'],},
+{path: '/add_user_notice_agreement',component: add_user_notice_agreement,meta: ['学校管理', '同意书'],},
 //{#replace2#}
 		],
 	}

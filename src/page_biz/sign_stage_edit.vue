@@ -23,6 +23,14 @@
                 <img v-if="img" :src="img" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+
+            <div class="search_item" style="margin-bottom: 20px;">
+                <span class="pre_info" style="font-size: 14px;margin-left: 30px;width: 150px;"><i style="color:red;">*</i>报名须知</span>
+                <el-input clearable type="textarea" v-model="notice" style="width: 350px;vertical-align: top">
+
+                </el-input>
+            </div>
+
             <template v-if="id && id>0">
                 <div class="search_item" style="margin-bottom: 20px;">
                     <el-button type="success" style="margin: 20px;" v-on:click="submit_stage" :loading="loading">确认修改</el-button>
@@ -232,6 +240,7 @@
             return {
                 id:0,
                 title:'',
+                notice:'',
                 img:'',
                 start_time:'',
                 end_time_self:'',
@@ -305,6 +314,7 @@
                 this.loading = false;
                 this.examine = '';
                 this.title = '';
+                this.notice = '';
                 this.img = '';
                 this.start_time = '';
                 this.end_time_self = '';
@@ -382,6 +392,7 @@
                             // this.checkList = [res.data.content.courseid];
                             // //this.set_checked_course();
                             this.title=res.data.title;
+                            this.notice=res.data.notice;
                             this.img=res.data.img;
                         } else {
                             this.$message({
@@ -448,10 +459,12 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
+//                    console.log(this.notice);
                     this.loading = true;
                     sign_course_edit({
                         id:this.id,
                         title:this.title,
+                        notice:this.notice,
                         img:this.img,
                         courses_data:this.courses_data
                     }).then(function (res) {
@@ -717,6 +730,7 @@
                     sign_stage_edit({
                         id:this.id,
                         title:this.title,
+                        notice:this.notice,
                         img:this.img
                     }).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
