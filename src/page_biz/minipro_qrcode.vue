@@ -12,6 +12,7 @@
                         <p>目前支持的路径如下:</p>
                         <p>考试详情页:page=/pages/examine_detail/index&id=$id 其中$id使用具体的id值代替</p>
                         <p>精品课详情页:page=/pages/course_detail/index&id=$id 其中$id使用具体的id值代替</p>
+                        <p>选课线下报名须知协议:page=/pages/sign_course_agreement/index&stage_id=$id 其中$id使用具体的选课id值代替</p>
                     </div>
                 </div>
             </div>
