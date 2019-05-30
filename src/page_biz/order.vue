@@ -40,6 +40,14 @@
             </el-input>
 
             <el-input
+                    v-if="type==2"
+                    style="display: inline-block;width: 250px;"
+                    placeholder="学生姓名"
+                    v-model="student_name"
+                    clearable>
+            </el-input>
+
+            <el-input
                     style="display: inline-block;width: 250px;"
                     placeholder="手机号"
                     v-model="tel"
@@ -383,6 +391,7 @@
 //                categories:[],
                 tel:'',
                 order_no:'',
+                student_name:'',
                 goods_title:'',
                 type:0,
                 status:-1,
@@ -436,7 +445,7 @@
         },
         methods: {
             list() {
-                order_list({page:this.currentPage,page_size:this.limit,tel:this.tel,order_no:this.order_no,goods_title:this.goods_title,status:this.status,start_time:this.start_time,end_time:this.end_time,type:this.type}).then(function(res){
+                order_list({page:this.currentPage,page_size:this.limit,tel:this.tel,student_name:this.student_name,order_no:this.order_no,goods_title:this.goods_title,status:this.status,start_time:this.start_time,end_time:this.end_time,type:this.type}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
