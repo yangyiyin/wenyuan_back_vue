@@ -75,6 +75,24 @@
                         clearable>
                 </el-input>
 
+                <el-select v-model="author_id" placeholder="录入者" clearable>
+                    <el-option
+                            v-for="item in authors"
+                            :key="item.id"
+                            :label="item.show_name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+
+                <el-select v-model="checker_id" placeholder="检查者" clearable>
+                    <el-option
+                            v-for="item in checkers"
+                            :key="item.id"
+                            :label="item.show_name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+
                 <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             </div>
             <div style="float: right; width: 20%;text-align: right;">
@@ -240,9 +258,9 @@
 
 <script>
     import headTop from '@/components/headTop'
-    import {question_list,question_del,get_grades, label_all_list} from '@/api/getDataEarth'
+    import {question_list,question_del,get_grades, label_all_list, admin_user_all_list} from '@/api/getDataEarth'
     import {knowledge_point_all_list} from '@/api/getDataknowledge_point'
-    import {getStore} from '@/config/mUtils'
+    import {getStore,deepCopy} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -257,6 +275,10 @@
                 title:'',
                 grade:{},
                 grades:[],
+                author_id:'',
+                authors:[],
+                checker_id:'',
+                checkers:[],
                 hard_level:'',
                 useway_ids:[],
                 knowledge_point_ids:[],
@@ -302,21 +324,37 @@
                         if (res.code == this.$store.state.constant.status_success) {
                             this.grades = res.data;
 
+                            admin_user_all_list({'is_question_author':1}).then(function (res) {
+                                if (res.code == this.$store.state.constant.status_success) {
+                                    this.authors = res.data;
+                                    this.checkers = deepCopy(res.data);
+                                    //console.log(this.checkers)
+                                    this.checkers.push({id:'none',show_name:'无检查者'});
+                                } else {
+                                    this.$message({
+                                        message: res.msg,
+                                        type: 'warning'
+                                    });
+                                }
+                                this.loading_info = false;
+                                resolve();
+                            }.bind(this));
+
                         } else {
                             this.$message({
                                 message: res.msg,
                                 type: 'warning'
                             });
                         }
-                        this.loading_info = false;
-                        resolve();
+                        //this.loading_info = false;
+                        //resolve();
                     }.bind(this));
                 }.bind(this))
             },
             list() {
                 question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,
                     type:this.type,tag:this.tag,hard_level:this.hard_level,grade:this.grade,useway_ids:this.useway_ids,
-                    knowledge_point_ids:this.knowledge_point_ids,
+                    knowledge_point_ids:this.knowledge_point_ids,author_id:this.author_id,checker_id:this.checker_id,
                     label_ids:this.label_ids,
                 }).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {

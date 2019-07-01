@@ -295,6 +295,18 @@
                 </el-select>
             </div>
 
+
+<div class="search_item">
+    <span class="pre_info" style="font-size: 16px;font-weight: bolder;"><i style="color:red;"></i>检查者:</span>
+    <el-select v-model="question.checker" multiple value-key="id" placeholder="请选择">
+        <el-option
+                v-for="item in checkers"
+                :key="item.id"
+                :label="item.show_name"
+                :value="item">
+        </el-option>
+    </el-select>
+</div>
             <!--<div class="editor-container">-->
                 <!--<UE :defaultMsg=defaultMsg :config=config ref="ue"></UE>-->
             <!--</div>-->
@@ -318,6 +330,7 @@
     import ImageResize from 'quill-image-resize-module'
     Quill.register('modules/imageDrop', ImageDrop)
     Quill.register('modules/imageResize', ImageResize)
+    import {deepCopy} from '@/config/mUtils'
 //    import UE from '../components/ue.vue';
     export default {
         data(){
@@ -343,6 +356,7 @@
                     year:'2018',
                     grade:[],
                     author:[],
+                    checker:[],
                     fill_num:'1',
                     knowledge_group_subject:{id:1,name:'语文'},
                     knowledge_group:{id:1,name:'一年级'},
@@ -361,6 +375,7 @@
                 knowledge_points:[],
                 labels:[],
                 authors:[],
+                checkers:[],
                 //group:{id:1,name:'一年级'},
                 groups:[],
                 //group_subject:{id:1,name:'语文'},
@@ -545,8 +560,10 @@
 
                                     admin_user_all_list({'is_question_author':1}).then(function (res) {
                                         if (res.code == this.$store.state.constant.status_success) {
-                                            this.authors = res.data;
-
+                                            this.authors = deepCopy(res.data);
+//                                            this.checkers = res.data;
+                                            this.checkers = deepCopy(res.data);
+                                            //this.question.checker = this.question.checker ? this.question.checker : [];
                                         } else {
                                             this.$message({
                                                 message: res.msg,
@@ -664,6 +681,7 @@
                     year:'2018',
                     grade:[],
                     author:[],
+                    checker:[],
                     fill_num:'1',
                     knowledge_group_subject:{id:1,name:'语文'},
                     knowledge_group:{id:1,name:'一年级'},
@@ -685,9 +703,8 @@
                 return new Promise((resolve,reject) => {
                     question_info({id: this.id}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
-
+                            res.data.question_data.checker = res.data.question_data.checker ? res.data.question_data.checker : [];
                             this.question = res.data.question_data;
-
                         } else {
                             this.$message({
                                 message: res.msg,

@@ -1148,6 +1148,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_quill_image_drop_module__ = __webpack_require__(226);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_quill_image_resize_module__ = __webpack_require__(227);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_quill_image_resize_module___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_quill_image_resize_module__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__config_mUtils__ = __webpack_require__(72);
 
 
 
@@ -1161,6 +1162,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageDrop', __WEBPACK_IMPORTED_MODULE_7_quill_image_drop_module__["a" /* ImageDrop */]);
 __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageResize', __WEBPACK_IMPORTED_MODULE_8_quill_image_resize_module___default.a);
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -1188,6 +1190,7 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
                 year: '2018',
                 grade: [],
                 author: [],
+                checker: [],
                 fill_num: '1',
                 knowledge_group_subject: { id: 1, name: '语文' },
                 knowledge_group: { id: 1, name: '一年级' },
@@ -1202,6 +1205,7 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
             knowledge_points: [],
             labels: [],
             authors: [],
+            checkers: [],
 
             groups: [],
 
@@ -1363,7 +1367,9 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
 
                                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataEarth__["k" /* admin_user_all_list */])({ 'is_question_author': 1 }).then(function (res) {
                                     if (res.code == this.$store.state.constant.status_success) {
-                                        this.authors = res.data;
+                                        this.authors = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_9__config_mUtils__["d" /* deepCopy */])(res.data);
+
+                                        this.checkers = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_9__config_mUtils__["d" /* deepCopy */])(res.data);
                                     } else {
                                         this.$message({
                                             message: res.msg,
@@ -1477,6 +1483,7 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
                 year: '2018',
                 grade: [],
                 author: [],
+                checker: [],
                 fill_num: '1',
                 knowledge_group_subject: { id: 1, name: '语文' },
                 knowledge_group: { id: 1, name: '一年级' },
@@ -1495,7 +1502,7 @@ __WEBPACK_IMPORTED_MODULE_6_vue_quill_editor__["Quill"].register('modules/imageR
             return new __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__api_getDataEarth__["o" /* question_info */])({ id: _this2.id }).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
-
+                        res.data.question_data.checker = res.data.question_data.checker ? res.data.question_data.checker : [];
                         this.question = res.data.question_data;
                     } else {
                         this.$message({
@@ -2205,7 +2212,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v("正解")]) : _vm._e()], 1)]
   })], 2)], 1)]) : _vm._e(), _vm._v(" "), (_vm.question.type == 3) ? _c('div', {
     staticClass: "search_item"
-  }, [_vm._m(12), _vm._v("\n\n            共"), _c('el-select', {
+  }, [_vm._m(12), _vm._v("\n\n                共"), _c('el-select', {
     attrs: {
       "placeholder": "填空数量"
     },
@@ -2257,7 +2264,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "value": item.value
       }
     })
-  })), _vm._v("填空\n            "), _c('div', {
+  })), _vm._v("填空\n                "), _c('div', {
     staticStyle: {
       "display": "inline-block",
       "vertical-align": "top"
@@ -2331,7 +2338,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.question.answer_subs.splice(index, 1)
         }
       }
-    }, [_vm._v("x")]), _vm._v("\n\n                " + _vm._s(index + 1) + "、"), _c('el-input', {
+    }, [_vm._v("x")]), _vm._v("\n\n                    " + _vm._s(index + 1) + "、"), _c('el-input', {
       staticStyle: {
         "width": "600px"
       },
@@ -2451,7 +2458,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.add_sub_option(sub.answer_options)
         }
       }
-    }, [_vm._v("增加选项")])], 1)] : _vm._e(), _vm._v(" "), (sub.type == 3) ? [_c('div', [_vm._v("\n                        答案:"), _c('el-input', {
+    }, [_vm._v("增加选项")])], 1)] : _vm._e(), _vm._v(" "), (sub.type == 3) ? [_c('div', [_vm._v("\n                            答案:"), _c('el-input', {
       staticStyle: {
         "width": "600px"
       },
@@ -2491,6 +2498,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "question.author"
     }
   }, _vm._l((_vm.authors), function(item) {
+    return _c('el-option', {
+      key: item.id,
+      attrs: {
+        "label": item.show_name,
+        "value": item
+      }
+    })
+  }))], 1), _vm._v(" "), _c('div', {
+    staticClass: "search_item"
+  }, [_vm._m(18), _vm._v(" "), _c('el-select', {
+    attrs: {
+      "multiple": "",
+      "value-key": "id",
+      "placeholder": "请选择"
+    },
+    model: {
+      value: (_vm.question.checker),
+      callback: function($$v) {
+        _vm.$set(_vm.question, "checker", $$v)
+      },
+      expression: "question.checker"
+    }
+  }, _vm._l((_vm.checkers), function(item) {
     return _c('el-option', {
       key: item.id,
       attrs: {
@@ -2725,6 +2755,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "color": "red"
     }
   }, [_vm._v("*")]), _vm._v("录题者:")])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "pre_info",
+    staticStyle: {
+      "font-size": "16px",
+      "font-weight": "bolder"
+    }
+  }, [_c('i', {
+    staticStyle: {
+      "color": "red"
+    }
+  }), _vm._v("检查者:")])
 }]}
 
 /***/ })
