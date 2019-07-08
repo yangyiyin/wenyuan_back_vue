@@ -163,8 +163,9 @@
                     <audio :src="item" controls="controls"></audio>
                 </div>
 
+                <tui-image-editor ref="tuiImageEditor" :include-ui="useDefaultUI" :options="options" @addText="onAddText"></tui-image-editor>
                 <div v-for="(item,index) in current.homework_upload_docs">
-                    <img @click="changeRotation(index)" :class="img_class" style="width:100%;" :src="item">
+                    <img @click="changeRotation(index)"  :src="item">
                 </div>
             </div>
 
@@ -275,6 +276,13 @@
     import {class_list} from '@/api/getDataEarth'
     import {homework_list} from '@/api/getDataHomework'
     import {getStore} from '@/config/mUtils'
+    import 'tui-image-editor/dist/svg/icon-a.svg';
+    import 'tui-image-editor/dist/svg/icon-b.svg';
+    import 'tui-image-editor/dist/svg/icon-c.svg';
+    import 'tui-image-editor/dist/svg/icon-d.svg';
+    import 'tui-image-editor/dist/tui-image-editor.css';
+    import 'tui-color-picker/dist/tui-color-picker.css';
+    import {ImageEditor} from '@toast-ui/vue-image-editor';
     export default {
         data(){
             return {
@@ -287,7 +295,8 @@
                 showSuggestVisible:false,
                 showSetResultVisible:false,
                 dialogFormVisibleDaoru:false,
-                current:{},
+                current:{
+                },
                 result_other:{
                     score:0,
                     total_score:0
@@ -316,11 +325,20 @@
                     status:''
                 },
                 upload_url:this.$store.state.constant.homework_result_excel_in,
-                upload_data:{token:getStore('token') ? getStore('token') : ''}
+                upload_data:{token:getStore('token') ? getStore('token') : ''},
+                useDefaultUI: true,
+                options: { // for options prop
+                    includeUI: {
+                        menu: ['draw', 'shape', 'icon', 'text']
+                    },
+                    cssMaxWidth: 700,
+                    cssMaxHeight: 500
+                }
             }
         },
         components: {
             headTop,
+            'tui-image-editor': ImageEditor
         },
         created(){
             this.list();
@@ -335,6 +353,9 @@
         })
         },
         methods: {
+            onAddText(pos) {
+                console.log('i added text', pos)
+            },
             list() {
                 student_homework_result_list({search_param:this.search_param,page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
@@ -644,5 +665,9 @@
     }
     .class4{
         transform:rotate(90deg);
+    }
+    .imageEditorApp {
+        width: 1000px;
+        height: 800px;
     }
 </style>
