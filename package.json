@@ -16,9 +16,10 @@
   },
   "dependencies": {
     "@tinymce/tinymce-vue": "^1.0.8",
+    "@toast-ui/vue-image-editor": "^1.0.2",
     "echarts": "^3.5.4",
     "element-ui": "^2.4.1",
-    "html2canvas": "^1.0.0-alpha.12",
+    "html2canvas": "^1.0.0-rc.3",
     "mavon-editor": "^2.6.15",
     "quill-image-drop-module": "^1.0.3",
     "quill-image-resize-module": "^3.0.0",
@@ -27,7 +28,7 @@
     "vue": "^2.2.6",
     "vue-quill-editor": "^2.3.3",
     "vue-router": "^2.3.1",
-    "vue-simple-uploader": "^0.7.0",
+    "vue-simple-uploader": "^0.7.1",
     "vue-simplemde": "^0.3.8",
     "vuex": "^2.3.1"
   },
