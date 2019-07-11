@@ -94,7 +94,7 @@
                         <el-button
                                 size="mini" type="primary"
                                 @click="img_class='class1';current=scope.row;showSetResultVisible=true;current_result={};result_other.total_score=scope.row.homework.total_score_extra;result_other.score=props.row.homework.score_extra"
-                                v-if="scope.row.homework.need_manual_check && !scope.row.total_score && scope.row.is_submit_offline == 1 && scope.row.is_manual_resulted == 0">
+                                >
                             批改作业
                         </el-button>
                         <el-button size="mini" type="primary" v-if="!scope.row.teacher_suggest" @click="current=scope.row;showSuggestVisible=true">评价</el-button>
@@ -156,17 +156,20 @@
         </el-dialog>
 
 
-        <div v-if="showSetResultVisible" style="position: absolute;top:0;left: 0;width: 100%;height: 100%;z-index: 99;background: rgba(0,0,0,0.7)">
+        <div v-show="showSetResultVisible" style="position: absolute;top:0;left: 0;width: 100%;height: 100%;z-index: 99;background: rgba(0,0,0,0.7)">
 
             <div style="height:100%;overflow-y: auto;width: 50%;margin-left: 5%;float: left;">
                 <div v-for="(item) in current.homework_upload_objs">
                     <audio :src="item" controls="controls"></audio>
                 </div>
-
-                <tui-image-editor ref="tuiImageEditor" :include-ui="useDefaultUI" :options="options" @addText="onAddText"></tui-image-editor>
-                <div v-for="(item,index) in current.homework_upload_docs">
-                    <img @click="changeRotation(index)"  :src="item">
+                <canvas ref="canvas" id="homework_canvas" width='2000px' height='800px'></canvas>
+                <div>
+                    <el-button @click='resetCanvas'>Reset Canvas</el-button>
+                    <el-button @click='saveCanvas'>Save Image</el-button>
                 </div>
+                    <!-- <div v-for="(item,index) in current.homework_upload_docs">
+                        <img @click="changeRotation(index)"  :src="item">
+                    </div> -->
             </div>
 
             <div style="height:85%;padding:10px 0;overflow-y: auto;width: 20%;float: right;margin-right: 5%;background: #fff;border-radius: 10px;">
@@ -276,16 +279,15 @@
     import {class_list} from '@/api/getDataEarth'
     import {homework_list} from '@/api/getDataHomework'
     import {getStore} from '@/config/mUtils'
-    import 'tui-image-editor/dist/svg/icon-a.svg';
-    import 'tui-image-editor/dist/svg/icon-b.svg';
-    import 'tui-image-editor/dist/svg/icon-c.svg';
-    import 'tui-image-editor/dist/svg/icon-d.svg';
-    import 'tui-image-editor/dist/tui-image-editor.css';
-    import 'tui-color-picker/dist/tui-color-picker.css';
-    import {ImageEditor} from '@toast-ui/vue-image-editor';
     export default {
         data(){
             return {
+                canvas: null,
+                context: null,
+                isDrawing: false,
+                startX: 0,
+                startY: 0,
+                points: [],
                 tableData: [],
                 limit: 10,
                 count: 0,
@@ -326,35 +328,118 @@
                 },
                 upload_url:this.$store.state.constant.homework_result_excel_in,
                 upload_data:{token:getStore('token') ? getStore('token') : ''},
-                useDefaultUI: true,
-                options: { // for options prop
-                    includeUI: {
-                        menu: ['draw', 'shape', 'icon', 'text']
-                    },
-                    cssMaxWidth: 700,
-                    cssMaxHeight: 500
-                }
             }
         },
         components: {
             headTop,
-            'tui-image-editor': ImageEditor
         },
         created(){
             this.list();
         },
         mounted(){
-
+            var vm = this
+            vm.canvas = vm.$refs.canvas
+            vm.context = vm.canvas.getContext("2d")
+            vm.initialize()
+            vm.canvas.addEventListener('mousedown', vm.mousedown, false)
+            vm.canvas.addEventListener('mousemove', vm.mousemove, false)
+            vm.canvas.addEventListener('mouseup', vm.mouseup, false)
+            const sources = ['https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/stan-lee-arrives-at-the-premiere-of-disney-and-marvels-news-photo-950501274-1542049801.jpg', 'https://img.maximummedia.ie/joe_co_uk/eyJkYXRhIjoie1widXJsXCI6XCJodHRwOlxcXC9cXFwvbWVkaWEtam9lY291ay5tYXhpbXVtbWVkaWEuaWUuczMuYW1hem9uYXdzLmNvbVxcXC93cC1jb250ZW50XFxcL3VwbG9hZHNcXFwvMjAxNVxcXC8wNlxcXC8yNDEwMjMzOVxcXC9zdGFubGVlLmpwZ1wiLFwid2lkdGhcIjo3NjcsXCJoZWlnaHRcIjo0MzEsXCJkZWZhdWx0XCI6XCJodHRwczpcXFwvXFxcL3d3dy5qb2UuY28udWtcXFwvYXNzZXRzXFxcL2ltYWdlc1xcXC9qb2Vjb3VrXFxcL25vLWltYWdlLnBuZz9pZD0yNjRhMmRiZTM3MGYyYzY3NWZjZFwiLFwib3B0aW9uc1wiOltdfSIsImhhc2giOiI4YzhmNDM5MTc4ZGE1MzZkZDZjMDE4Zjg3YTNmZDU4MmUxZjNkMTM3In0=/stanlee.jpg']
+                
+            // loadImages(sources, function(images) {
+            //     for(var image in images) {
+            //         context.drawImage(image, 0, 100);
+            //     }
+            // });
+            var image = new Image()
+            image.src = sources[1]
+            image.onload =() =>{
+                vm.context.drawImage(image, 0, 100);
+            }
         },
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.list();
-        })
+            })
         },
         methods: {
-            onAddText(pos) {
-                console.log('i added text', pos)
+            initialize() {
+                var vm = this,context = vm.context,
+                canvas = vm.canvas
+               
+            },
+
+            // loadImages(sources, callback) {
+            //     var images = {};
+            //     var loadedImages = 0;
+            //     var numImages = 0;
+            //     // get num of sources
+            //     for(var src of sources) {
+            //     numImages++;
+            //     }
+            //     for(let i = 0; i<sources.length; i++) {
+            //     images[i] = new Image();
+            //     images[i].onload = function() {
+            //         if(++loadedImages >= numImages) {
+            //         callback(images);
+            //         }
+            //     };
+            //     images[i].src = sources[i];
+            //     }
+            // },
+            mousedown(e) {
+                var vm = this
+                var rect = vm.canvas.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                vm.isDrawing = true;
+                vm.startX = x;
+                vm.startY = y;
+                vm.points.push({
+                    x: x,
+                    y: y
+                });
+            },
+            mousemove(e) {
+                var vm = this
+                var rect = vm.canvas.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                if(vm.isDrawing) {
+                    vm.context.beginPath();
+                    vm.context.moveTo(vm.startX, vm.startY);
+                    vm.context.lineTo(x, y);
+                    vm.context.lineWidth = 1;
+                    vm.context.lineCap = 'round';
+                    vm.context.strokeStyle = "rgba(0,0,0,1)";
+                    vm.context.stroke();
+                    vm.startX = x;
+                    vm.startY = y;
+                    vm.points.push({
+                        x: x,
+                        y: y
+                    });    
+                }
+            },
+            mouseup(e) {
+                var vm = this
+                vm.isDrawing = false;
+                if(vm.points.length > 0) {
+                    localStorage['points'] = JSON.stringify(vm.points);
+                }
+            },
+            resetCanvas() {
+                var vm = this
+                vm.canvas.width = vm.canvas.width;
+                vm.points.length = 0;
+            },
+            saveImage() {
+                var vm = this
+                console.log('i am here')
+                var dataURL = vm.canvas.toDataURL();
+                console.log('i am here', dataURL)
+                //adding an endpoint call to save URL
             },
             list() {
                 student_homework_result_list({search_param:this.search_param,page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
@@ -666,8 +751,7 @@
     .class4{
         transform:rotate(90deg);
     }
-    .imageEditorApp {
-        width: 1000px;
-        height: 800px;
+    canvas {
+        // background: green;
     }
 </style>
