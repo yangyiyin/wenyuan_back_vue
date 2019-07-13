@@ -251,14 +251,14 @@
             </div>
 
             <div slot="footer" class="dialog-footer" style="position: fixed;bottom:20px;left:50%">
-                <el-button type="primary" @click="print(1)">打 印</el-button>
+                <el-button type="primary" @click="printTest()">打 印</el-button>
                 <el-button @click="dialogFormVisiblePreview1 = false">关 闭</el-button>
             </div>
         </el-dialog>
 
         <el-dialog title="预览" :visible.sync="dialogFormVisiblePreview2" width="80%">
 
-            <div  style="height:1115px;width: 794px;margin: 0 auto;position: relative " v-for="(question_position, order_id) in preview_content_datika.question_positions" >
+            <div id="print_all" style="height:1115px;width: 794px;margin: 0 auto;position: relative " v-for="(question_position, order_id) in preview_content_datika.question_positions" >
 
                 <div style="position: absolute;left: 0;top:0; background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
                 <div style="position: absolute;right: 0;top:0;background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
@@ -288,21 +288,33 @@
                 </template>
 
                 <div style="position:absolute;left: 50px;top:340px;width: 694px;height:2px;background: #E188BA"></div>
-                <div :style="'position:absolute;left: '+(title.x+13)+'px;top:'+(title.y+13)+'px;height:2px;'" v-for="(title, index) in question_position.titles">{{title.text}}</div>
+                
+                <div :style="'position:absolute;left: '+(title.x+13)+'px;top:'+(title.y+13)+'px;height:2px;'" v-for="(title, index) in question_position.titles">
+                    <vue-draggable-resizable :w="100" :h="2" @dragging="onDrag" :resizable="false">{{title.text}}</vue-draggable-resizable>
+                </div>
+                
 
 
                 <template v-for="(_question,index) in question_position.questions">
                     <div v-if="(_question.type==1 || _question.type==2) && _question.is_sub_title" :style="'font-size: 12px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;text-align: center;width: 22px;'">{{_question.text}}</div>
-                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6|| _question.type==7) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}、</div>
+                    
+                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6|| _question.type==7) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">
+                        <vue-draggable-resizable :w="20" :h="22" @dragging="onDrag" :resizable="false">{{_question.text}}、</vue-draggable-resizable>
+                    </div>
+
                     <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && _question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}</div>
 
                     <div v-if="(_question.type==1 || _question.type==2) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;'">{{_question.text}}</div>
-                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
-                    <div v-if="(_question.type==8) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'">
-                        <div style="border-bottom: 1px dashed #333;height:28px;" v-for="(line, index) in lines"></div>
+                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">
+                        <vue-draggable-resizable :w="+_question.width" :h="+_question.height" @dragging="onDrag" @resizing="onResize" :style="'border: 2px solid #E188BA'"></vue-draggable-resizable>
+                    </div>
+                    <div v-if="(_question.type==8) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;'">
+                        <vue-draggable-resizable :w="+_question.width" :h="+_question.height" @dragging="onDrag" :resizable="false" :style="'border: 2px solid #E188BA'">
+                            <div style="border-bottom: 1px dashed #333;height:28px;" v-for="(line, index) in lines"></div>
+                        </vue-draggable-resizable>
 
                     </div>
-
+                    
 
                 </template>
             </div>
@@ -310,7 +322,7 @@
 
 
             <div slot="footer" class="dialog-footer" style="position: fixed;bottom:20px;left:50%">
-                <el-button type="primary" @click="print(2)">打 印</el-button>
+                <el-button type="primary" @click="print()">打 印</el-button>
                 <el-button @click="dialogFormVisiblePreview2 = false">关 闭</el-button>
             </div>
         </el-dialog>
@@ -327,7 +339,7 @@
 
             </div>
 
-            <div slot="footer" class="dialog-footer"">
+            <div slot="footer" class="dialog-footer">
                 <el-button @click="reviewQuestionPreview = false">关 闭</el-button>
             </div>
         </el-dialog>
@@ -343,9 +355,16 @@
     import {reckon_result_batch} from '@/api/getDatastudent_examine_result'
     import '@/assets/js/jquery-1.4.4.min';
     import '@/assets/js/jquery.jqprint-0.3';
+    import VueDraggableResizable from 'vue-draggable-resizable';
+
     export default {
         data(){
             return {
+                output: null,
+                width: 0,
+                height: 0,
+                x: 0,
+                y: 0,
                 id:0,
                 loading:false,
                 loading1:false,
@@ -397,7 +416,16 @@
         })
         },
         methods: {
-
+            onResize: function (x, y, width, height) {
+                this.x = x
+                this.y = y
+                this.width = width
+                this.height = height
+                },
+            onDrag: function (x, y) {
+                this.x = x
+                this.y = y
+            },
             init() {
                 this.loading = false;
                 this.loading1 = false;
@@ -525,6 +553,10 @@
 
             },
             print() {
+                this.$htmlToPaper('print_all', () => {});
+            },
+
+            printTest() {
                 setTimeout(()=>{
                     $("#preview").jqprint();
                 })
