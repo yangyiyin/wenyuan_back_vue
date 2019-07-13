@@ -2,6 +2,10 @@
     <div style="height: 500px;overflow-y: auto">
         <el-scrollbar style="height: 100%;">
 
+            <p style="font-size: 16px;font-weight: bolder">2019.7.13重要更新内容:</p>
+            <p style="line-height: 22px;">1.考试卷预览增加打印按钮,可打印试卷。</p>
+            <p style="height: 20px;"></p>
+
             <p style="font-size: 16px;font-weight: bolder">2019.7.1重要更新内容:</p>
             <p style="line-height: 22px;">1.当录入题目未选择绝密等级的时候，系统默认为等级四。</p>
             <p style="line-height: 22px;">2.增加题目检查者，流程：录入题目之后，可再次进入编辑，在最下面选择检查者。添加完检查者，表示该题目已检查。可在题库列表中进行条件筛选。</p>

@@ -95,7 +95,7 @@
                     <template slot-scope="scope">
                         <el-button type="danger" v-if="!scope.row.questions.length" size="mini" @click="set_question(scope.row)">!添加题目</el-button>
                         <el-button v-if="scope.row.questions.length" size="mini" @click="set_question(scope.row)">设置题目</el-button>
-                        <el-button v-if="scope.row.questions.length" size="mini" @click="pre_print(scope.row)">预览</el-button>
+                        <el-button v-if="scope.row.questions.length" size="mini" @click="pre_print(1,scope.row)">预览</el-button>
                         <el-button size="mini" @click="goto_edit_examine_paper(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
@@ -154,9 +154,198 @@
             <!--</div>-->
         <!--</el-dialog>-->
 
-        <el-dialog title="预览" :visible.sync="dialogFormVisiblePreview" width="80%">
+        <!--<el-dialog title="预览" :visible.sync="dialogFormVisiblePreview" width="80%">-->
 
-            <div id="preview" class="question_block" style="width: 754px;padding:20px;margin: 0 auto;border: 1px solid #ddd;position: relative " >
+            <!--<div id="preview" class="question_block" style="width: 754px;padding:20px;margin: 0 auto;border: 1px solid #ddd;position: relative " >-->
+                <!--&lt;!&ndash;<template v-for="(item,index) in current.questions">&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<div class="question_item">&ndash;&gt;-->
+                <!--&lt;!&ndash;{{index+1}}.{{item.title}}&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;</template>&ndash;&gt;-->
+
+                <!--<template v-if="preview_content.id">-->
+                    <!--<p style="text-align: center;font-size: 20px;font-weight: bolder">{{preview_content.title}}</p>-->
+                    <!--<p style="text-align: center;font-size: 12px;margin-bottom: 20px;">考试时间:{{preview_content.time_limit_min}}分钟</p>-->
+                    <!--<div style="font-size: 14px;margin-bottom: 10px;" v-for="(_question, type, index2) in preview_content.questions_with_types">-->
+                        <!--<p style="float: 16px;font-weight: bolder;margin-top:20px;">{{_question.name}}</p>-->
+
+                        <!--<template v-for="(question, index) in _question.list">-->
+                            <!--<div style="margin-top: 10px;">-->
+                                <!--<div style="float: left;vertical-align:top;width: 20px;" v-html="'<p style=\'display:inline-block\'>'+(index+1)+'、</p>'"></div>-->
+                                <!--<div style="float: right;vertical-align:top;width: 50px;" v-html="'<p style=\'display:inline-block\'>['+question.score+'分]</p>'"></div>-->
+                                <!--<div style="float: left;vertical-align:top;width: 670px;" v-html="question.question_content"></div>-->
+                                <!--<div style="clear: both"></div>-->
+                                <!--<template v-if="question.type==1">-->
+                                    <!--<div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options">-->
+                                        <!--{{option.label}}.{{option.text}}-->
+                                    <!--</div>-->
+
+                                <!--</template>-->
+
+                                <!--<template v-if="question.type==2">-->
+                                    <!--<div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options2">-->
+                                        <!--{{option.label}}.{{option.text}}-->
+                                    <!--</div>-->
+
+                                <!--</template>-->
+
+                                <!--<template v-if="question.type==6">-->
+                                    <!--<div style="" v-for="(option,index) in question.question_answer.sub_content">-->
+                                        <!--<div style="margin-left: 20px;">-->
+                                            <!--<p>({{index+1}}){{option.title}}</p>-->
+                                            <!--<template v-if="option.type==1">-->
+                                                <!--<div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option2,index2) in option.answer_options">-->
+                                                    <!--{{option2.label}}.{{option2.text}}-->
+                                                <!--</div>-->
+                                                <!--<div style="clear: both"></div>-->
+                                            <!--</template>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                <!--</template>-->
+
+                                <!--<div style="clear: both"></div>-->
+                            <!--</div>-->
+                        <!--</template>-->
+                    <!--</div>-->
+
+                <!--</template>-->
+            <!--</div>-->
+
+            <!--<div slot="footer" class="dialog-footer" style="position: fixed;bottom:20px;left:50%">-->
+                <!--&lt;!&ndash;<el-button type="primary" @click="print()">打 印</el-button>&ndash;&gt;-->
+                <!--<el-button @click="dialogFormVisiblePreview = false">关 闭</el-button>-->
+            <!--</div>-->
+        <!--</el-dialog>-->
+
+
+        <div style="display: none">
+            <div id="preview" style="width: 794px;height:1115px;position: relative">
+                <template v-if="preview_content.id">
+                    <p style="text-align: center;font-size: 20px;font-weight: bolder">{{preview_content.title}}</p>
+                    <p style="text-align: center;font-size: 12px;margin-bottom: 20px;">考试时间:{{preview_content.time_limit_min}}分钟</p>
+                    <div style="font-size: 14px;margin-bottom: 10px;" v-for="(_question, type, index2) in preview_content.questions_with_types">
+                        <p style="float: 16px;font-weight: bolder;margin-top:20px;">{{_question.name}}</p>
+
+                        <template v-for="(question, index) in _question.list">
+                            <div style="margin-top: 10px;">
+                                <div style="float: left;vertical-align:top;width: 20px;" v-html="'<p style=\'display:inline-block\'>'+(index+1)+'、</p>'"></div>
+                                <div style="float: right;vertical-align:top;width: 50px;" v-html="'<p style=\'display:inline-block\'>['+question.score+'分]</p>'"></div>
+                                <div style="float: left;vertical-align:top;width: 670px;" v-html="question.question_content"></div>
+                                <div style="clear: both"></div>
+                                <template v-if="question.type==1">
+                                    <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options">
+                                        {{option.label}}.{{option.text}}
+                                    </div>
+
+                                </template>
+
+                                <template v-if="question.type==2">
+                                    <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option,index) in question.question_answer.answer_options2">
+                                        {{option.label}}.{{option.text}}
+                                    </div>
+
+                                </template>
+
+                                <template v-if="question.type==6">
+                                    <div style="" v-for="(option,index) in question.question_answer.sub_content">
+                                        <div style="margin-left: 20px;">
+                                            <p>({{index+1}}){{option.title}}</p>
+                                            <template v-if="option.type==1">
+                                                <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option2,index2) in option.answer_options">
+                                                    {{option2.label}}.{{option2.text}}
+                                                </div>
+                                                <div style="clear: both"></div>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                </template>
+                                <div style="clear: both"></div>
+
+                                <template v-if="show_answer">
+                                    <div style="color: red;font-weight: bolder">
+
+                                        <p v-if="question.type == 3" >
+                                            <span>答案:</span>
+                                            <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                        </p>
+                                        <p v-else-if="question.type == 6" >
+                                            <span>答案:</span>
+                                            <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">({{index3+1}}){{answer_item}}</span>
+                                        </p>
+                                        <p v-else v-html="'答案:'+question.question_answer.answer"></p>
+                                        <p v-html="'答案解析:'+question.question_answer.answer_parse"></p>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+
+                </template>
+
+                <template v-if="preview_content_datika.question_positions">
+
+                    <div  style="height:1115px;width: 794px;margin: 0 auto;position: relative " v-for="(question_position, order_id) in preview_content_datika.question_positions" >
+
+                        <div style="position: absolute;left: 0;top:0; background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+                        <div style="position: absolute;right: 0;top:0;background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+                        <div style="position: absolute;left: 0;bottom:0;background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+                        <div style="position: absolute;right: 0;bottom:0;background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+
+                        <div style="position: absolute;left: 13px;top:13px;width: 768px;height:1089px;border: 1px solid #000"></div>
+
+                        <div style="text-align: center;color:#E188BA;font-size: 24px;font-weight: bolder;position: absolute;top:40px;width: 100%;">{{preview_content_datika.title}}答题卡({{order_id+1}})</div>
+
+                        <div style="position:absolute;left: 30px;top:100px;width: 150px;height:160px;line-height:60px;border: 2px solid #E188BA">
+                            <p>姓名:</p>
+                            <p>准考证号:</p>
+                        </div>
+
+                        <div style="position:absolute;left: 230px;top:100px;width: 380px;height:220px;border: 2px solid #E188BA"></div>
+                        <div style="position: absolute;left: 235px;top:110px;">准考证号:</div>
+                        <!--准考证号-->
+                        <template v-if="question_position.zhunkaozheng">
+                            <div v-for="(item,index) in question_position.zhunkaozheng" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(item.x+13)+'px;top:'+(item.y+13)+'px;margin-left: -11px;margin-top: -5px;'">[{{index%10}}]</div>
+                        </template>
+
+                        <!--序号-->
+                        <div style="position:absolute;left: 630px;top:100px;width: 120px;height:220px;border: 2px solid #E188BA"></div>
+                        <template v-if="question_position.xuhao">
+                            <div v-for="(item,index) in question_position.xuhao" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(item.x+13)+'px;top:'+(item.y+13)+'px;margin-left: -11px;margin-top: -5px;width: 22px;height: 10px;background: '+item.color"></div>
+                        </template>
+
+                        <div style="position:absolute;left: 50px;top:340px;width: 694px;height:2px;background: #E188BA"></div>
+                        <div :style="'position:absolute;left: '+(title.x+13)+'px;top:'+(title.y+13)+'px;height:2px;'" v-for="(title, index) in question_position.titles">{{title.text}}</div>
+
+
+                        <template v-for="(_question,index) in question_position.questions">
+                            <div v-if="(_question.type==1 || _question.type==2) && _question.is_sub_title" :style="'font-size: 12px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;text-align: center;width: 22px;'">{{_question.text}}</div>
+                            <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6|| _question.type==7) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}、</div>
+                            <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && _question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}</div>
+
+                            <div v-if="(_question.type==1 || _question.type==2) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;'">{{_question.text}}</div>
+                            <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
+                            <div v-if="(_question.type==8) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'">
+                                <div style="border-bottom: 1px dashed #333;height:28px;" v-for="(line, index) in lines"></div>
+                            </div>
+
+
+                        </template>
+
+                        <div style="page-break-after: always;"></div>
+                    </div>
+
+
+                </template>
+
+            </div>
+        </div>
+
+        <el-dialog title="预览" :visible.sync="dialogFormVisiblePreview1" width="80%">
+
+            <div class="question_block" style="width: 754px;padding:20px;margin: 0 auto;border: 1px solid #ddd;position: relative " >
                 <!--<template v-for="(item,index) in current.questions">-->
 
                 <!--<div class="question_item">-->
@@ -204,8 +393,21 @@
                                     </div>
 
                                 </template>
-
                                 <div style="clear: both"></div>
+                                <template v-if="show_answer">
+                                    <div style="color: red;font-weight: bolder">
+                                        <p v-if="question.type == 3" >
+                                            <span>答案:</span>
+                                            <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                        </p>
+                                        <p v-else-if="question.type == 6" >
+                                            <span>答案:</span>
+                                            <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in question.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                        </p>
+                                        <p v-else v-html="'答案:'+question.question_answer.answer"></p>
+                                        <p v-html="'答案解析:'+question.question_answer.answer_parse"></p>
+                                    </div>
+                                </template>
                             </div>
                         </template>
                     </div>
@@ -214,11 +416,69 @@
             </div>
 
             <div slot="footer" class="dialog-footer" style="position: fixed;bottom:20px;left:50%">
-                <!--<el-button type="primary" @click="print()">打 印</el-button>-->
-                <el-button @click="dialogFormVisiblePreview = false">关 闭</el-button>
+                <el-button type="primary" @click="print(1)">打 印</el-button>
+                <el-button @click="dialogFormVisiblePreview1 = false">关 闭</el-button>
             </div>
         </el-dialog>
 
+        <el-dialog title="预览" :visible.sync="dialogFormVisiblePreview2" width="80%">
+
+            <div  style="height:1115px;width: 794px;margin: 0 auto;position: relative " v-for="(question_position, order_id) in preview_content_datika.question_positions" >
+
+                <div style="position: absolute;left: 0;top:0; background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+                <div style="position: absolute;right: 0;top:0;background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+                <div style="position: absolute;left: 0;bottom:0;background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+                <div style="position: absolute;right: 0;bottom:0;background: #000;width: 26px;height: 26px;border-radius: 26px;"></div>
+
+                <div style="position: absolute;left: 13px;top:13px;width: 768px;height:1089px;border: 1px solid #000"></div>
+
+                <div style="text-align: center;color:#E188BA;font-size: 24px;font-weight: bolder;position: absolute;top:40px;width: 100%;">{{preview_content_datika.title}}答题卡({{order_id+1}})</div>
+
+                <div style="position:absolute;left: 30px;top:100px;width: 150px;height:160px;line-height:60px;border: 2px solid #E188BA">
+                    <p>姓名:</p>
+                    <p>准考证号:</p>
+                </div>
+
+                <div style="position:absolute;left: 230px;top:100px;width: 380px;height:220px;border: 2px solid #E188BA"></div>
+                <div style="position: absolute;left: 235px;top:110px;">准考证号:</div>
+                <!--准考证号-->
+                <template v-if="question_position.zhunkaozheng">
+                    <div v-for="(item,index) in question_position.zhunkaozheng" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(item.x+13)+'px;top:'+(item.y+13)+'px;margin-left: -11px;margin-top: -5px;'">[{{index%10}}]</div>
+                </template>
+
+                <!--序号-->
+                <div style="position:absolute;left: 630px;top:100px;width: 120px;height:220px;border: 2px solid #E188BA"></div>
+                <template v-if="question_position.xuhao">
+                    <div v-for="(item,index) in question_position.xuhao" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(item.x+13)+'px;top:'+(item.y+13)+'px;margin-left: -11px;margin-top: -5px;width: 22px;height: 10px;background: '+item.color"></div>
+                </template>
+
+                <div style="position:absolute;left: 50px;top:340px;width: 694px;height:2px;background: #E188BA"></div>
+                <div :style="'position:absolute;left: '+(title.x+13)+'px;top:'+(title.y+13)+'px;height:2px;'" v-for="(title, index) in question_position.titles">{{title.text}}</div>
+
+
+                <template v-for="(_question,index) in question_position.questions">
+                    <div v-if="(_question.type==1 || _question.type==2) && _question.is_sub_title" :style="'font-size: 12px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;text-align: center;width: 22px;'">{{_question.text}}</div>
+                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6|| _question.type==7) && _question.is_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}、</div>
+                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6) && _question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;'">{{_question.text}}</div>
+
+                    <div v-if="(_question.type==1 || _question.type==2) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'font-size: 10px;letter-spacing:5px;font-family: \'Arial\';position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;margin-left: -11px;margin-top: -5px;'">{{_question.text}}</div>
+                    <div v-if="(_question.type==3 || _question.type==4 || _question.type==5 || _question.type==6 || _question.type==7) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'"></div>
+                    <div v-if="(_question.type==8) && !_question.is_sub_title && !_question.is_sub_sub_title" :style="'position: absolute;left: '+(_question.x+13)+'px;top:'+(_question.y+13)+'px;width: '+_question.width+'px;height:'+_question.height+'px;border: 2px solid #E188BA'">
+                        <div style="border-bottom: 1px dashed #333;height:28px;" v-for="(line, index) in lines"></div>
+
+                    </div>
+
+
+                </template>
+            </div>
+            <!--<div style="page-break-after: always;"></div>-->
+
+
+            <div slot="footer" class="dialog-footer" style="position: fixed;bottom:20px;left:50%">
+                <el-button type="primary" @click="print(2)">打 印</el-button>
+                <el-button @click="dialogFormVisiblePreview2 = false">关 闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -239,6 +499,8 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 dialogFormVisiblePreview:false,
+                dialogFormVisiblePreview1:false,
+                dialogFormVisiblePreview2:false,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
@@ -251,7 +513,9 @@
                 useway_ids:[],
                 entity:'',
                 count_test:[1],
-                preview_content:{}
+                preview_content:{},
+                preview_content:{},
+                preview_content_datika: {},
             }
         },
         components: {
@@ -403,13 +667,13 @@
             set_question(item){
                 this.$router.push({path:'examine_paper_set_questions',query:{id:item.id}});
             },
-            print() {
+            print2() {
                 setTimeout(()=>{
                     $("#preview").jqprint();
                 })
 
             },
-            pre_print(paper) {
+            pre_print2(paper) {
                 this.dialogFormVisiblePreview=true;
                 this.preview_content = {};
                 this.current=paper;
@@ -424,6 +688,49 @@
                 }
             });
 
+
+            },
+
+            pre_print(type, paper, show_answer) {
+                this.preview_content = {};
+                this.preview_content_datika = {};
+                this.current=paper;
+                this.show_answer = show_answer ? true : false;
+                var datika = 0;
+                if(type == 1) {//试卷
+                    datika = 0;
+                } else if(type == 2){//答题卡
+                    datika = 1;
+                } else {
+                    return ;
+                }
+                examine_paper_info({id:this.current.id, datika:datika}).then((res) => {
+                    if (res.code == this.$store.state.constant.status_success) {
+
+                    if(type == 1) {//试卷
+                        this.preview_content = res.data;
+                    } else if(type == 2){//答题卡
+                        this.preview_content_datika = res.data.datika_info;
+                        this.preview_content_datika.title = res.data.title;
+                    }
+
+                    this['dialogFormVisiblePreview'+type]=true;
+
+
+                } else {
+                    this.$message({
+                        message: res.msg,
+                        type: 'warning'
+                    });
+                }
+            });
+
+
+            },
+            print() {
+                setTimeout(()=>{
+                    $("#preview").jqprint();
+            })
 
             },
         },
