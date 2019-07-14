@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@tinymce/tinymce-vue": "^1.0.8",
-    "@toast-ui/vue-image-editor": "^1.0.2",
     "echarts": "^3.5.4",
     "element-ui": "^2.4.1",
     "html2canvas": "^1.0.0-rc.3",
@@ -26,6 +25,8 @@
     "simple-uploader.js": "^0.5.0",
     "time-formater": "^1.0.1",
     "vue": "^2.2.6",
+    "vue-draggable-resizable": "^2.0.0-rc2",
+    "vue-html-to-paper": "^1.1.0",
     "vue-quill-editor": "^2.3.3",
     "vue-router": "^2.3.1",
     "vue-simple-uploader": "^0.7.1",
