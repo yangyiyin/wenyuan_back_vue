@@ -162,9 +162,10 @@
                 <div v-for="(item) in current.homework_upload_objs">
                     <audio :src="item" controls="controls"></audio>
                 </div>
-                    <div v-for="(item,index) in current.homework_upload_docs">
-                        <img @click="changeRotation(index)" :class="img_class" style="width:100%;" :src="item">
-                    </div>
+
+                <div v-for="(item,index) in current.homework_upload_docs">
+                    <img @click="changeRotation(index)" :class="img_class" style="width:100%;" :src="item">
+                </div>
             </div>
 
             <div style="height:85%;padding:10px 0;overflow-y: auto;width: 20%;float: right;margin-right: 5%;background: #fff;border-radius: 10px;">
