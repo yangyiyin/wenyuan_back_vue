@@ -156,16 +156,18 @@
         </el-dialog>
 
 
-        <div v-if="showSetResultVisible" style="position: absolute;top:0;left: 0;width: 100%;height: 100%;z-index: 99;background: rgba(0,0,0,0.7)">
+        <div v-show="showSetResultVisible" style="position: absolute;top:0;left: 0;width: 100%;height: 100%;z-index: 99;background: rgba(0,0,0,0.7)">
 
             <div style="height:100%;overflow-y: auto;width: 50%;margin-left: 5%;float: left;">
                 <div v-for="(item) in current.homework_upload_objs">
                     <audio :src="item" controls="controls"></audio>
                 </div>
-
-                <div v-for="(item,index) in current.homework_upload_docs">
-                    <img @click="changeRotation(index)" :class="img_class" style="width:100%;" :src="item">
+                <div style="max-height: 2000px;max-width:1000px;overflow: scroll;">
+                    <canvas id='canvas' ref="canvas" :class="classname"></canvas>
+                    <el-button @click='saveCanvas'>Save Image</el-button>
+                    <!-- <el-button @click='resetCanvas'>Reset Image</el-button> -->
                 </div>
+                <img id='saved'/>
             </div>
 
             <div style="height:85%;padding:10px 0;overflow-y: auto;width: 20%;float: right;margin-right: 5%;background: #fff;border-radius: 10px;">
@@ -278,6 +280,12 @@
     export default {
         data(){
             return {
+                canvas: null,
+                context: null,
+                isDrawing: false,
+                startX: 0,
+                startY: 0,
+                points: [],
                 tableData: [],
                 limit: 10,
                 count: 0,
@@ -287,7 +295,9 @@
                 showSuggestVisible:false,
                 showSetResultVisible:false,
                 dialogFormVisibleDaoru:false,
-                current:{},
+                current:{
+                    homework_upload_docs: ['https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/stan-lee-arrives-at-the-premiere-of-disney-and-marvels-news-photo-950501274-1542049801.jpg', 'https://img.maximummedia.ie/joe_co_uk/eyJkYXRhIjoie1widXJsXCI6XCJodHRwOlxcXC9cXFwvbWVkaWEtam9lY291ay5tYXhpbXVtbWVkaWEuaWUuczMuYW1hem9uYXdzLmNvbVxcXC93cC1jb250ZW50XFxcL3VwbG9hZHNcXFwvMjAxNVxcXC8wNlxcXC8yNDEwMjMzOVxcXC9zdGFubGVlLmpwZ1wiLFwid2lkdGhcIjo3NjcsXCJoZWlnaHRcIjo0MzEsXCJkZWZhdWx0XCI6XCJodHRwczpcXFwvXFxcL3d3dy5qb2UuY28udWtcXFwvYXNzZXRzXFxcL2ltYWdlc1xcXC9qb2Vjb3VrXFxcL25vLWltYWdlLnBuZz9pZD0yNjRhMmRiZTM3MGYyYzY3NWZjZFwiLFwib3B0aW9uc1wiOltdfSIsImhhc2giOiI4YzhmNDM5MTc4ZGE1MzZkZDZjMDE4Zjg3YTNmZDU4MmUxZjNkMTM3In0=/stanlee.jpg']
+                },
                 result_other:{
                     score:0,
                     total_score:0
@@ -326,15 +336,100 @@
             this.list();
         },
         mounted(){
-
+            this.loadImage();
         },
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.list();
-        })
+            })
         },
         methods: {
+            loadImage() {
+                var vm = this
+                vm.canvas = vm.$refs.canvas
+                vm.context = vm.canvas.getContext("2d")
+                vm.canvas.height = 3000;
+                vm.canvas.width = 600;
+                vm.images = [];
+                for (let i = 0; i < this.current.homework_upload_docs.length; i++) {
+                    vm.images[i] = new Image();
+                    vm.images[i].crossOrigin = "Anonymous";
+                    vm.images[i].onload = () =>{
+                        vm.context.drawImage(vm.images[i], 0, 0 + 500 * i, 600, 500);
+                    }
+                    vm.images[i].src = this.current.homework_upload_docs[i];
+                }
+                vm.canvas.addEventListener('mousedown', vm.mousedown, false)
+                vm.canvas.addEventListener('mousemove', vm.mousemove, false)
+                vm.canvas.addEventListener('mouseup', vm.mouseup, false)
+                
+            },
+            mousedown(e) {
+                var vm = this
+                var rect = vm.canvas.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                vm.isDrawing = true;
+                vm.startX = x;
+                vm.startY = y;
+                vm.points.push({
+                    x: x,
+                    y: y
+                });
+            },
+            mousemove(e) {
+                var vm = this
+                var rect = vm.canvas.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                if(vm.isDrawing) {
+                    vm.context.beginPath();
+                    vm.context.moveTo(vm.startX, vm.startY);
+                    vm.context.lineTo(x, y);
+                    vm.context.lineWidth = 2;
+                    vm.context.lineCap = 'round';
+                    vm.context.strokeStyle = "rgba(0,0,0,1)";
+                    vm.context.stroke();
+                    vm.startX = x;
+                    vm.startY = y;
+                    vm.points.push({
+                        x: x,
+                        y: y
+                    });
+                }
+            },
+            mouseup(e) {
+                var vm = this
+                vm.isDrawing = false;
+                if(vm.points.length > 0) {
+                    localStorage['points'] = JSON.stringify(vm.points);
+                }
+            },
+            saveCanvas() {
+                var vm = this
+                var dataURL = vm.canvas.toDataURL();
+                var img3 = document.getElementById('saved')
+                img3.src = dataURL;
+                //adding an endpoint call to save URL
+                save_canvas_image({dataURL: dataURL}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.$router.push({path:'admin_user',query:{}});
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+            },
+            // resetCanvas() {
+               
+            // },
             list() {
                 student_homework_result_list({search_param:this.search_param,page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
@@ -644,5 +739,8 @@
     }
     .class4{
         transform:rotate(90deg);
+    }
+    canvas {
+        background-color: green;
     }
 </style>

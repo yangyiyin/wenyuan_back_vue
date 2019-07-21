@@ -33,3 +33,5 @@ new Vue({
 	template: '<App/>',
 	components: { App }
 })
+
+global.vm = vm;

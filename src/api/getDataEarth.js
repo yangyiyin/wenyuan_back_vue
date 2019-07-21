@@ -131,5 +131,6 @@ export const admin_purview_del = data => fetch('/wenyuanjiaoyu/admin_purview/del
 export const admin_purview_info = data => fetch('/wenyuanjiaoyu/admin_purview/info', data, 'POST').then(check_login);
 export const admin_purview_sort = data => fetch('/wenyuanjiaoyu/admin_purview/sort', data, 'POST').then(check_login);
 export const get_menu = data => fetch('/wenyuanjiaoyu/admin_purview/get_menu', data, 'POST').then(check_login);
+export const save_canvas_image = data => fetch('/wenyuanjiaoyu/admin_user/save_canvas_image', data, 'POST').then(check_login);
 
 
