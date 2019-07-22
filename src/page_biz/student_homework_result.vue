@@ -162,11 +162,15 @@
                 <div v-for="(item) in current.homework_upload_objs">
                     <audio :src="item" controls="controls"></audio>
                 </div>
+                <!--<div v-for="(item,index) in ['https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=180868167,273146879&fm=27&gp=0.jpg', 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1117035161,2826823365&fm=27&gp=0.jpg']">-->
+                    <!--<img @click="changeRotation(index)" :class="img_class" style="width:100%;" :src="item">-->
+                <!--</div>-->
                 <div style="max-height: 2000px;max-width:1000px;overflow: scroll;">
                     <canvas id='canvas' ref="canvas" :class="classname"></canvas>
                     <el-button @click='saveCanvas'>Save Image</el-button>
                     <!-- <el-button @click='resetCanvas'>Reset Image</el-button> -->
                 </div>
+
                 <img id='saved'/>
             </div>
 
@@ -347,19 +351,55 @@
         methods: {
             loadImage() {
                 var vm = this
+                //主canvas,目前也是绘画的所在canvas
                 vm.canvas = vm.$refs.canvas
                 vm.context = vm.canvas.getContext("2d")
                 vm.canvas.height = 3000;
                 vm.canvas.width = 600;
                 vm.images = [];
-                for (let i = 0; i < this.current.homework_upload_docs.length; i++) {
-                    vm.images[i] = new Image();
-                    vm.images[i].crossOrigin = "Anonymous";
-                    vm.images[i].onload = () =>{
-                        vm.context.drawImage(vm.images[i], 0, 0 + 500 * i, 600, 500);
-                    }
-                    vm.images[i].src = this.current.homework_upload_docs[i];
+//                for (let i = 0; i < this.current.homework_upload_docs.length; i++) {
+//                    vm.images[i] = new Image();
+//                    vm.images[i].crossOrigin = "Anonymous";
+//                    vm.images[i].onload = () =>{
+//                        vm.context.drawImage(vm.images[i], 0, 0 + 500 * i, 600, 500);
+//                    }
+//                    vm.images[i].src = this.current.homework_upload_docs[i];
+//                }
+
+                var layer1=document.createElement('canvas');
+                layer1.width=600;
+                layer1.height=500;
+                var layer1_canvas=layer1.getContext('2d');
+
+
+                var img = new Image();
+                img.setAttribute('crossOrigin','anonymous');
+                img.src = 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1117035161,2826823365&fm=27&gp=0.jpg';
+                img.onload = function(){
+                    layer1_canvas.rotate(30*Math.PI/180);
+                    layer1_canvas.drawImage(this, 0, 0 , 600, 500);
+                    vm.context.drawImage(layer1,0,0,600,500,0,0,600,500)
+
                 }
+
+                /**
+                 * 可做到点击旋转的事件中
+                 */
+                setTimeout(()=>{
+                    //清除主canvas画布指定区域,目前会清空绘画的内容,后期再考虑怎么优化,目前只能先旋转好,再进行绘画
+                    vm.context.clearRect(0,0,600,3000);
+                    //下面重新创建图片的canvas,并绘画到主canvas
+                    var layer1=document.createElement('canvas');
+                    layer1.width=600;
+                    layer1.height=500;
+                    var layer1_canvas=layer1.getContext('2d');
+                    layer1_canvas.rotate(60*Math.PI/180);
+                    layer1_canvas.drawImage(img, 0, 0 , 600, 500);
+                    vm.context.drawImage(layer1,0,0,600,500,0,0,600,500)
+                },5000)
+
+               // vm.context.rotate(30*Math.PI/180)
+
                 vm.canvas.addEventListener('mousedown', vm.mousedown, false)
                 vm.canvas.addEventListener('mousemove', vm.mousemove, false)
                 vm.canvas.addEventListener('mouseup', vm.mouseup, false)
