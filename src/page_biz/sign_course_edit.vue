@@ -101,7 +101,7 @@
                                 <span style="font-size: 14px;">条件:</span>
                                 <el-select v-model="item2.field" placeholder="字段" style="width: 180px;">
                                     <el-option
-                                            v-for="item in [{value:'A1_score',label:'一试总分'},{value:'A2_score',label:'二试总分'},{value:'A12_score',label:'合计分'},{value:'B_english_score',label:'英语达人赛综合分'},{value:'B_maths_score',label:'数学晋级考总分'},{value:'C_score',label:'新生入学测试总分'},{value:'remark_luqu',label:'录取班级'},{value:'remark_luqu2',label:'录取班级2'},{value:'remark_luqu3',label:'录取班级3'},{value:'remark',label:'考试结果备注'}]"
+                                            v-for="item in [{value:'remark_luqu',label:'录取班级'},{value:'A1_score',label:'一试总分'},{value:'A2_score',label:'二试总分'},{value:'A12_score',label:'合计分'},{value:'B_english_score',label:'英语达人赛综合分'},{value:'B_maths_score',label:'数学晋级考总分'},{value:'C_score',label:'新生入学测试总分'},{value:'remark_luqu2',label:'录取班级2'},{value:'remark_luqu3',label:'录取班级3'},{value:'remark',label:'考试结果备注'}]"
                                             :key="item.value"
                                             :label="item.label"
                                             :value="item.value">
