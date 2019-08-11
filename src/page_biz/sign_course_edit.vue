@@ -567,7 +567,7 @@
                 var rule = {
                     examine_id:this.examination_select.id,
                     name:this.examination_select.title,
-                    field:'A1_score',
+                    field:'remark_luqu',
                     logic:'eq',
                     value:0
 
