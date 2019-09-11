@@ -185,6 +185,8 @@
                 <el-table-column label="科目" prop="entity_desc"></el-table-column>
                 <el-table-column label="类型" prop="type_desc"></el-table-column>
                 <el-table-column label="题干" prop="title_short"></el-table-column>
+                <el-table-column label="录入者" prop="inputer[0].show_name"></el-table-column>
+                <el-table-column label="检查者" prop="checker[0].show_name"></el-table-column>
                 <!--<el-table-column label="简介" prop="desc_pre"></el-table-column>-->
                 <el-table-column label="创建时间" prop="create_time"></el-table-column>
                 <!--<el-table-column label="评语" width="300">-->
