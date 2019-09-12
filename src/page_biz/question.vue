@@ -103,6 +103,7 @@
         <div class="table_container">
             <el-table
                     :data="tableData"
+                    :span-method="objectSpanMethod"
                     style="width: 100%">
                 <!--<el-table-column label="图片">-->
                 <!--<template slot-scope="scope">-->
@@ -185,8 +186,8 @@
                 <el-table-column label="科目" prop="entity_desc"></el-table-column>
                 <el-table-column label="类型" prop="type_desc"></el-table-column>
                 <el-table-column label="题干" prop="title_short"></el-table-column>
-                <el-table-column label="录入者" prop="inputer[0].show_name"></el-table-column>
-                <el-table-column label="检查者" prop="checker[0].show_name"></el-table-column>
+                <el-table-column label="录入者" prop="allInputer"></el-table-column>
+                <el-table-column label="检查者" prop="allChecker"></el-table-column>
                 <!--<el-table-column label="简介" prop="desc_pre"></el-table-column>-->
                 <el-table-column label="创建时间" prop="create_time"></el-table-column>
                 <!--<el-table-column label="评语" width="300">-->
@@ -360,11 +361,14 @@
                     label_ids:this.label_ids,
                 }).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
+                        res.data.list.map(el => el.checker? el.allChecker = el.checker.map(val => val.show_name).join(', ') : '');
+                        res.data.list.map(el => el.inputer? el.allInputer = el.inputer.map(val => val.show_name).join(', ') : '');
+                        console.log(res.data.list)
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
                     }
                 }.bind(this));
-
+                
             },
             handleCurrentChange(val){
                 this.currentPage = val;
@@ -480,6 +484,21 @@
                 }
 
             },
+            objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex === 0) {
+                if (rowIndex % 2 === 0) {
+                    return {
+                    rowspan: 2,
+                    colspan: 1
+                    };
+                } else {
+                    return {
+                    rowspan: 0,
+                    colspan: 0
+                    };
+                }
+                }
+            }
 //            handleDaoru(row){
 //                this.dialogFormVisibleDaoru = true;
 //                this.current = row;
