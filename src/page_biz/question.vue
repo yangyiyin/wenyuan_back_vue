@@ -103,7 +103,6 @@
         <div class="table_container">
             <el-table
                     :data="tableData"
-                    :span-method="objectSpanMethod"
                     style="width: 100%">
                 <!--<el-table-column label="图片">-->
                 <!--<template slot-scope="scope">-->
@@ -368,7 +367,6 @@
                         this.count = parseInt(res.data.count);
                     }
                 }.bind(this));
-                
             },
             handleCurrentChange(val){
                 this.currentPage = val;
@@ -484,21 +482,6 @@
                 }
 
             },
-            objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-                if (columnIndex === 0) {
-                if (rowIndex % 2 === 0) {
-                    return {
-                    rowspan: 2,
-                    colspan: 1
-                    };
-                } else {
-                    return {
-                    rowspan: 0,
-                    colspan: 0
-                    };
-                }
-                }
-            }
 //            handleDaoru(row){
 //                this.dialogFormVisibleDaoru = true;
 //                this.current = row;
