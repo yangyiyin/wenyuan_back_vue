@@ -39,8 +39,10 @@ const sign_stage_edit = r => require.ensure([], () => r(require('@/page_biz/sign
 const question = r => require.ensure([], () => r(require('@/page_biz/question')), 'question');
 const question_edit = r => require.ensure([], () => r(require('@/page_biz/question_edit')), 'question_edit');
 
+const label_group = r => require.ensure([], () => r(require('@/page_biz/label_group')), 'label_group');
 const label = r => require.ensure([], () => r(require('@/page_biz/label')), 'label');
 const add_label = r => require.ensure([], () => r(require('@/page_biz/add_label')), 'add_label');
+const add_label_group = r => require.ensure([], () => r(require('@/page_biz/add_label_group')), 'add_label_group');
 const knowledge_point = r => require.ensure([], () => r(require('@/page_biz/knowledge_point')), 'knowledge_point');
 const add_knowledge_point = r => require.ensure([], () => r(require('@/page_biz/add_knowledge_point')), 'add_knowledge_point');
 const homework = r => require.ensure([], () => r(require('@/page_biz/homework')), 'homework');
@@ -243,7 +245,9 @@ const routes = [
 			},
 
 			{path: '/label',component: label,meta: ['题库', '标签'],},
+			{path: '/label_group',component: label_group,meta: ['题库', '标签组'],},
 {path: '/add_label',component: add_label,meta: ['题库', '设置标签'],},
+{path: '/add_label_group',component: add_label_group,meta: ['题库', '设置标签组'],},
 {path: '/knowledge_point',component: knowledge_point,meta: ['题库', '知识点'],},
 {path: '/add_knowledge_point',component: add_knowledge_point,meta: ['题库', '设置知识点'],},
 {path: '/homework',component: homework,meta: ['题库', '家庭作业'],},
