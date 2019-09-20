@@ -32,7 +32,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {label_edit, label_info, label_group_all_list} from '@/api/getDatalabel'
+    import {label_edit, label_info, label_group_list, label_group_all_list, label_group_info} from '@/api/getDatalabel'
     export default {
         data(){
             return {
@@ -61,9 +61,9 @@
 //                console.log(vm.id )
             if (vm.id && vm.id > 0) {
                 vm.get_info();
-                vm.get_label_group_info();
+                vm.get_label_group_list_all();
             } else {
-                vm.get_label_group_info().then(vm.init);
+                vm.get_label_group_list_all().then(vm.init);
             }
 
             })
@@ -80,6 +80,16 @@
                     if (res.code == this.$store.state.constant.status_success) {
                         this.name = res.data.name;
                         this.group_id = res.data.group_id;
+                        label_group_info({id:this.group_id}).then(function (res) {
+                            if (res.code == this.$store.state.constant.status_success) {
+                                if(res.data.deleted === '1') this.group_id = ''
+                            } else {
+                                this.$message({
+                                    message: res.msg,
+                                    type: 'warning'
+                                });
+                            }
+                        }.bind(this))
                     } else {
                         this.$message({
                             message: res.msg,
@@ -89,7 +99,7 @@
 
                 }.bind(this));
             },
-            get_label_group_info() {
+            get_label_group_list_all() {
                 return label_group_all_list().then(function(res){
                     return new Promise(function(resolve,reject){
                         if (res.code == this.$store.state.constant.status_success) {
