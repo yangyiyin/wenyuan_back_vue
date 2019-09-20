@@ -17,6 +17,12 @@ import '../static/UE/kityformula-plugin/addKityFormulaDialog.js'
 import '../static/UE/kityformula-plugin/getKfContent.js'
 import '../static/UE/kityformula-plugin/defaultFilterFix.js'
 
+// import VueDraggableResizable from 'vue-draggable-resizable'
+//
+// // optionally import default styles
+// import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
+//
+// Vue.component('vue-draggable-resizable', VueDraggableResizable)
 
 // use
 Vue.use(mavonEditor);
