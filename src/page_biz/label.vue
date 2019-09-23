@@ -11,6 +11,7 @@
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_label(0)">新增标签</el-button>
+            <el-button style="float: right" type="primary" @click="goto_label_group(0)">标签组管理</el-button>
 
         </div>
         <div class="table_container">
@@ -122,6 +123,9 @@
             },
             goto_edit_label(id) {
                 this.$router.push({path:'add_label',query:{id:id}});
+            },
+            goto_label_group(id) {
+                this.$router.push({path:'label_group',query:{}});
             },
             verify(scope, status) {
 
