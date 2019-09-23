@@ -99,15 +99,29 @@
                     <span style="color: red">当前分组下无标签</span>
                 </template>
             </div>
-
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">标签组:</span>
+                <el-select v-model="question.label_group" value-key="id" placeholder="请选择标签组" style="width: 120px;" @change="get_labels()" clearable>
+                    <el-option
+                            v-for="item in label_groups"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item">
+                    </el-option>
+                </el-select>
+            </div>
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;">标签:</span>
-
-                <el-checkbox-group v-model="question.label" size="mini" style="display: inline-block">
-                    <template v-for="(item, index) in labels">
-                        <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
-                    </template>
-                </el-checkbox-group>
+                <template v-if="labels.length > 0">
+                    <el-checkbox-group v-model="question.label" size="mini" style="display: inline-block">
+                        <template v-for="(item, index) in labels">
+                            <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
+                        </template>
+                    </el-checkbox-group>
+                </template>
+                <template v-else>
+                    <span style="color: red">当前标签组下无标签</span>
+                </template>
             </div>
 
             <div class="search_item">
@@ -324,7 +338,7 @@
     import headTop from '../components/headTop'
     import {question_edit,question_info,get_grades,admin_user_all_list} from '@/api/getDataEarth'
     import {knowledge_point_all_list,get_groups,get_groups_subject} from '@/api/getDataknowledge_point'
-    import {label_all_list} from '@/api/getDatalabel'
+    import {label_all_list, label_group_all_list} from '@/api/getDatalabel'
     import  { quillEditor,Quill } from 'vue-quill-editor'
     import { ImageDrop } from 'quill-image-drop-module'
     import ImageResize from 'quill-image-resize-module'
@@ -351,6 +365,7 @@
                     answer_options:[{label:'A',text:''},{label:'B',text:''},{label:'C',text:''}],
                     answer_options_2:[{label:'A',text:'是'},{label:'B',text:'否'}],
                     label:[],
+                    label_group:{id:'0',name:'全部'},
                     knowledge_point:[],
                     hard_level:1,
                     year:'2018',
@@ -374,6 +389,7 @@
                 },
                 knowledge_points:[],
                 labels:[],
+                label_groups:[],
                 authors:[],
                 checkers:[],
                 //group:{id:1,name:'一年级'},
@@ -536,15 +552,27 @@
                     get_grades({}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.grades = res.data;
-
+                            label_group_all_list().then(function (res) {
+                                if (res.code == this.$store.state.constant.status_success) {
+                                    res.data.unshift({id:'0',name:'全部'})
+                                    this.label_groups = res.data;
+                                } else {
+                                    this.$message({
+                                        message: res.msg,
+                                        type: 'warning'
+                                    });
+                                }
+                                this.loading_info = false;
+                                resolve();
+                            }.bind(this));
                         } else {
                             this.$message({
                                 message: res.msg,
                                 type: 'warning'
                             });
                         }
-                        this.loading_info = false;
-                        resolve();
+                        // this.loading_info = false;
+                        // resolve();
                     }.bind(this));
                 }.bind(this))
             },
@@ -554,35 +582,35 @@
                     knowledge_point_all_list({group:this.question.knowledge_group, group_subject:this.question.knowledge_group_subject}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.knowledge_points = res.data;
-                            label_all_list({}).then(function (res) {
-                                if (res.code == this.$store.state.constant.status_success) {
-                                    this.labels = res.data;
+                                label_all_list({group_id:this.question.label_group.id}).then(function (res) {
+                                    if (res.code == this.$store.state.constant.status_success) {
+                                        this.labels = res.data;
 
-                                    admin_user_all_list({'is_question_author':1}).then(function (res) {
-                                        if (res.code == this.$store.state.constant.status_success) {
-                                            this.authors = deepCopy(res.data);
-//                                            this.checkers = res.data;
-                                            this.checkers = deepCopy(res.data);
-                                            //this.question.checker = this.question.checker ? this.question.checker : [];
-                                        } else {
-                                            this.$message({
-                                                message: res.msg,
-                                                type: 'warning'
-                                            });
-                                        }
-                                        this.loading_info = false;
-                                        resolve();
-                                    }.bind(this));
-
-                                } else {
-                                    this.$message({
-                                        message: res.msg,
-                                        type: 'warning'
-                                    });
-                                }
-
-                            }.bind(this));
-                        } else {
+                                        admin_user_all_list({'is_question_author':1}).then(function (res) {
+                                            if (res.code == this.$store.state.constant.status_success) {
+                                                this.authors = deepCopy(res.data);
+    //                                            this.checkers = res.data;
+                                                this.checkers = deepCopy(res.data);
+                                                //this.question.checker = this.question.checker ? this.question.checker : [];
+                                            } else {
+                                                this.$message({
+                                                    message: res.msg,
+                                                    type: 'warning'
+                                                });
+                                            }
+                                            this.loading_info = false;
+                                            resolve();
+                                        }.bind(this));
+    
+                                    } else {
+                                        this.$message({
+                                            message: res.msg,
+                                            type: 'warning'
+                                        });
+                                    }
+    
+                        }.bind(this));
+                    } else {
                             this.$message({
                                 message: res.msg,
                                 type: 'warning'
@@ -676,6 +704,7 @@
                     answer_options:[{label:'A',text:''},{label:'B',text:''},{label:'C',text:''}],
                     answer_options_2:[{label:'A',text:'是'},{label:'B',text:'否'}],
                     label:[],
+                    label_group:{id:'0',name:'全部'},
                     knowledge_point:[],
                     hard_level:1,
                     year:'2018',
@@ -704,6 +733,7 @@
                     question_info({id: this.id}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             res.data.question_data.checker = res.data.question_data.checker ? res.data.question_data.checker : [];
+                            res.data.question_data.label_group = res.data.question_data.label_group? res.data.question_data.label_group : {id:'0',name:'全部'}
                             this.question = res.data.question_data;
                         } else {
                             this.$message({
@@ -901,6 +931,19 @@
                     if (res.code == this.$store.state.constant.status_success) {
                         this.question.knowledge_point = [];
                         this.knowledge_points = res.data;
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+            },
+            get_labels() {
+                label_all_list({group_id:this.question.label_group.id}).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.question.label = [];
+                        this.labels = res.data;
                     } else {
                         this.$message({
                             message: res.msg,

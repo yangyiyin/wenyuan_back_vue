@@ -10,17 +10,6 @@
                 </el-input>
             </div>
 
-            <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">标签组:</span>
-                <el-select v-model="group_id" placeholder="类型">
-                    <el-option
-                            v-for="item in groups"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </div>
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
@@ -32,15 +21,13 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {label_edit, label_info, label_group_list, label_group_all_list, label_group_info} from '@/api/getDatalabel'
+    import {label_group_edit,label_group_info} from '@/api/getDatalabel'
     export default {
         data(){
             return {
                 id:0,
                 loading:false,
-                name:'',
-                groups: [],
-                group_id:'',
+                name:''
             }
 
         },
@@ -61,35 +48,22 @@
 //                console.log(vm.id )
             if (vm.id && vm.id > 0) {
                 vm.get_info();
-                vm.get_label_group_list_all();
             } else {
-                vm.get_label_group_list_all().then(vm.init);
+                vm.init();
             }
 
-            })
+        })
         },
         methods: {
 
             init() {
                 this.loading = false;
                 this.name = '';
-                this.group_id = '';
             },
             get_info() {
-                label_info({id:this.id}).then(function (res) {
+                label_group_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.name = res.data.name;
-                        this.group_id = res.data.group_id;
-                        label_group_info({id:this.group_id}).then(function (res) {
-                            if (res.code == this.$store.state.constant.status_success) {
-                                if(res.data.deleted === '1') this.group_id = ''
-                            } else {
-                                this.$message({
-                                    message: res.msg,
-                                    type: 'warning'
-                                });
-                            }
-                        }.bind(this))
                     } else {
                         this.$message({
                             message: res.msg,
@@ -99,23 +73,10 @@
 
                 }.bind(this));
             },
-            get_label_group_list_all() {
-                return label_group_all_list().then(function(res){
-                    return new Promise(function(resolve,reject){
-                        if (res.code == this.$store.state.constant.status_success) {
-                            this.groups = res.data
-                        }
-                        resolve();
-                    }.bind(this));
-
-                }.bind(this));
-            },
             submit: function () {
+
                 if (!this.name) {
                     var error_msg = '请填写名称';
-                }
-                if (!this.group_id) {
-                    var error_msg = '请选择组';
                 }
 
                 if (error_msg) {
@@ -132,13 +93,13 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    label_edit({id:this.id,name:this.name, group_id:this.group_id}).then(function (res) {
+                    label_group_edit({id:this.id,name:this.name}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
                                 type: 'success'
                             });
-                            this.$router.push({path:'label',query:{}});
+                            this.$router.push({path:'label_group',query:{}});
                         } else {
                             this.$message({
                                 message: res.msg,
