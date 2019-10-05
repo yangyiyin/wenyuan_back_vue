@@ -25,6 +25,7 @@
                         <el-button size="mini" @click="handleSort(scope.row)">设置</el-button>
                     </template>
                 </el-table-column>
+                <el-table-column label="标签组" prop="group_name"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
