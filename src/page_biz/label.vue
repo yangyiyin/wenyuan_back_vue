@@ -10,6 +10,15 @@
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+            <el-select v-model="group_id" placeholder="类型" clearable>
+                <el-option
+                        v-for="item in groups"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+            <el-button type="primary" icon="el-icon-search" @click="search">标签组筛选</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_label(0)">新增标签</el-button>
             <el-button style="float: right" type="primary" @click="goto_label_group(0)">标签组管理</el-button>
 
@@ -63,7 +72,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {label_list,label_del,label_verify,label_sort} from '@/api/getDatalabel'
+    import {label_list,label_del,label_verify,label_sort, label_group_all_list} from '@/api/getDatalabel'
     export default {
         data(){
             return {
@@ -77,6 +86,8 @@
 //                choose_categories:[],
 //                categories:[],
                 name:'',
+                groups: '',
+                group_id:'',
                 loadingBtn:-1
             }
         },
@@ -93,17 +104,29 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.list();
-        })
+                vm.get_label_group_list_all();
+            })
         },
         methods: {
             list() {
-                label_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
+                label_list({page:this.currentPage,page_size:this.limit,name:this.name, group_id:this.group_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
                     }
                 }.bind(this));
 
+            },
+            get_label_group_list_all() {
+                return label_group_all_list().then(function(res){
+                    return new Promise(function(resolve,reject){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.groups = res.data
+                        }
+                        resolve();
+                    }.bind(this));
+
+                }.bind(this));
             },
             handleCurrentChange(val){
                 this.currentPage = val;
