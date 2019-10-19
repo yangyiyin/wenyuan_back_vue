@@ -41,6 +41,7 @@ const question_edit = r => require.ensure([], () => r(require('@/page_biz/questi
 
 const label_group = r => require.ensure([], () => r(require('@/page_biz/label_group')), 'label_group');
 const label = r => require.ensure([], () => r(require('@/page_biz/label')), 'label');
+const statistics_exams = r => require.ensure([], () => r(require('@/page_biz/statistics_exams')), 'statistics_exams');
 const add_label = r => require.ensure([], () => r(require('@/page_biz/add_label')), 'add_label');
 const add_label_group = r => require.ensure([], () => r(require('@/page_biz/add_label_group')), 'add_label_group');
 const knowledge_point = r => require.ensure([], () => r(require('@/page_biz/knowledge_point')), 'knowledge_point');
@@ -246,6 +247,7 @@ const routes = [
 
 			{path: '/label',component: label,meta: ['题库', '标签'],},
 			{path: '/label_group',component: label_group,meta: ['题库', '标签组'],},
+			{path: '/statistics_exams',component: statistics_exams,meta: ['题库', '历届考试统计'],},
 {path: '/add_label',component: add_label,meta: ['题库', '设置标签'],},
 {path: '/add_label_group',component: add_label_group,meta: ['题库', '设置标签组'],},
 {path: '/knowledge_point',component: knowledge_point,meta: ['题库', '知识点'],},

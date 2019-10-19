@@ -18,6 +18,7 @@ export const reckon_result_batch = data => fetch('/wenyuanjiaoyu/student_examine
 export const set_ticket_id = data => fetch('/wenyuanjiaoyu/student_examine_result/set_ticket_id', data, 'POST').then(check_login);
 export const set_ticket_id_replace = data => fetch('/wenyuanjiaoyu/student_examine_result/set_ticket_id_replace', data, 'POST').then(check_login);
 export const set_student_question_answer_result = data => fetch('/wenyuanjiaoyu/student_examine_result/set_student_question_answer_result', data, 'POST').then(check_login);
+export const get_statistics_student_examinations = data => fetch('/wenyuanjiaoyu/examination_signs/statistics_student_examinations', data, 'POST').then(check_login);
 
 
 
