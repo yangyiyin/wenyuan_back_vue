@@ -16,8 +16,7 @@
         </div>
         <div class="table_container">
             <el-table
-                    height="250"
-                    width="100"
+                    height="650"
                     :data="tableData"
                     style="width: 100%">
                 <el-table-column :fixed="index2==0" v-for="(item, index2) in tableData[0]" :key="index2">
