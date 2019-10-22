@@ -16,15 +16,16 @@
         </div>
         <div class="table_container">
             <el-table
-                    height="650"
+                    height="250"
+                    width="100"
                     :data="tableData"
                     style="width: 100%">
-                <el-table-column v-for="(item, index) in tableData[0]" key="index">
+                <el-table-column :fixed="index2==0" v-for="(item, index2) in tableData[0]" :key="index2">
                     <template slot="header" slot-scope="scope">
-                        {{scope.row[index]}}
+                        {{scope.row[index2]}}
                     </template>
                     <template slot-scope="scope">
-                        {{scope.row[index]}}
+                        {{scope.row[index2]}}
                     </template>
                 </el-table-column>
             </el-table>
