@@ -11,6 +11,7 @@
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button icon="el-icon-search" :loading="loadingBtn == 'daochu'" @click="daochu">导出</el-button>
+            <el-button icon="el-icon-search" :loading="loadingBtn == 'statistics'" @click="statistics">刷新统计</el-button>
 
         </div>
         <div class="table_container">
@@ -125,6 +126,10 @@
                         return;
                     }
                 }.bind(this));
+            },
+            statistics() {
+                this.loadingBtn = 'statistics';
+                window.open(this.$store.state.constant.statistics_student_examinations);
             },
         },
     }
