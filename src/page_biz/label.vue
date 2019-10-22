@@ -9,8 +9,7 @@
                     v-model="name"
                     clearable>
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-select v-model="group_id" placeholder="类型" clearable>
+            <el-select v-model="group_id" placeholder="标签组" clearable>
                 <el-option
                         v-for="item in groups"
                         :key="item.id"
@@ -18,7 +17,7 @@
                         :value="item.id">
                 </el-option>
             </el-select>
-            <el-button type="primary" icon="el-icon-search" @click="search">标签组筛选</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_label(0)">新增标签</el-button>
             <el-button style="float: right" type="primary" @click="goto_label_group(0)">标签组管理</el-button>
 
