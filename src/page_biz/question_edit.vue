@@ -88,8 +88,11 @@
                             :value="item">
                     </el-option>
                 </el-select>
+            </div>
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"></span>
                 <template v-if="knowledge_points.length > 0">
-                    <el-checkbox-group v-model="question.knowledge_point" size="mini" style="display: inline-block">
+                    <el-checkbox-group class="checkbox-border" v-model="question.knowledge_point" size="mini" style="display: inline-block;">
                         <template v-for="(item, index) in knowledge_points">
                             <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
                         </template>
@@ -113,7 +116,7 @@
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;">标签:</span>
                 <template v-if="labels.length > 0">
-                    <el-checkbox-group v-model="question.label" size="mini" style="display: inline-block">
+                    <el-checkbox-group class="checkbox-border" v-model="question.label" size="mini" style="display: inline-block" >
                         <template v-for="(item, index) in labels">
                             <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
                         </template>
@@ -1020,5 +1023,25 @@
     }
     .editor-container{
         display: inline-block;vertical-align: top;
+    }
+    .checkbox-border {
+        border:1px solid #d9d9d9;
+        width:600px;
+        height:60px;
+        padding: 3px 0;
+        overflow-y:scroll;
+        overflow-x:hidden;
+        border-radius:4px;
+        label:nth-child(1) {
+            margin-left: 10px;
+        }
+    }
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 7px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: #d9d9d9;
     }
 </style>
