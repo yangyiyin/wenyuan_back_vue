@@ -8,6 +8,7 @@ export default {
     upload_url_local:baseUrl + '/waibao/common/local_upload?bucket=wenyuanjiaoyu',
     examination_daoru_excel_url:baseUrl + '/wenyuanjiaoyu/examination_signs/excel_in',
     examination_daoru_excel_out:baseUrl + '/wenyuanjiaoyu/examination_signs/excel_out',
+    statistics_student_examinations_export:baseUrl + '/wenyuanjiaoyu/examination_signs/statistics_student_examinations_export',
     homework_result_excel_out:baseUrl + '/wenyuanjiaoyu/student_homework_result/excel_out',
     homework_result_excel_in:baseUrl + '/wenyuanjiaoyu/student_homework_result/teacher_suggest_excel_in',
     words_content_daoru_excel_in:baseUrl + '/wenyuanjiaoyu/words_content/excel_in',

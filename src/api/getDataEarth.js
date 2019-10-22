@@ -40,13 +40,15 @@ export const set_examine_paper = data => fetch('/wenyuanjiaoyu/examination/set_e
 export const set_publish_examine_paper_result = data => fetch('/wenyuanjiaoyu/examination/set_publish_examine_paper_result', data, 'POST').then(check_login);
 export const set_publish = data => fetch('/wenyuanjiaoyu/examination/set_publish', data, 'POST').then(check_login);
 export const set_examine_paper_status = data => fetch('/wenyuanjiaoyu/examination/set_examine_paper_status', data, 'POST').then(check_login);
-export const get_examine_paper_status = data => fetch('/wenyuanjiaoyu/examination/get_examine_paper_status', data, 'POST').then(check_login);
-export const get_examine_paper_data_url = data => fetch('/wenyuanjiaoyu/examination/get_examine_paper_data_url', data, 'POST').then(check_login);
+export const get_score_columns = data => fetch('/wenyuanjiaoyu/examination/getScoreColumns', data, 'POST').then(check_login);
+export const set_score_columns = data => fetch('/wenyuanjiaoyu/examination/setScoreColumns', data, 'POST').then(check_login);
 export const examination_excel_out = data => fetch('/wenyuanjiaoyu/examination_signs/excel_out', data, 'POST').then(check_login);
 export const examination_gen_ticket = data => fetch('/wenyuanjiaoyu/examination_signs/gen_ticket', data, 'POST').then(check_login);
 export const examination_signs_change_data = data => fetch('/wenyuanjiaoyu/examination_signs/change_data', data, 'POST').then(check_login);
 export const examination_send_mail = data => fetch('/wenyuanjiaoyu/examination_signs/send_mail', data, 'POST').then(check_login);
 export const examination_signs_list = data => fetch('/wenyuanjiaoyu/examination_signs/index', data, 'POST').then(check_login);
+export const statistics_student_examinations = data => fetch('/wenyuanjiaoyu/examination_signs/statistics_student_examinations', data, 'POST').then(check_login);
+export const statistics_student_examinations_export = data => fetch('/wenyuanjiaoyu/examination_signs/statistics_student_examinations_export', data, 'POST').then(check_login);
 export const examination_sign_del = data => fetch('/wenyuanjiaoyu/examination_signs/del', data, 'POST').then(check_login);
 export const examination_signs_edit = data => fetch('/wenyuanjiaoyu/examination_signs/edit', data, 'POST').then(check_login);
 export const setCanEditAvatar = data => fetch('/wenyuanjiaoyu/examination_signs/setCanEditAvatar', data, 'POST').then(check_login);

@@ -47,6 +47,14 @@
                         <el-button size="mini" @click="handleSort(scope.row)">设置</el-button>
                     </template>
                 </el-table-column>
+
+                <el-table-column label="成绩列">
+                    <template slot-scope="scope">
+                        {{scope.row.score_columns}}
+                        <el-button  size="mini" @click="dialogFormVisibleScoreColumn=true;set_score_column_id=scope.row.id;score_column_ids = scope.row.score_columns ? scope.row.score_columns.split(',') : [];"  >设置</el-button>
+
+                    </template>
+                </el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="考生报名" width="450">
                     <template slot-scope="scope">
@@ -130,6 +138,26 @@
             </div>
         </el-dialog>
 
+        <el-dialog title="设置成绩列(统计)" :visible.sync="dialogFormVisibleScoreColumn" width="30%">
+            <p>
+                设置有效成绩列,将在统计中,取值该字段。
+            </p>
+
+            <el-select v-model="score_column_ids" multiple placeholder="请选择">
+                <el-option
+                        v-for="item in score_columns"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleScoreColumn = false">取 消</el-button>
+                <el-button type="primary" @click="set_score_column">确定</el-button>
+            </div>
+        </el-dialog>
+
 
         <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
             <p>
@@ -175,7 +203,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_list,examination_del,examination_verify,examination_sort,examination_excel_out, examination_gen_ticket, examination_send_mail,set_publish} from '@/api/getDataEarth'
+    import {examination_list,examination_del,set_score_columns,get_score_columns,examination_verify,examination_sort,examination_excel_out, examination_gen_ticket, examination_send_mail,set_publish} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -189,6 +217,10 @@
                 dialogFormVisibleDaochu:false,
                 dialogFormVisibleTicket:false,
                 dialogFormVisibleMail:false,
+                dialogFormVisibleScoreColumn:false,
+                score_column_ids:[],
+                score_columns:[],
+                set_score_column_id:0,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
@@ -212,6 +244,7 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.list();
+                vm.get_score_columns();
         })
         },
         methods: {
@@ -274,6 +307,13 @@
                 }.bind(this));
 
             },
+            get_score_columns() {
+                get_score_columns({}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.score_columns = res.data;
+                    }
+                }.bind(this));
+            },
             handleCurrentChange(val){
                 this.currentPage = val;
                 this.list();
@@ -299,6 +339,24 @@
             },
             goto_examine_paper(row){
                 this.$router.push({path:'examination_examine_paper',query:{id:row.id}});
+            },
+            set_score_column()
+            {
+                set_score_columns({id:this.set_score_column_id,columns:this.score_column_ids}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.msg
+                        });
+                    }
+                    this.list();
+                    this.dialogFormVisibleScoreColumn = false;
+                }.bind(this))
             },
             verify(scope, status) {
 
