@@ -50,7 +50,7 @@
 
                 <el-table-column label="成绩列">
                     <template slot-scope="scope">
-                        {{scope.row.score_columns}}
+                        {{scope.row.score_columns_desc}}
                         <el-button  size="mini" @click="dialogFormVisibleScoreColumn=true;set_score_column_id=scope.row.id;set_score_columns(scope.row.score_columns);"  >设置</el-button>
 
                     </template>
