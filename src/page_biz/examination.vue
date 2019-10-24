@@ -51,7 +51,7 @@
                 <el-table-column label="成绩列">
                     <template slot-scope="scope">
                         {{scope.row.score_columns}}
-                        <el-button  size="mini" @click="dialogFormVisibleScoreColumn=true;set_score_column_id=scope.row.id;score_column_ids = scope.row.score_columns ? scope.row.score_columns.split(',') : [];"  >设置</el-button>
+                        <el-button  size="mini" @click="dialogFormVisibleScoreColumn=true;set_score_column_id=scope.row.id;set_score_columns(scope.row.score_columns);"  >设置</el-button>
 
                     </template>
                 </el-table-column>
@@ -138,19 +138,28 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="设置成绩列(统计)" :visible.sync="dialogFormVisibleScoreColumn" width="30%">
+        <el-dialog title="设置成绩列(统计)" :visible.sync="dialogFormVisibleScoreColumn" width="200">
             <p>
-                设置有效成绩列,将在统计中,取值该字段。
+                设置有效成绩列,将在应用于统计
             </p>
 
-            <el-select v-model="score_column_ids" multiple placeholder="请选择">
-                <el-option
-                        v-for="item in score_columns"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                </el-option>
-            </el-select>
+            <!--<el-select v-model="score_column" multiple placeholder="请选择">-->
+                <!--<el-option-->
+                        <!--v-for="item in score_columns"-->
+                        <!--:key="item.id"-->
+                        <!--:label="item.name"-->
+                        <!--:value="item.id">-->
+                <!--</el-option>-->
+            <!--</el-select>-->
+
+
+                <el-checkbox-group v-model="score_column">
+                    <el-checkbox v-for="(column, index) in score_columns" :label="column.id">
+                        {{column.name}}
+                        权重:<el-input style="width: 40px;" v-model="column.weight" placeholder="默认为1"></el-input>
+                    </el-checkbox>
+                </el-checkbox-group>
+
 
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleScoreColumn = false">取 消</el-button>
@@ -218,7 +227,7 @@
                 dialogFormVisibleTicket:false,
                 dialogFormVisibleMail:false,
                 dialogFormVisibleScoreColumn:false,
-                score_column_ids:[],
+                score_column:[],
                 score_columns:[],
                 set_score_column_id:0,
                 current:{},
@@ -342,7 +351,15 @@
             },
             set_score_column()
             {
-                set_score_columns({id:this.set_score_column_id,columns:this.score_column_ids}).then(function(res){
+                var columns = [];
+                var score_columns_map = [];
+                this.score_columns.forEach((item)=>{
+                    score_columns_map[item.id] = item.weight;
+                })
+                this.score_column.forEach((val)=>{
+                    columns.push({id:val,weight:score_columns_map[val] ? score_columns_map[val] : 1});
+                })
+                set_score_columns({id:this.set_score_column_id,columns:columns}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.$message({
                             type: 'success',
@@ -552,6 +569,20 @@
             },
             sign_offline(id) {
                 this.$router.push({path:'examination_signs_add',query:{id:id}});
+            },
+            set_score_columns(score_columns){
+                this.score_column = [];
+                var score_columns_map = [];
+                score_columns.forEach((val)=>{
+                    this.score_column.push(val.id);
+                    this.score_columns.forEach((item)=>{
+                        if (item.id == val.id) {
+                            item.weight = val.weight;
+                            return;
+                        }
+                    })
+                });
+
             }
         },
     }

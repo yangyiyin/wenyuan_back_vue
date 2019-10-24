@@ -802,6 +802,9 @@
                 if (!this.question.title) {
                     error.push('请输入题干');
                 }
+                if (!this.question.useway.length || this.question.useway.length <= 0) {
+                    error.push('请输入选择绝密等级');
+                }
                 return error;
             },
             add_option(){
