@@ -15,6 +15,7 @@ var check_login = function(res){
     });
 }
 
+export const getconfigvalue = data => fetch('/wenyuanjiaoyu/config/valuebykey', data, 'POST').then(check_login);
 export const news_list = data => fetch('/wenyuanjiaoyu/news/index', data, 'POST').then(check_login);
 export const news_info = data => fetch('/wenyuanjiaoyu/news/info', data, 'POST').then(check_login);
 export const news_verify = data => fetch('/wenyuanjiaoyu/news/verify', data, 'POST').then(check_login);

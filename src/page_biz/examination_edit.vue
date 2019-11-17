@@ -50,6 +50,17 @@
                 </el-date-picker>
             </div>
 
+            <div class="search_item">
+                <span class="pre_info"  style="font-size: 14px;">上课时间:</span>
+                <el-select v-model="examine_sign_time" multiple value-key="id" placeholder="请选择">
+                    <el-option
+                            v-for="item in examine_sign_times"
+                            :key="item.id"
+                            :label="item.text"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
 
             <div class="block search_item">
                 <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>报名截止:</span>
@@ -112,7 +123,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_edit,examination_info,get_course_list} from '@/api/getDataEarth'
+    import {examination_edit,examination_info,get_course_list,getconfigvalue} from '@/api/getDataEarth'
     import { quillEditor } from 'vue-quill-editor'
     export default {
         data(){
@@ -140,6 +151,8 @@
                     {id:2,name:'综合实验班'},
                     {id:3,name:'晋级考'},
                 ],
+                examine_sign_times:[],
+                examine_sign_time:[],
                 courselist:[],
                 type:1,
                 form_type:1,
@@ -165,11 +178,23 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
 
-                if (vm.id && vm.id > 0) {
-                    vm.get_info();
-                } else {
-                    vm.init();
-                }
+                getconfigvalue({key:'examine_sign_times'}).then(function (res) {
+                    if (res.code == vm.$store.state.constant.status_success) {
+                        vm.examine_sign_times = res.data;
+
+                        if (vm.id && vm.id > 0) {
+                            vm.get_info();
+                        } else {
+                            vm.init();
+                        }
+
+                    } else {
+                        vm.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                });
 
             })
         },
@@ -215,6 +240,7 @@
                         this.sign_end_time=res.data.sign_end_time;
                         this.checkList=res.data.checkList ? res.data.checkList : [];
                         this.all_visible=res.data.all_visible;
+                        this.examine_sign_time=res.data.extra;
                         this.visible_time_limit=res.data.visible_time_limit;
 
                     } else {
@@ -263,7 +289,8 @@
                         examination_time:this.examination_time,
                         checkList:this.checkList,
                         all_visible:this.all_visible,
-                        visible_time_limit:this.visible_time_limit
+                        visible_time_limit:this.visible_time_limit,
+                        examine_sign_times:this.examine_sign_time
                     }).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
