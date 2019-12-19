@@ -729,6 +729,7 @@
             },
             print() {
                 setTimeout(()=>{
+                    $("#preview").find('.kfformula').css('vertical-align', 'middle');
                     $("#preview").jqprint();
             })
 
@@ -753,5 +754,8 @@
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;
+    }
+    img.kfformula {
+        vertical-align: middle;
     }
 </style>

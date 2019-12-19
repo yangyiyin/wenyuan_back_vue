@@ -526,6 +526,7 @@
             },
             print() {
                 setTimeout(()=>{
+                    $("#preview").find('.kfformula').css('vertical-align', 'middle');
                     $("#preview").jqprint();
                 })
 
