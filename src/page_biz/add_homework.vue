@@ -495,7 +495,7 @@
                                     break;
                                 }
                             }
-                            return;
+//                            return;
 
                             this._submit();
 
