@@ -259,7 +259,7 @@
 
             </div>
         </el-dialog>
-        <canvas id="myCanvas" width="650" height="920" style="position: absolute;z-index: -1;top:-9999999px;"></canvas>
+        <canvas id="myCanvas" width="650" height="920" style="position: absolute;z-index: -1;top:1000px;"></canvas>
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
         <div class="ql-editor" id="question_paper" style="position: absolute;z-index:-1;top:-9999999px;height:auto;background: #fff;font-size:20px;">
@@ -461,11 +461,12 @@
                 if(this.data.questions2 && this.data.questions2.length) {//线下形式,生成图片
                     var total_height = this.$refs.questions_paper.offsetHeight;
                     if (total_height > 0) {
-                        html2canvas(document.querySelector('#question_paper'), {useCORS:true}).then(function(canvas) {
+                        html2canvas(document.querySelector('#question_paper'), {useCORS:true,width:650}).then(function(canvas) {
 
                             var c=document.getElementById("myCanvas");
                             var ctx=c.getContext("2d");
                             var canvastx=canvas.getContext("2d");
+
 
 //                            ctx.fillRect(0,0,canvas.width,canvas.height);
                             //var imgData=canvastx.getImageData(0,0,canvas.width,canvas.height);
@@ -478,9 +479,9 @@
 
                             function copy(x, y)
                             {
-                                var canvas2 = canvas;
-                                canvas2.width= 650;
-                                canvas2.height= 920;
+                                var canvas2=document.createElement('canvas');
+                                canvas2.width=650;
+                                canvas2.height=920;
 //                                canvas2.
                                 var canvastx2=canvas2.getContext("2d");
 //                                ctx.scale(1,1);
