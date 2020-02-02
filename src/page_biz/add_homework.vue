@@ -469,7 +469,7 @@
 
                             function copy(x, y)
                             {
-                                var imgData=canvastx.getImageData(x,y,650,920);
+                                var imgData=canvastx.getImageData(x,y,1330,920);
                                 ctx.putImageData(imgData,0,0);
                                 return c.toDataURL();
                             }
