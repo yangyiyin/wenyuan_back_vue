@@ -259,12 +259,12 @@
 
             </div>
         </el-dialog>
-        <canvas id="myCanvas" width="650" height="900" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
+        <canvas id="myCanvas" width="1330" height="900" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
-        <div  class="ql-editor" style="position: absolute;z-index:-1;top:1000px;height:auto;background: #fff;font-size:20px;">
-            <div ref="questions_paper" style="border-bottom: 1px solid #ddd;width:650px;white-space:normal">
-                <p style="width: 650px;text-align: center;font-size: 20px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
+        <div class="ql-editor" style="position: absolute;z-index:-1;top:1000px;height:auto;background: #fff;font-size:20px;">
+            <div ref="questions_paper" style="border-bottom: 1px solid #ddd;width:1330px;white-space:normal">
+                <p style="width: 1330px;text-align: center;font-size: 20px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
 
                     <div v-if="item.type==1" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
@@ -469,7 +469,7 @@
 
                             function copy(x, y)
                             {
-                                var imgData=canvastx.getImageData(x,y,650,920);
+                                var imgData=canvastx.getImageData(x,y,1330,920);
                                 ctx.putImageData(imgData,0,0);
                                 return c.toDataURL();
                             }
