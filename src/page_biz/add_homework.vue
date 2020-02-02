@@ -259,12 +259,12 @@
 
             </div>
         </el-dialog>
-        <canvas id="myCanvas" width="1330" height="900" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
+        <canvas id="myCanvas" width="650" height="920" style="position: absolute;z-index: -1;top:-9999999px;"></canvas>
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
-        <div class="ql-editor" style="position: absolute;z-index:-1;top:1000px;height:auto;background: #fff;font-size:20px;">
-            <div ref="questions_paper" style="border-bottom: 1px solid #ddd;width:650px;white-space:normal">
-                <p style="width: 650px;text-align: center;font-size: 20px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
+        <div class="ql-editor" id="question_paper" style="position: absolute;z-index:-1;top:-9999999px;height:auto;background: #fff;font-size:20px;">
+            <div ref="questions_paper"  style="font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
+                <p style="width: 650px;text-align: center;font-size: 10px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
 
                     <div v-if="item.type==1" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
@@ -459,19 +459,32 @@
             submit: function () {
 
                 if(this.data.questions2 && this.data.questions2.length) {//线下形式,生成图片
-                    var total_height = this.data.questions2.length * 180;
+                    var total_height = this.$refs.questions_paper.offsetHeight;
                     if (total_height > 0) {
-                        html2canvas(this.$refs.questions_paper, {useCORS:true}).then(function(canvas) {
+                        html2canvas(document.querySelector('#question_paper'), {useCORS:true}).then(function(canvas) {
 
                             var c=document.getElementById("myCanvas");
                             var ctx=c.getContext("2d");
                             var canvastx=canvas.getContext("2d");
 
+//                            ctx.fillRect(0,0,canvas.width,canvas.height);
+                            //var imgData=canvastx.getImageData(0,0,canvas.width,canvas.height);
+//                                imgData.(0.5,0.5);
+                            //canvastx.putImageData(imgData,0,0);
+                            //return c.toDataURL();
+
+//                            document.body.appendChild(canvas);
+//                            return;
+
                             function copy(x, y)
                             {
-                                var imgData=canvastx.getImageData(x,y,1330,920);
-                                ctx.putImageData(imgData,0,0);
-                                return c.toDataURL();
+                                var canvas2 = canvas;
+                                var canvastx2=canvas2.getContext("2d");
+//                                ctx.scale(1,1);
+                                var imgData=canvastx.getImageData(x,y,650,920);
+//                                imgData.(0.5,0.5);
+                                canvastx2.putImageData(imgData,0,0);
+                                return canvas2.toDataURL();
                             }
                             this.data.homework_pic = [];
                             for (var i=0;i<100;i+=5) {
@@ -481,6 +494,7 @@
                                     break;
                                 }
                             }
+                           // return;
 
                             this._submit();
 
