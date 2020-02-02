@@ -264,11 +264,11 @@
 
         <div  class="ql-editor" style="position: absolute;z-index:-1;top:1000px;height:auto;background: #fff;font-size:20px;">
             <div ref="questions_paper" style="border-bottom: 1px solid #ddd;width:650px;white-space:normal">
-
+                <p style="width: 650px;text-align: center;font-size: 20px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
 
-                    <div v-if="item.type==1" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
-                        <p style="font-weight: bolder">(单选题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                    <div v-if="item.type==1" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-weight: bolder;font-size: 20px;">(单选题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
                         <p v-html="item.question_content.content" ></p>
                         <p v-for="(option) in item.question_answer.answer_options" style="'position:absolute;top: '+(50+20*index)+'px;'">
                             <span>{{option.label}}.{{option.text}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -279,8 +279,8 @@
                 <template v-for="(item, index) in data.questions2">
 
 
-                    <div  v-if="item.type==2" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
-                        <p style="font-weight: bolder">(判断题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                    <div  v-if="item.type==2" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-size: 20px;font-weight: bolder">(判断题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
 
                         <p v-html="item.question_content.content" ></p>
@@ -292,16 +292,16 @@
 
                 </template>
                 <template v-for="(item, index) in data.questions2">
-                    <div v-if="item.type==3" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
-                        <p v-if="item.type==3"  style="font-weight: bolder">(填空题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                    <div v-if="item.type==3" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                        <p v-if="item.type==3"  style="font-size: 20px;font-weight: bolder">(填空题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
                         <p v-html="item.question_content.content"></p>
 
                     </div>
                 </template>
                 <template v-for="(item, index) in data.questions2">
 
-                        <div v-if="item.type==4" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
-                            <p style="font-weight: bolder">(简答题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                        <div v-if="item.type==4" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                            <p style="font-size: 20px;font-weight: bolder">(简答题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
                             <p v-html="item.question_content.content"></p>
 
@@ -311,8 +311,8 @@
 
                 <template v-for="(item, index) in data.questions2">
 
-                        <div v-if="item.type==5" style="height:180px;line-height: 25px;overflow: hidden;position: relative">
-                            <p style="font-weight: bolder">(其他题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                        <div v-if="item.type==5" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                            <p style="font-size: 20px;font-weight: bolder">(其他题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
                             <p v-html="item.question_content.content"></p>
 
@@ -469,13 +469,13 @@
 
                             function copy(x, y)
                             {
-                                var imgData=canvastx.getImageData(x,y,650,900);
+                                var imgData=canvastx.getImageData(x,y,650,920);
                                 ctx.putImageData(imgData,0,0);
                                 return c.toDataURL();
                             }
                             this.data.homework_pic = [];
                             for (var i=0;i<100;i+=5) {
-                                this.data.homework_pic.push(copy(0,i*180));
+                                this.data.homework_pic.push(copy(0,i*176));
                                 //break;
                                 if ((i+5)*180 >= total_height) {
                                     break;
