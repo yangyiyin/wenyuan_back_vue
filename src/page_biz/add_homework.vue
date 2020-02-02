@@ -259,10 +259,10 @@
 
             </div>
         </el-dialog>
-        <canvas id="myCanvas" width="650" height="920" style="position: absolute;z-index: -1;top:1000px;"></canvas>
+        <canvas id="myCanvas" width="1040" height="920" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
-        <div class="ql-editor" id="question_paper" style="position: absolute;z-index:-1;top:-9999999px;height:auto;background: #fff;font-size:20px;">
+        <div class="ql-editor" id="question_paper" style="padding:0;width:650px;position: absolute;z-index:-1;top:-999999px;height:auto;background: #fff;font-size:20px;">
             <div ref="questions_paper"  style="font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
                 <p style="width: 650px;text-align: center;font-size: 10px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
@@ -461,34 +461,31 @@
                 if(this.data.questions2 && this.data.questions2.length) {//线下形式,生成图片
                     var total_height = this.$refs.questions_paper.offsetHeight;
                     if (total_height > 0) {
-                        html2canvas(document.querySelector('#question_paper'), {useCORS:true,width:650}).then(function(canvas) {
+                        html2canvas(document.querySelector('#question_paper'), {useCORS:true}).then(function(canvas) {
 
                             var c=document.getElementById("myCanvas");
                             var ctx=c.getContext("2d");
                             var canvastx=canvas.getContext("2d");
-
-
+                            total_height = canvas.height;
+//console.log(total_height);
 //                            ctx.fillRect(0,0,canvas.width,canvas.height);
                             //var imgData=canvastx.getImageData(0,0,canvas.width,canvas.height);
 //                                imgData.(0.5,0.5);
                             //canvastx.putImageData(imgData,0,0);
                             //return c.toDataURL();
 
-//                            document.body.appendChild(canvas);
+// document.body.appendChild(canvas);
 //                            return;
 
                             function copy(x, y)
                             {
-                                var canvas2=document.createElement('canvas');
-                                canvas2.width=650;
-                                canvas2.height=920;
 //                                canvas2.
-                                var canvastx2=canvas2.getContext("2d");
 //                                ctx.scale(1,1);
-                                var imgData=canvastx.getImageData(x,y,650,920);
+                                console.log(canvas.width);
+                                var imgData=canvastx.getImageData(x,y,1040,920);
 //                                imgData.(0.5,0.5);
-                                canvastx2.putImageData(imgData,0,0);
-                                return canvas2.toDataURL();
+                                ctx.putImageData(imgData,0,0);
+                                return c.toDataURL();
                             }
                             this.data.homework_pic = [];
                             for (var i=0;i<100;i+=5) {
@@ -498,7 +495,7 @@
                                     break;
                                 }
                             }
-                           // return;
+                            return;
 
                             this._submit();
 
