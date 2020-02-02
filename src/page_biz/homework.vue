@@ -71,10 +71,16 @@
                         <!--</p>-->
                     <!--</template>-->
                 <!--</el-table-column>-->
-                <el-table-column label="课程班级">
+                <el-table-column label="课程班级" style="overflow: hidden">
                     <template slot-scope="scope">
-                        <span v-for="(item) in scope.row.classes">
-                            {{item.classname}};
+                        <!--<span v-for="(item,index) in scope.row.classes" v-if="index<1">-->
+                            <!--{{item.classname}};-->
+                        <!--</span>-->
+                        <span v-if="scope.row.classes[0]">
+                            {{scope.row.classes[0].classname}};
+                        </span>
+                        <span v-if="scope.row.classes[1]">
+                            ...
                         </span>
                     </template>
                 </el-table-column>

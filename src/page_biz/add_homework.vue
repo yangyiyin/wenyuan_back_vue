@@ -132,7 +132,7 @@
                     <div class="search_item">
                         <span class="pre_info" style="font-size: 16px;font-weight: bolder">额外分:</span>
                         <el-input clearable placeholder="请输入总分" v-model="data.total_score_extra" style="width: 150px"></el-input>
-                        <span style="color: #999;font-size: 11px;">此总分作为批改作业时的非题库作业的总分,<span style="color: red">如果有非题库作业(书本作业等),请务必输入此分数</span></span>
+                        <span style="color: #999;font-size: 11px;">此额外分作为批改作业时的非题库作业的总分,<span style="color: red">如果有非题库作业(书本作业等),请务必输入此分数</span></span>
                     </div>
 
                     <div class="search_item">
@@ -262,7 +262,7 @@
         <canvas id="myCanvas" width="650" height="900" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
-        <div  class="ql-editor" style="position: absolute;z-index:-1;top:-999999px;height:auto;background: #fff;font-size:20px;">
+        <div  class="ql-editor" style="position: absolute;z-index:-1;top:1000px;height:auto;background: #fff;font-size:20px;">
             <div ref="questions_paper" style="border-bottom: 1px solid #ddd;width:650px;white-space:normal">
 
                 <template v-for="(item, index) in data.questions2">
