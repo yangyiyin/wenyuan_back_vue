@@ -479,6 +479,9 @@
                             function copy(x, y)
                             {
                                 var canvas2 = canvas;
+                                canvas2.width= 650;
+                                canvas2.height= 920;
+//                                canvas2.
                                 var canvastx2=canvas2.getContext("2d");
 //                                ctx.scale(1,1);
                                 var imgData=canvastx.getImageData(x,y,650,920);
