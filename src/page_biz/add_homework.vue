@@ -263,8 +263,8 @@
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
         <div class="ql-editor" id="question_paper" style="padding:0;width:650px;position: absolute;z-index:-1;top:-999999px;height:auto;background: #fff;font-size:20px;">
-            <div ref="questions_paper"  style="font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
-                <p style="width: 650px;text-align: center;font-size: 10px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
+            <div ref="questions_paper"  style="padding:20px;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
+                <p style="width: 650px;text-align: center;font-size: 16px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
 
                     <div v-if="item.type==1" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
@@ -481,20 +481,21 @@
                             {
 //                                canvas2.
 //                                ctx.scale(1,1);
-                                console.log(canvas.width);
+                                //console.log(canvas.width);
                                 var imgData=canvastx.getImageData(x,y,1040,920);
 //                                imgData.(0.5,0.5);
                                 ctx.putImageData(imgData,0,0);
                                 return c.toDataURL();
                             }
                             this.data.homework_pic = [];
-                            for (var i=0;i<100;i+=5) {
-                                this.data.homework_pic.push(copy(0,i*176));
-                                //break;
-                                if ((i+5)*180 >= total_height) {
-                                    break;
-                                }
-                            }
+//                            for (var i=0;i<100;i+=5) {
+//                                this.data.homework_pic.push(copy(0,i*176));
+//                                //break;
+//                                if ((i+5)*180 >= total_height) {
+//                                    break;
+//                                }
+//                            }
+                            this.data.homework_pic.push(canvas.toDataURL());
 //                            return;
 
                             this._submit();
