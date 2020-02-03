@@ -262,7 +262,7 @@
         <canvas id="myCanvas" width="1040" height="920" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
-        <div class="ql-editor" id="question_paper" style="padding:0;width:690px;position: absolute;z-index:-1;top:-999999px;height:auto;background: #fff;font-size:20px;">
+        <div class="ql-editor" id="question_paper" style="padding:0;width:690px;position: absolute;z-index:-1;top:1000px;height:auto;background: #fff;font-size:20px;">
             <div ref="questions_paper"  style="padding:20px 30px;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
                 <p style="width: 650px;text-align: center;font-size: 16px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
@@ -309,14 +309,56 @@
 
                 </template>
 
+
                 <template v-for="(item, index) in data.questions2">
 
-                        <div v-if="item.type==5" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
-                            <p style="font-size: 20px;font-weight: bolder">(其他题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+                    <div v-if="item.type==6" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-size: 20px;font-weight: bolder">(阅读题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
-                            <p v-html="item.question_content.content"></p>
+                        <p v-html="item.question_content.content"></p>
 
+                        <div style="" v-for="(option,index) in item.question_answer.sub_content">
+                            <div style="margin-left: 20px;">
+                                <p>({{index+1}}){{option.title}}</p>
+                                <template v-if="option.type==1">
+                                    <div style="float: left;vertical-align:top;width: 300px;margin-top:5px;margin-left: 20px;" v-for="(option2,index2) in option.answer_options">
+                                        {{option2.label}}.{{option2.text}}
+                                    </div>
+                                    <div style="clear: both"></div>
+                                </template>
+                            </div>
                         </div>
+
+                    </div>
+                </template>
+
+                <template v-for="(item, index) in data.questions2">
+
+                    <div v-if="item.type==5" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-size: 20px;font-weight: bolder">(计算题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+
+                        <p v-html="item.question_content.content"></p>
+
+                    </div>
+                </template>
+
+                <template v-for="(item, index) in data.questions2">
+
+                    <div v-if="item.type==5" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-size: 20px;font-weight: bolder">(作文题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+
+                        <p v-html="item.question_content.content"></p>
+
+                    </div>
+                </template>
+                <template v-for="(item, index) in data.questions2">
+
+                    <div v-if="item.type==5" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                        <p style="font-size: 20px;font-weight: bolder">(其他题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
+
+                        <p v-html="item.question_content.content"></p>
+
+                    </div>
                 </template>
 
             </div>
