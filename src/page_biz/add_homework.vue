@@ -334,7 +334,7 @@
 
                 <template v-for="(item, index) in data.questions2">
 
-                    <div v-if="item.type==5" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                    <div v-if="item.type==7" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
                         <p style="font-size: 20px;font-weight: bolder">(计算题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
                         <p v-html="item.question_content.content"></p>
@@ -344,7 +344,7 @@
 
                 <template v-for="(item, index) in data.questions2">
 
-                    <div v-if="item.type==5" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
+                    <div v-if="item.type==8" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
                         <p style="font-size: 20px;font-weight: bolder">(作文题【难度{{item.hard_level}}】题目id:{{item.id}}):</p>
 
                         <p v-html="item.question_content.content"></p>
