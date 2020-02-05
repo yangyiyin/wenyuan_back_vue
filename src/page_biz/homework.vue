@@ -107,6 +107,7 @@
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.response_type == 2" size="mini" @click="show_img(scope.row)">预览作业</el-button>
+                        <el-button v-if="scope.row.response_type == 2" size="mini" @click="view_homework(scope.row)">预览作业含答案</el-button>
                         <el-button size="mini" @click="goto_edit_homework(scope.row.id)">编辑</el-button>
 
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
@@ -224,6 +225,9 @@
             },
             show_img(row){
                 this.$router.push({path:'show_img',query:{path:row.homework_downloads, mp3_path:row.homework_downloads_objs}});
+            },
+            view_homework(row){
+                this.$router.push({path:'view_homework',query:{id:row.id}});
             },
             goto_edit_homework(id) {
                 this.$router.push({path:'add_homework',query:{id:id}});

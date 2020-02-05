@@ -47,6 +47,7 @@ const knowledge_point = r => require.ensure([], () => r(require('@/page_biz/know
 const add_knowledge_point = r => require.ensure([], () => r(require('@/page_biz/add_knowledge_point')), 'add_knowledge_point');
 const homework = r => require.ensure([], () => r(require('@/page_biz/homework')), 'homework');
 const add_homework = r => require.ensure([], () => r(require('@/page_biz/add_homework')), 'add_homework');
+const view_homework = r => require.ensure([], () => r(require('@/page_biz/view_homework')), 'view_homework');
 const student_homework_result = r => require.ensure([], () => r(require('@/page_biz/student_homework_result')), 'student_homework_result');
 const show_img = r => require.ensure([], () => r(require('@/page_biz/show_img')), 'show_img');
 const admin_log = r => require.ensure([], () => r(require('@/page_biz/admin_log')), 'admin_log');
@@ -253,6 +254,7 @@ const routes = [
 {path: '/add_knowledge_point',component: add_knowledge_point,meta: ['题库', '设置知识点'],},
 {path: '/homework',component: homework,meta: ['题库', '家庭作业'],},
 {path: '/add_homework',component: add_homework,meta: ['题库', '设置家庭作业'],},
+{path: '/view_homework',component: view_homework,meta: ['题库', '家庭作业'],},
 {path: '/student_homework_result',component: student_homework_result,meta: ['题库', '批改作业'],},
 {path: '/show_img',component: show_img,meta: ['题库', '作业图'],},
 {path: '/admin_log',component: admin_log,meta: ['用户管理', '操作日志'],},
