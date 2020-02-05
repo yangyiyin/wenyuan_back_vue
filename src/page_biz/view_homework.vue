@@ -6,6 +6,7 @@
 
 
             <img :src="homework_pic" width="650">
+            <p v-if="!homework_pic" style="text-align: center">加载图片中...</p>
 
         <div class="ql-editor" id="question_paper" style="padding:0;width:690px;position:absolute;top:-9999999px;height:auto;background: #fff;font-size:20px;">
             <div ref="questions_paper"  style="padding:20px 30px;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
@@ -298,7 +299,7 @@
 
                             }.bind(this))
                         }
-                        });
+                        }, 3000);
                     } else {
                         this.$message({
                             message: res.msg,
