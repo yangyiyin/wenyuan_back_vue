@@ -10,6 +10,7 @@
                     <!--clearable>-->
             <!--</el-input>-->
 
+
             <el-autocomplete
                     v-model="classname"
                     :fetch-suggestions="querySearchAsync"
@@ -29,6 +30,15 @@
                     clearable
                     style="width: 250px;"
             ></el-autocomplete>
+
+            <el-select clearable v-model="author" value-key="id" placeholder="课程老师">
+                <el-option
+                        v-for="item in authors"
+                        :key="item.id"
+                        :label="item.show_name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
 
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_homework(0)">新增家庭作业</el-button>
@@ -135,6 +145,7 @@
     import headTop from '@/components/headTop'
     import {homework_list,homework_del,homework_verify,homework_sort} from '@/api/getDataHomework'
     import {class_list} from '@/api/getDataEarth'
+    import {admin_user_all_list} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -146,6 +157,7 @@
                 current:{},
                 classname:'',
                 homeworkname:'',
+                author:'',
                 classinfo:{
                     value:''
                 },
@@ -168,13 +180,24 @@
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
+            admin_user_all_list({'is_question_author':1}).then(function (res) {
+                if (res.code == vm.$store.state.constant.status_success) {
+                    vm.authors = res.data;
+
+                } else {
+                    vm.$message({
+                        message: res.msg,
+                        type: 'warning'
+                    });
+                }
+            });
                 vm.list();
         })
         },
         methods: {
 
             list() {
-                homework_list({page:this.currentPage,page_size:this.limit,name:this.name, classid:this.classinfo.classid, homework_id:this.homeworkinfo.id}).then(function(res){
+                homework_list({page:this.currentPage,page_size:this.limit,name:this.name, author:this.author,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
