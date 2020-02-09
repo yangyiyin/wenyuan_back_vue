@@ -259,12 +259,12 @@
 
             </div>
         </el-dialog>
-        <canvas id="myCanvas" width="1040" height="920" style="position: absolute;z-index: -1;top:-999999px;"></canvas>
+        <!--<canvas id="myCanvas" width="1040" height="920" style="position: absolute;z-index: -1;top:1000px;"></canvas>-->
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
-        <div class="ql-editor" id="question_paper" style="padding:0;width:690px;position: absolute;z-index:-1;top:-999999px;height:auto;background: #fff;font-size:20px;">
-            <div ref="questions_paper"  style="padding:20px 30px;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
-                <p style="width: 650px;text-align: center;font-size: 16px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
+        <div class="ql-editor" id="question_paper" style="padding:0;width:690px;position: absolute;z-index:-1;top:-9999999px;height:auto;background: #fff;font-size:20px;">
+            <div ref="questions_paper" style="padding:20px 30px;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
+                <p style="width: 100%;text-align: center;font-size: 16px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
 
                     <div v-if="item.type==1" style="font-size: 14px;margin-top:10px;line-height: 25px;overflow: hidden;position: relative">
@@ -503,10 +503,10 @@
                 if(this.data.questions2 && this.data.questions2.length) {//线下形式,生成图片
                     var total_height = this.$refs.questions_paper.offsetHeight;
                     if (total_height > 0) {
-                        html2canvas(document.querySelector('#question_paper'), {useCORS:true}).then(function(canvas) {
+                        html2canvas(document.querySelector('#question_paper'), {useCORS:true,width:690}).then(function(canvas) {
 
-                            var c=document.getElementById("myCanvas");
-                            var ctx=c.getContext("2d");
+//                            var c=document.getElementById("myCanvas");
+//                            var ctx=c.getContext("2d");
                             var canvastx=canvas.getContext("2d");
                             total_height = canvas.height;
 //console.log(total_height);
@@ -538,7 +538,7 @@
 //                                }
 //                            }
                             this.data.homework_pic.push(canvas.toDataURL());
-//                            return;
+                            return;
 
                             this._submit();
 
