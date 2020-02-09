@@ -263,7 +263,7 @@
 <!--<img v-for="(homework_pic) in data.homework_pic" :src="homework_pic"/>-->
 
         <div class="ql-editor" id="question_paper" style="padding:0;width:690px;position: absolute;z-index:-1;top:-9999999px;height:auto;background: #fff;font-size:20px;">
-            <div ref="questions_paper" style="padding:20px 30px;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
+            <div ref="questions_paper" style="padding:20px 30px;margin:0;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
                 <p style="width: 100%;text-align: center;font-size: 16px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
 
