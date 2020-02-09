@@ -9,7 +9,7 @@
             <p v-if="!homework_pic" style="text-align: center">加载图片中...</p>
 
         <div class="ql-editor" id="question_paper" style="padding:0;width:690px;position:absolute;top:-9999999px;height:auto;background: #fff;font-size:20px;">
-            <div ref="questions_paper"  style="padding:20px 30px;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
+            <div ref="questions_paper"  style="padding:20px 30px;margin:0;font-variant: normal;border-bottom: 1px solid #ddd;width:650px;white-space:normal">
                 <p style="width: 650px;text-align: center;font-size: 16px;font-weight: bolder;padding: 10px;">{{data.name}}</p>
                 <template v-for="(item, index) in data.questions2">
 
@@ -294,7 +294,7 @@
                         setTimeout(()=>{
                             var total_height = this.$refs.questions_paper.offsetHeight;
                         if (total_height > 0) {
-                            html2canvas(document.querySelector('#question_paper'), {useCORS: true}).then(function (canvas) {
+                            html2canvas(document.querySelector('#question_paper'), {useCORS: true,width:690}).then(function (canvas) {
                                 this.homework_pic = canvas.toDataURL();
 
                             }.bind(this))
