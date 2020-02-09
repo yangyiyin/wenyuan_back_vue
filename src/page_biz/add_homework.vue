@@ -538,7 +538,7 @@
 //                                }
 //                            }
                             this.data.homework_pic.push(canvas.toDataURL());
-                            return;
+//                            return;
 
                             this._submit();
 
