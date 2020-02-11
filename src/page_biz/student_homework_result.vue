@@ -3,6 +3,24 @@
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
 
+            <el-select clearable v-model="schoolid" value-key="id" placeholder="校区">
+                <el-option
+                        v-for="item in schools"
+                        :key="item.schoolid"
+                        :label="item.schoolname"
+                        :value="item.schoolid">
+                </el-option>
+            </el-select>
+
+            <el-select clearable v-model="courseid" value-key="id" placeholder="课程">
+                <el-option
+                        v-for="item in courses"
+                        :key="item.courseid"
+                        :label="item.coursename"
+                        :value="item.courseid">
+                </el-option>
+            </el-select>
+
             <el-autocomplete
                     v-model="classname"
                     :fetch-suggestions="querySearchAsync"
@@ -306,7 +324,7 @@
 <script>
     import headTop from '../components/headTop'
     import {student_homework_result_list,student_homework_result_del,student_homework_result_verify,teacher_suggest, reckon_result, submit_result,getResultHomeWorkStudentlist,homework_result_excel_out,homework_result_excel_in} from '@/api/getDatastudent_homework_result'
-    import {class_list} from '@/api/getDataEarth'
+    import {class_list,school_list,course_list} from '@/api/getDataEarth'
     import {homework_list} from '@/api/getDataHomework'
     import {getStore} from '@/config/mUtils'
     export default {
@@ -315,6 +333,10 @@
                 tableData: [],
                 limit: 10,
                 count: 0,
+                schools:'',
+                schoolid:'',
+                courses:'',
+                courseid:'',
                 currentPage: 1,
                 dialogFormVisible:false,
                 showResultVisible:false,
@@ -365,12 +387,26 @@
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
+                vm.init_options();
                 vm.list();
         })
         },
         methods: {
+            async init_options(){
+                await school_list().then( (res) =>{
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.schools = res.data;
+                    }
+                });
+                await course_list().then( (res) =>{
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.courses = res.data;
+                    }
+                });
+            },
             list() {
-                student_homework_result_list({search_param:this.search_param,page:this.currentPage,page_size:this.limit,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
+                student_homework_result_list({search_param:this.search_param,page:this.currentPage,page_size:this.limit,
+                    schoolid:this.schoolid,courseid:this.courseid,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,student_id:this.studentinfo.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -487,7 +523,7 @@
             querySearchAsync(queryString, cb) {
                 //this.classinfo = {};
                 var results = [];
-                class_list({name:this.classname}).then(function (res) {
+                class_list({name:this.classname,schoolid:this.schoolid,courseid:this.courseid}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         results = res.data;
                         results.forEach(function(val){
