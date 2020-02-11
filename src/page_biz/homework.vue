@@ -10,6 +10,23 @@
                     <!--clearable>-->
             <!--</el-input>-->
 
+            <el-select clearable v-model="schoolid" value-key="id" placeholder="校区">
+                <el-option
+                        v-for="item in schools"
+                        :key="item.schoolid"
+                        :label="item.schoolname"
+                        :value="item.schoolid">
+                </el-option>
+            </el-select>
+
+            <el-select clearable v-model="courseid" value-key="id" placeholder="课程">
+                <el-option
+                        v-for="item in courses"
+                        :key="item.courseid"
+                        :label="item.coursename"
+                        :value="item.courseid">
+                </el-option>
+            </el-select>
 
             <el-autocomplete
                     v-model="classname"
@@ -145,7 +162,7 @@
 <script>
     import headTop from '@/components/headTop'
     import {homework_list,homework_del,homework_verify,homework_sort} from '@/api/getDataHomework'
-    import {class_list} from '@/api/getDataEarth'
+    import {class_list,school_list,course_list} from '@/api/getDataEarth'
     import {admin_user_all_list} from '@/api/getDataEarth'
     export default {
         data(){
@@ -159,6 +176,10 @@
                 classname:'',
                 homeworkname:'',
                 author:'',
+                schools:'',
+                schoolid:'',
+                courses:'',
+                courseid:'',
                 classinfo:{
                     value:''
                 },
@@ -181,6 +202,7 @@
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
+                vm.init_options();
             admin_user_all_list({'is_question_author':1}).then(function (res) {
                 if (res.code == vm.$store.state.constant.status_success) {
                     vm.authors = res.data;
@@ -197,8 +219,22 @@
         },
         methods: {
 
+            async init_options(){
+                await school_list().then( (res) =>{
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.schools = res.data;
+                    }
+                });
+                await course_list().then( (res) =>{
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.courses = res.data;
+                    }
+                });
+        },
             list() {
-                homework_list({page:this.currentPage,page_size:this.limit,name:this.name, author:this.author,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id}).then(function(res){
+                homework_list({page:this.currentPage,page_size:this.limit,name:this.name,
+                    author:this.author,classid:this.classinfo.classid, homework_id:this.homeworkinfo.id,
+                    schoolid:this.schoolid,courseid:this.courseid}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -318,7 +354,7 @@
               //  this.classinfo = {};
 
                 var results = [];
-                class_list({name:this.classname}).then(function (res) {
+                class_list({name:this.classname,schoolid:this.schoolid,courseid:this.courseid}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         results = res.data;
                         results.forEach(function(val){

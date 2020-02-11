@@ -24,11 +24,11 @@
                         <div style="color: red;font-weight: bolder">
                             <p v-if="item.type == 3" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                             </p>
                             <p v-else-if="item.type == 6" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                             </p>
                             <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                             <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>
@@ -52,11 +52,11 @@
                         <div style="color: red;font-weight: bolder">
                             <p v-if="item.type == 3" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                             </p>
                             <p v-else-if="item.type == 6" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                             </p>
                             <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                             <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>
@@ -71,11 +71,11 @@
                         <div style="color: red;font-weight: bolder">
                             <p v-if="item.type == 3" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                             </p>
                             <p v-else-if="item.type == 6" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                             </p>
                             <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                             <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>
@@ -91,11 +91,11 @@
                             <div style="color: red;font-weight: bolder">
                                 <p v-if="item.type == 3" >
                                     <span>答案:</span>
-                                    <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                    <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                                 </p>
                                 <p v-else-if="item.type == 6" >
                                     <span>答案:</span>
-                                    <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                    <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                                 </p>
                                 <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                                 <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>
@@ -126,11 +126,11 @@
                         <div style="color: red;font-weight: bolder">
                             <p v-if="item.type == 3" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                             </p>
                             <p v-else-if="item.type == 6" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                             </p>
                             <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                             <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>
@@ -148,11 +148,11 @@
                         <div style="color: red;font-weight: bolder">
                             <p v-if="item.type == 3" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                             </p>
                             <p v-else-if="item.type == 6" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                             </p>
                             <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                             <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>
@@ -169,11 +169,11 @@
                         <div style="color: red;font-weight: bolder">
                             <p v-if="item.type == 3" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                             </p>
                             <p v-else-if="item.type == 6" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                             </p>
                             <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                             <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>
@@ -189,11 +189,11 @@
                         <div style="color: red;font-weight: bolder">
                             <p v-if="item.type == 3" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3+1}}){{answer_item.text}}</span>
                             </p>
                             <p v-else-if="item.type == 6" >
                                 <span>答案:</span>
-                                <span style="display:block;margin-left: 15px;text-decoration: underline" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
+                                <span style="display:block;margin-left: 15px;" v-for="(answer_item, index3) in item.question_answer.answer">({{index3}}){{answer_item}}</span>
                             </p>
                             <p v-else v-html="'答案:'+item.question_answer.answer"></p>
                             <p v-html="'答案解析:'+item.question_answer.answer_parse"></p>

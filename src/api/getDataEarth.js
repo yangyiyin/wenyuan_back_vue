@@ -108,6 +108,7 @@ export const get_grades = data => fetch('/wenyuanjiaoyu/question/get_grades', da
 
 export const course_list = data => fetch('/wenyuanjiaoyu/common/course_list', data, 'POST').then(check_login);
 export const class_list = data => fetch('/wenyuanjiaoyu/common/class_list', data, 'POST').then(check_login);
+export const school_list = data => fetch('/wenyuanjiaoyu/common/school_list', data, 'POST').then(check_login);
 export const label_all_list = data => fetch('/wenyuanjiaoyu/label/get_all', data, 'POST').then(check_login);
 
 export const admin_log_list = data => fetch('/wenyuanjiaoyu/admin_log/index', data, 'POST').then(check_login);

@@ -6,6 +6,14 @@
 
             <div style="display: inline-block;width: 80%">
 
+                <el-input
+                        style="display: inline-block;width:150px;"
+                        placeholder="题目id"
+                        v-model="id"
+                        clearable>
+                </el-input>
+
+
                 <el-select v-model="type" placeholder="类型" clearable>
                     <el-option
                             v-for="(item, index) in [{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4},{label:'其他题',value:5},{label:'阅读题',value:6},{label:'计算题',value:7},{label:'作文题',value:8}]"
@@ -266,7 +274,7 @@
     export default {
         data(){
             return {
-                id:0,
+                id:'',
                 tableData: [],
                 limit: 10,
                 count: 0,
@@ -309,7 +317,7 @@
         beforeRouteEnter (to, from, next) {
             next(vm => {
                 // 通过 `vm` 访问组件实例
-                vm.id = to.query.id ? to.query.id : 0;
+                vm.id = to.query.id ? to.query.id : '';
             vm.init_grades().then(function(){
                 vm.get_knowledge_points();
                 vm.get_labels();
