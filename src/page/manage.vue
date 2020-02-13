@@ -2,7 +2,7 @@
 	<div class="manage_page fillcontain">
 
 		<el-row style="height: 100%;">
-			<el-col :span="4"  style="height: 100%; ">
+			<el-col :span="4"  style="height: 100%;overflow:scroll ">
 				<el-menu :default-active="defaultActive" style="min-height: 100%;"   background-color="#545c64"  text-color="#fff" active-text-color="#ffd04b" router>
 					<div style="background: rgb(255, 208, 75);height: 5px;"></div>
 
