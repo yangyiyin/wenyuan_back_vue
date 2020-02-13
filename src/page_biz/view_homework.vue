@@ -253,6 +253,7 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
+                vm.homework_pic = '';
 //                console.log(vm.id )
                 if (vm.id && vm.id > 0) {
                     vm.get_info();
