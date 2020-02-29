@@ -478,7 +478,11 @@
                 this.loadingsubmit = true;
                 submit_result({manual_check:1,is_redo:this.current.is_redo,answer_comment:this.current.answer_comment,result:this.current.homework_question2, result_other:this.result_other,from_type:1, main_id:this.current.homework_id,sub_id:this.current.classid,student_id:this.current.student_id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
-                        this.reckon_result();
+                        //this.reckon_result();
+                        this.$message({
+                            type: 'success',
+                            message: '提交成功'
+                        });
                     } else {
                         this.$message({
                             type: 'warning',
@@ -486,6 +490,8 @@
                         });
                     }
                     this.loadingsubmit = false;
+                    this.list();
+                    this.showSetResultVisible = false;
                 }.bind(this)).finally(function(){
 
                 }.bind(this));
