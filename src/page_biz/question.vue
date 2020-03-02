@@ -122,7 +122,7 @@
                         <el-form label-position="left" inline class="demo-table-expand">
                             <el-form-item label="题干" style="width: 100%">
                                 <!--<span>{{ props.row.title}}</span>-->
-                                <span v-html="props.row.title"></span>
+                                <span v-html="props.row.question_content.content"></span>
                             </el-form-item>
                         </el-form>
                         <el-form v-if="props.row.type==1" label-position="left" inline class="demo-table-expand">
