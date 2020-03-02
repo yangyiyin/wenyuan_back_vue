@@ -121,7 +121,8 @@
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
                             <el-form-item label="题干" style="width: 100%">
-                                <span>{{ props.row.title}}</span>
+                                <!--<span>{{ props.row.title}}</span>-->
+                                <span v-html="props.row.title"></span>
                             </el-form-item>
                         </el-form>
                         <el-form v-if="props.row.type==1" label-position="left" inline class="demo-table-expand">
@@ -414,7 +415,7 @@
             },
             get_knowledge_points() {
                 this.knowledge_points = [];
-                this.knowledge_point_ids = [];
+                // this.knowledge_point_ids = [];
                 var group_subject = parseInt(this.entity) ? {id:this.entity} : '';
                 knowledge_point_all_list({group_subject:group_subject,group:this.grade}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
@@ -429,7 +430,7 @@
             },
             get_labels() {
                 this.labels = [];
-                this.label_ids = [];
+                // this.label_ids = [];
 
                 label_all_list({}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
