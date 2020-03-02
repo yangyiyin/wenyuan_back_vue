@@ -10,6 +10,16 @@
                 <span class="el-upload__tip">如:19春英语堂Level X 外（中）教课 - 第X次</span>
             </div>
 
+            <div class="block search_item">
+                <span class="pre_info" style="font-size: 16px;width: 150px;font-weight: bolder"><i style="color:red;">*</i>作业日期:</span>
+                <el-date-picker
+                        v-model="data.date"
+                        type="date"
+                        value-format="timestamp"
+                        placeholder="选择日期">
+                </el-date-picker>
+            </div>
+
             <div class="search_item" style="display: none">
                 <span class="pre_info" style="font-size: 16px;width: 150px;font-weight: bolder"><i style="color:red;">*</i>作业形式:</span>
                 <el-radio-group v-model="data.response_type" size="small">
@@ -382,6 +392,7 @@
                 data:{
                     name:'',
                     response_type:'2',
+                    date:'',
                     limit_min:0,
                     content:'',
                     homework_downloads:'',
@@ -446,6 +457,7 @@
                 this.data = {
                     name:'',
                     response_type:'2',
+                    date:'',
                     limit_min:0,
                     content:'',
                     homework_downloads:'',
@@ -555,6 +567,7 @@
                 var error_msg = '';
 
                 if (!this.data.name) error_msg = '请填写作业标题';
+                if (!this.data.date) error_msg = '请选择作业日期';
                 if (!this.data.content) error_msg = '请填写学习内容';
 //                if (this.data.response_type == 1 && !this.data.questions.length) error_msg = '请选择题目';
                 if (!this.data.classes.length) error_msg = '请选择班级';
