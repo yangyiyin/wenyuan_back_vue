@@ -5,7 +5,8 @@ import { baseUrl } from './env'
 export default {
     status_success : 100,
     upload_url:baseUrl + '/waibao/common/qiniu_upload?bucket=wenyuanjiaoyu',
-    upload_url_local:baseUrl + '/waibao/common/local_upload?bucket=wenyuanjiaoyu',
+    upload_url_local:'//api.yixsu.com/index.php' + '/waibao/common/local_upload?bucket=wenyuanjiaoyu',
+    upload_video_url_local:'//api.yixsu.com/index.php' + '/waibao/common/local_upload?bucket=wenyuanjiaoyu_video',
     examination_daoru_excel_url:baseUrl + '/wenyuanjiaoyu/examination_signs/excel_in',
     examination_daoru_excel_out:baseUrl + '/wenyuanjiaoyu/examination_signs/excel_out',
     statistics_student_examinations_export:baseUrl + '/wenyuanjiaoyu/examination_signs/statistics_student_examinations_export',

@@ -314,11 +314,11 @@
 
                         this.multipleSelectionAll.forEach(row => {
 
-                        if (row1.id == row.id){
+                            if (row1.id == row.id){
                                 if (row.sort_value != undefined) row1.sort_value = row.sort_value;
                                 if (row.score != undefined) row1.score = row.score;
                                 this.$refs.multipleTable.toggleRowSelection(row1);
-                             return;
+                                return;
                             }
                         })
 
