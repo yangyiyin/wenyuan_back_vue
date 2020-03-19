@@ -6,6 +6,7 @@ export default {
     status_success : 100,
     upload_url:baseUrl + '/waibao/common/qiniu_upload?bucket=wenyuanjiaoyu',
     upload_url_local:'//api.yixsu.com/index.php' + '/waibao/common/local_upload?bucket=wenyuanjiaoyu',
+    upload_url_time_fangdao:'//api.yixsu.com/index.php' + '/waibao/common/qiniu_upload?bucket=time-fangdao',
     upload_video_url_local:'//api.yixsu.com/index.php' + '/waibao/common/local_upload?bucket=wenyuanjiaoyu_video',
     examination_daoru_excel_url:baseUrl + '/wenyuanjiaoyu/examination_signs/excel_in',
     examination_daoru_excel_out:baseUrl + '/wenyuanjiaoyu/examination_signs/excel_out',

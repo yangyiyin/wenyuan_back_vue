@@ -104,7 +104,7 @@
         },
         methods: {
             list() {
-                video_list({page:this.currentPage,page_size:this.limit,...search_data}).then(function(res){
+                video_list({page:this.currentPage,page_size:this.limit,...this.search_data}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);

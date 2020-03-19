@@ -51,7 +51,7 @@
 
                 <el-form-item label="视频上传"  prop="video">
                     <el-upload
-                            :action="upload_video_url_local"
+                            :action="upload_url_time_fangdao"
                             :limit="1"
                             :on-remove="(file, fileList) => {return handleRemove(file, fileList, 'audio')}"
                             :on-exceed="(files, fileList) => {return handleExceed(files, fileList, 'audio')}"
@@ -152,10 +152,25 @@
                 </el-form-item>
                 <el-form-item label="选择关联原题" prop="questions">
                     <el-button size="small" type="primary" @click="dialogFormVisibleQuestions = true;">选择题目</el-button>
-                    
-                </el-form-item>
+                    <div style="display: inline-block">
+                        <!--<span v-for="(item,index) in data.questions">{{item.title.substring(0,10)}}...</span>-->
+                        <template v-for="(item,index) in form.questions">
+                            <el-popover
+                                    placement="top"
+                                    width="160"
+                                    v-model="item.visible"
+                                    style="margin-left: 5px;">
+                                <p>{{item.title}}</p>
+                                <div style="text-align: center; margin: 0">
 
-                <el-form-item label="价格" prop="price">
+                                    <el-button type="danger" size="mini" @click="form.questions.splice(index, 1)">删除</el-button>
+                                </div>
+                                <el-button slot="reference">{{item.title.substring(0,10)}}...</el-button>
+                            </el-popover>
+                        </template>
+                    </div>
+                </el-form-item>
+                <el-form-item label="价格(元)" prop="price">
                     <el-input type="number" clearable v-model="form.price"></el-input>
                 </el-form-item>
             </el-form>
@@ -215,7 +230,7 @@
                     video: { required: true, message: '请上传视频', trigger: 'blur' },
                     level: { required: true, message: '请选择星级', trigger: 'blur' },
                     questions: { type:'array', required: true, message: '请选择原题', trigger: 'blur' },
-                    price: { type:'number', required: true, message: '请输入价格', trigger: 'blur' },
+                    price: { required: true, message: '请输入价格', trigger: 'blur' },
                 },
                 knowledge_points:[],
                 labels:[],
@@ -225,6 +240,7 @@
                 grades:[],
                 upload_url:this.$store.state.constant.upload_url,
                 upload_video_url_local:this.$store.state.constant.upload_video_url_local,
+                upload_url_time_fangdao:this.$store.state.constant.upload_url_time_fangdao,
 
             }
 
