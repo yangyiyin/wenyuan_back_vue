@@ -35,8 +35,8 @@
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="goto_edit_video(scope.row.id)">编辑</el-button>
-                        <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
-                        <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
+                        <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
+                        <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>

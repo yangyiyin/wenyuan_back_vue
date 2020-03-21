@@ -61,7 +61,7 @@
                     </el-upload>
                 </el-form-item>
 
-                <el-form-item label="视频上传"  prop="video">
+                <el-form-item label="视频上传"  prop="url">
                     <el-upload
                             :action="upload_url_time_fangdao"
                             :limit="1"
@@ -69,14 +69,14 @@
                             :on-exceed="(files, fileList) => {return handleExceed(files, fileList, 'audio')}"
                             :on-success="(res, file, fileList) => {return handleSuccess(res, file, fileList, 'audio')}"
                             :before-upload="(file) => {return beforeUpload(file, 'audio')}"
-                            :file-list="form.videos">
+                            >
                         <el-button size="small" type="primary">点击上传</el-button>
                         <div slot="tip" class="el-upload__tip">请控制视频大小不要过大(40M)</div>
                     </el-upload>
                     <!--<el-dialog :visible.sync="dialogVisible" style="width: ">-->
                     <!--<img width="100%" :src="dialogImageUrl" alt="">-->
                     <!--</el-dialog>-->
-                    <video  style="width: 200px" controls="controls" v-if="form.video" :src="form.video"></video>
+                    <video  style="width: 200px" controls="controls" v-if="form.url" :src="form.url"></video>
                 </el-form-item>
 
                 <el-form-item label="视频星级" prop="level">
@@ -225,7 +225,7 @@
                     title: '',
                     desc: '',
                     img: '',
-                    video: '',
+                    url: '',
                     level: '1',
                     knowledge_group_subject:{id:1,name:'语文'},
                     knowledge_group:{id:1,name:'一年级'},
@@ -241,7 +241,7 @@
                     entity: { required: true, message: '请选择科目', trigger: 'blur' },
                     title: { required: true, message: '请输入视频标题', trigger: 'blur' },
                     img: { required: true, message: '请上传视频封面', trigger: 'blur' },
-                    video: { required: true, message: '请上传视频', trigger: 'blur' },
+                    url: { required: true, message: '请上传视频', trigger: 'blur' },
                     level: { required: true, message: '请选择星级', trigger: 'blur' },
                     questions: { type:'array', required: true, message: '请选择原题', trigger: 'blur' },
                     price: { required: true, message: '请输入价格', trigger: 'blur' },
@@ -307,10 +307,11 @@
                     if (res.code == this.$store.state.constant.status_success) {
                         this.form = {
                             title: res.data.title,
+                            type: res.data.type,
                             entity: res.data.entity,
                             desc: res.data.desc,
                             img: res.data.img,
-                            video: res.data.video,
+                            url: res.data.url,
                             level: res.data.level,
                             knowledge_group_subject:res.data.knowledge_group_subject,
                             knowledge_group:res.data.knowledge_group,
@@ -536,7 +537,7 @@
             handleRemove(file, fileList, ele) {
                 //console.log(file, fileList);
                 if (ele == 'audio') {
-                    this.form.video = '';
+                    this.form.url = '';
                 } else {
                     this.form.img = '';
                 }
@@ -558,7 +559,7 @@
             },
             handleSuccess(res, file, fileList, ele) {
                 if (ele == 'audio') {
-                    this.form.video = res.data[0];
+                    this.form.url = res.data[0];
                 } else {
                     this.form.img = res.data[0];
                 }
