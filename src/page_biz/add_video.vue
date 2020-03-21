@@ -17,6 +17,18 @@
                     </el-select>
                 </el-form-item>
 
+                <el-form-item label="科目" prop="entity">
+                    <el-select v-model="form.entity" placeholder="请选择">
+                        <el-option
+                                v-for="item in [{label:'语文',value:'1'},{label:'数学',value:'2'},{label:'英语',value:'3'}]"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+
                 <el-form-item label="视频标题" prop="title">
                     <el-input clearable v-model="form.title"></el-input>
                 </el-form-item>
@@ -209,6 +221,7 @@
                 dialogFormVisibleQuestions:false,
                 form: {
                     type: {label:'题目精讲',value:'1'},
+                    entity: '',
                     title: '',
                     desc: '',
                     img: '',
@@ -225,6 +238,7 @@
                 },
                 rule:{
                     type: { required: true, message: '请输入视频类型', trigger: 'blur' },
+                    entity: { required: true, message: '请选择科目', trigger: 'blur' },
                     title: { required: true, message: '请输入视频标题', trigger: 'blur' },
                     img: { required: true, message: '请上传视频封面', trigger: 'blur' },
                     video: { required: true, message: '请上传视频', trigger: 'blur' },
@@ -293,6 +307,7 @@
                     if (res.code == this.$store.state.constant.status_success) {
                         this.form = {
                             title: res.data.title,
+                            entity: res.data.entity,
                             desc: res.data.desc,
                             img: res.data.img,
                             video: res.data.video,
