@@ -57,7 +57,7 @@
                         <img v-if="form.img" :src="form.img" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"  ></i>
                         <!--<el-button size="small" type="primary">点击上传</el-button>-->
-                        <div slot="tip" class="el-upload__tip">宽:高=2:1,且请不要超过2M大小</div>
+                        <div slot="tip" class="el-upload__tip">宽:高=3:2,且请不要超过2M大小</div>
                     </el-upload>
                 </el-form-item>
 
@@ -598,14 +598,14 @@
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;
-        width: 200px;
-        height: 100px;
-        line-height: 100px;
+        width: 300px;
+        height: 200px;
+        line-height: 200px;
         text-align: center;
     }
     .avatar {
-        width: 200px;
-        height: 100px;
+        width: 300px;
+        height: 200px;
         display: block;
     }
 
