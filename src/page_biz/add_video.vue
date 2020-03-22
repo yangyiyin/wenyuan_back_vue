@@ -72,7 +72,7 @@
                             :before-upload="(file) => {return beforeUpload(file, 'audio')}"
                             >
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">请控制视频大小不要过大(40M)</div>
+                        <div slot="tip" class="el-upload__tip">请控制视频大小不要过大(100M)</div>
                     </el-upload>
                     <!--<el-dialog :visible.sync="dialogVisible" style="width: ">-->
                     <!--<img width="100%" :src="dialogImageUrl" alt="">-->
@@ -153,7 +153,7 @@
                 <el-form-item label="标签">
                     <template v-if="labels.length > 0">
                         <div style="max-height: 200px;width: 500px;overflow: scroll;border: 1px solid #999;border-radius: 10px;">
-                            <el-checkbox-group class="checkbox-border" v-model="form.label" size="mini" style="display: inline-block" >
+                            <el-checkbox-group class="checkbox-border" v-model="form.label" size="mini" style="display: inline-block;" >
                                 <template v-for="(item, index) in labels">
                                     <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
                                 </template>
@@ -304,6 +304,23 @@
             init() {
                 this.loading = false;
                 this.name = '';
+                this.form = {
+                    type: {label:'题目精讲',value:'1'},
+                    entity: '',
+                            title: '',
+                            desc: '',
+                            img: '',
+                            url: '',
+                            level: '1',
+                            knowledge_group_subject:{id:1,name:'语文'},
+                    knowledge_group:{id:1,name:'一年级'},
+                    grade:[],
+                            knowledge_point:[],
+                            label:[],
+                            label_group:{id:'0',name:'全部'},
+                    questions:[],
+                            price:''
+                },
             },
             async get_info() {
                 await video_info({id:this.id}).then(function (res) {
@@ -510,14 +527,14 @@
                     const isJPG = (file.name.indexOf('.mp4') != -1|| (file.name.indexOf('.MP4') != -1))
 //                    const isJPG = true;
 
-                    const isLt2M = file.size / 1024  < 1024 * 40;
+                    const isLt2M = file.size / 1024  < 1024 * 100;
 
                     if (!isJPG) {
                         this.$message.error('只能上传mp4文件!');
                     }
 
                     if (!isLt2M) {
-                        this.$message.error('文件大小不能超过 40M!');
+                        this.$message.error('文件大小不能超过 100M!');
                     }
                     return  isJPG && isLt2M;
                 } else {
