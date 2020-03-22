@@ -320,7 +320,7 @@
                             label_group:{id:'0',name:'全部'},
                     questions:[],
                             price:''
-                },
+                }
             },
             async get_info() {
                 await video_info({id:this.id}).then(function (res) {
