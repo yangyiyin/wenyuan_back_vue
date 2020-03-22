@@ -65,6 +65,7 @@ const add_user_notice_agreement = r => require.ensure([], () => r(require('@/pag
 const student_examination_statistics = r => require.ensure([], () => r(require('@/page_biz/student_examination_statistics')), 'student_examination_statistics');
 const video = r => require.ensure([], () => r(require('@/page_biz/video')), 'video');
 const add_video = r => require.ensure([], () => r(require('@/page_biz/add_video')), 'add_video');
+const user_video = r => require.ensure([], () => r(require('@/page_biz/user_video')), 'user_video');
 //{#replace1#}
 
 const routes = [
@@ -273,6 +274,7 @@ const routes = [
 {path: '/user_notice_agreement',component: user_notice_agreement,meta: ['学校管理', '同意书'],},
 {path: '/add_user_notice_agreement',component: add_user_notice_agreement,meta: ['学校管理', '同意书'],},
 {path: '/student_examination_statistics',component: student_examination_statistics,meta: ['学校管理', '考试成绩统计'],},
+{path: '/user_video',component: user_video,meta: ['题库', '用户购买列表'],},
 {path: '/video',component: video,meta: ['题库', '小视频'],},
 {path: '/add_video',component: add_video,meta: ['题库', '小视频'],},
 //{#replace2#}

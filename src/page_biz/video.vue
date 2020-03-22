@@ -17,7 +17,7 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
-                <el-table-column label="名称" prop="title"></el-table-column>
+                <el-table-column label="名称" prop="title_short"></el-table-column>
                 <el-table-column label="图片">
                     <template slot-scope="scope">
                         <img :src="scope.row.img" width="60" height="30"/>

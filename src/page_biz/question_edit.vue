@@ -92,7 +92,7 @@
             <div class="search_item">
                 <span class="pre_info" style="font-size: 16px;font-weight: bolder;"></span>
                 <template v-if="knowledge_points.length > 0">
-                    <el-checkbox-group class="checkbox-border" v-model="question.knowledge_point" size="mini" style="display: inline-block;">
+                    <el-checkbox-group class="checkbox-border" v-model="question.knowledge_point" size="mini" style="display: inline-block;height:auto;max-height: 250px;">
                         <template v-for="(item, index) in knowledge_points">
                             <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
                         </template>
@@ -114,9 +114,9 @@
                 </el-select>
             </div>
             <div class="search_item">
-                <span class="pre_info" style="font-size: 16px;font-weight: bolder;">标签:</span>
+                <span class="pre_info" style="font-size: 16px;font-weight: bolder;"></span>
                 <template v-if="labels.length > 0">
-                    <el-checkbox-group class="checkbox-border" v-model="question.label" size="mini" style="display: inline-block" >
+                    <el-checkbox-group class="checkbox-border" v-model="question.label" size="mini" style="display: inline-block;height:auto;max-height: 250px;" >
                         <template v-for="(item, index) in labels">
                             <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
                         </template>

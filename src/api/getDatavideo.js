@@ -3,6 +3,7 @@ import router from '@/router'
 import {check_login} from '@/config/mUtils'
 
 
+export const user_video_list = data => fetch('/wenyuanjiaoyu/video/user_video_list', data, 'POST').then(check_login);
 export const video_list = data => fetch('/wenyuanjiaoyu/video/index', data, 'POST').then(check_login);
 export const video_all_list = data => fetch('/wenyuanjiaoyu/video/get_all', data, 'POST').then(check_login);
 export const video_edit = data => fetch('/wenyuanjiaoyu/video/edit', data, 'POST').then(check_login);

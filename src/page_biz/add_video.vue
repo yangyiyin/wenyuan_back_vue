@@ -67,6 +67,7 @@
                             :limit="1"
                             :on-remove="(file, fileList) => {return handleRemove(file, fileList, 'audio')}"
                             :on-exceed="(files, fileList) => {return handleExceed(files, fileList, 'audio')}"
+                            :on-progress="()=>{url_info = '上传尚未完成,请耐心等待...'}"
                             :on-success="(res, file, fileList) => {return handleSuccess(res, file, fileList, 'audio')}"
                             :before-upload="(file) => {return beforeUpload(file, 'audio')}"
                             >
@@ -77,6 +78,7 @@
                     <!--<img width="100%" :src="dialogImageUrl" alt="">-->
                     <!--</el-dialog>-->
                     <video  style="width: 200px" controls="controls" v-if="form.url" :src="form.url"></video>
+                    <div>{{url_info}}</div>
                 </el-form-item>
 
                 <el-form-item label="视频星级" prop="level">
@@ -217,6 +219,7 @@
         data(){
             return {
                 id:0,
+                url_info:'',
                 loading:false,
                 dialogFormVisibleQuestions:false,
                 form: {
@@ -504,7 +507,7 @@
 
             beforeUpload(file, ele){
                 if (ele == 'audio') {
-                    const isJPG = (file.name.indexOf('.mp4') != -1)
+                    const isJPG = (file.name.indexOf('.mp4') != -1|| (file.name.indexOf('.MP4') != -1))
 //                    const isJPG = true;
 
                     const isLt2M = file.size / 1024  < 1024 * 40;
@@ -560,6 +563,7 @@
             handleSuccess(res, file, fileList, ele) {
                 if (ele == 'audio') {
                     this.form.url = res.data[0];
+                    this.url_info = '';
                 } else {
                     this.form.img = res.data[0];
                 }

@@ -3,6 +3,13 @@
 
         <div class="table_container" style="padding-bottom: 0">
 
+            <el-input
+                    style="display: inline-block;width:150px;"
+                    placeholder="题目id"
+                    v-model="id"
+                    clearable>
+            </el-input>
+
             <el-select v-model="type" placeholder="类型" clearable>
                 <el-option
                         v-for="item in [{label:'单选题',value:1},{label:'判断题',value:2},{label:'填空题',value:3},{label:'简答题',value:4},{label:'其他题',value:5},{label:'阅读题',value:6},{label:'计算题',value:7},{label:'作文题',value:8}]"
@@ -196,7 +203,8 @@
         props: ['checked'],
         data(){
             return {
-                id:0,
+                id:'',
+                qid:'',
                 tableData: [],
                 limit: 10,
                 count: 0,
@@ -261,7 +269,7 @@
             list() {
                 question_list({id:this.id,page:this.currentPage,page_size:this.limit,entity:this.entity,title:this.title,
                     type:this.type,tag:this.tag,hard_level:this.hard_level,grade:this.grade,useway_ids:this.useway_ids,
-                    knowledge_point_ids:this.knowledge_point_ids,label_ids:this.label_ids}).then(function(res){
+                    knowledge_point_ids:this.knowledge_point_ids,label_ids:this.label_ids,}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
