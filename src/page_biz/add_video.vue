@@ -70,7 +70,8 @@
                             :on-progress="()=>{url_info = '上传尚未完成,请耐心等待...'}"
                             :on-success="(res, file, fileList) => {return handleSuccess(res, file, fileList, 'audio')}"
                             :before-upload="(file) => {return beforeUpload(file, 'audio')}"
-                            >
+                            :file-list="fileList"
+                    >
                         <el-button size="small" type="primary">点击上传</el-button>
                         <div slot="tip" class="el-upload__tip">请控制视频大小不要过大(100M)</div>
                     </el-upload>
@@ -222,6 +223,7 @@
                 url_info:'',
                 loading:false,
                 dialogFormVisibleQuestions:false,
+                fileList:[],
                 form: {
                     type: {label:'题目精讲',value:'1'},
                     entity: '',
@@ -342,6 +344,12 @@
                             questions:res.data.questions,
                             price:res.data.price,
                         }
+                        this.fileList = [
+                            {
+                                url:res.data.url,
+                                name:res.data.url_name,
+                            }
+                        ]
                     } else {
                         this.$message({
                             message: res.msg,
@@ -468,7 +476,7 @@
                 }.bind(this));
             },
             submit: function () {
-
+//                console.log(this.fileList[0].name);return;
                 var error = false;
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
@@ -497,7 +505,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    video_edit({id:this.id,...this.form}).then(function (res) {
+                    video_edit({id:this.id,...this.form,url_name:this.fileList[0].name}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
@@ -557,6 +565,7 @@
             handleRemove(file, fileList, ele) {
                 //console.log(file, fileList);
                 if (ele == 'audio') {
+                    this.fileList = [];
                     this.form.url = '';
                 } else {
                     this.form.img = '';
@@ -579,6 +588,12 @@
             },
             handleSuccess(res, file, fileList, ele) {
                 if (ele == 'audio') {
+//                    console.log(file);
+                    this.fileList = [{
+                        name:file.name,
+                        url:res.data[0],
+                    }
+                    ];
                     this.form.url = res.data[0];
                     this.url_info = '';
                 } else {
