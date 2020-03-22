@@ -128,7 +128,7 @@
                 <el-form-item label="" >
 
                     <template v-if="knowledge_points.length > 0">
-                        <div style="max-height: 200px;width: 500px;">
+                        <div style="max-height: 200px;width: 500px;overflow: scroll;border: 1px solid #999;border-radius: 10px;">
                             <el-checkbox-group class="checkbox-border" v-model="form.knowledge_point" size="mini" style="display: inline-block;">
                                 <template v-for="(item, index) in knowledge_points">
                                     <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
@@ -152,7 +152,7 @@
                 </el-form-item>
                 <el-form-item label="标签">
                     <template v-if="labels.length > 0">
-                        <div style="max-height: 200px;width: 500px;">
+                        <div style="max-height: 200px;width: 500px;overflow: scroll;border: 1px solid #999;border-radius: 10px;">
                             <el-checkbox-group class="checkbox-border" v-model="form.label" size="mini" style="display: inline-block" >
                                 <template v-for="(item, index) in labels">
                                     <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
