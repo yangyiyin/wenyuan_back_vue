@@ -73,7 +73,7 @@
                             :file-list="fileList"
                     >
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">请控制视频大小不要过大(100M)</div>
+                        <div slot="tip" class="el-upload__tip">请控制视频大小不要过大(1G)</div>
                     </el-upload>
                     <!--<el-dialog :visible.sync="dialogVisible" style="width: ">-->
                     <!--<img width="100%" :src="dialogImageUrl" alt="">-->
@@ -535,14 +535,14 @@
                     const isJPG = (file.name.indexOf('.mp4') != -1|| (file.name.indexOf('.MP4') != -1))
 //                    const isJPG = true;
 
-                    const isLt2M = file.size / 1024  < 1024 * 100;
+                    const isLt2M = file.size / 1024  < 1024 * 1024;
 
                     if (!isJPG) {
                         this.$message.error('只能上传mp4文件!');
                     }
 
                     if (!isLt2M) {
-                        this.$message.error('文件大小不能超过 100M!');
+                        this.$message.error('文件大小不能超过 1G!');
                     }
                     return  isJPG && isLt2M;
                 } else {
