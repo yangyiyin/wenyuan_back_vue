@@ -136,4 +136,6 @@ export const admin_purview_info = data => fetch('/wenyuanjiaoyu/admin_purview/in
 export const admin_purview_sort = data => fetch('/wenyuanjiaoyu/admin_purview/sort', data, 'POST').then(check_login);
 export const get_menu = data => fetch('/wenyuanjiaoyu/admin_purview/get_menu', data, 'POST').then(check_login);
 
+export const get_qiniu_token = data => fetch('/waibao/common/get_qiniu_token', data, 'GET').then(check_login);
+
 

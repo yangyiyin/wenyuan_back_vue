@@ -5,6 +5,7 @@ import { baseUrl } from './env'
 export default {
     status_success : 100,
     upload_url:baseUrl + '/waibao/common/qiniu_upload?bucket=wenyuanjiaoyu',
+    // get_qiniu_token:baseUrl + '/waibao/common/get_qiniu_token',
     upload_url_local:'//api.yixsu.com/index.php' + '/waibao/common/local_upload?bucket=wenyuanjiaoyu',
     upload_url_time_fangdao:'//api.yixsu.com/index.php' + '/waibao/common/qiniu_upload?bucket=time-fangdao',
     upload_video_url_local:'//api.yixsu.com/index.php' + '/waibao/common/local_upload?bucket=wenyuanjiaoyu_video',
