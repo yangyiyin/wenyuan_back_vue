@@ -111,65 +111,65 @@
                     </el-select>
                 </el-form-item>
 
-                <!--<el-form-item label="知识点" prop="knowledge">-->
+                <el-form-item label="知识点" prop="knowledge">
 
-                    <!--<el-select v-model="form.knowledge_group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()" clearable>-->
-                        <!--<el-option-->
-                                <!--v-for="item in groups"-->
-                                <!--:key="item.id"-->
-                                <!--:label="item.name"-->
-                                <!--:value="item">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
+                    <el-select v-model="form.knowledge_group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
+                        <el-option
+                                v-for="item in groups"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item">
+                        </el-option>
+                    </el-select>
 
-                    <!--<el-select v-model="form.knowledge_group_subject" value-key="id" placeholder="请选择知识点科目分组" style="width: 120px;" @change="get_knowledge_points()" clearable>-->
-                        <!--<el-option-->
-                                <!--v-for="item in groups_subject"-->
-                                <!--:key="item.id"-->
-                                <!--:label="item.name"-->
-                                <!--:value="item">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="" >-->
+                    <el-select v-model="form.knowledge_group_subject" value-key="id" placeholder="请选择知识点科目分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
+                        <el-option
+                                v-for="item in groups_subject"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="" >
 
-                    <!--<template v-if="knowledge_points.length > 0">-->
-                        <!--<div style="max-height: 200px;width: 500px;overflow: scroll;border: 1px solid #999;border-radius: 10px;">-->
-                            <!--<el-checkbox-group class="checkbox-border" v-model="form.knowledge_point" size="mini" style="display: inline-block;">-->
-                                <!--<template v-for="(item, index) in knowledge_points">-->
-                                    <!--<el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>-->
-                                <!--</template>-->
-                            <!--</el-checkbox-group>-->
-                        <!--</div>-->
-                    <!--</template>-->
-                    <!--<template v-else>-->
-                        <!--<span style="color: red">当前分组下无标签</span>-->
-                    <!--</template>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="标签组" prop="label">-->
-                    <!--<el-select v-model="form.label_group" value-key="id" placeholder="请选择标签组" style="width: 120px;" @change="get_labels()" clearable>-->
-                        <!--<el-option-->
-                                <!--v-for="item in label_groups"-->
-                                <!--:key="item.id"-->
-                                <!--:label="item.name"-->
-                                <!--:value="item">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="标签">-->
-                    <!--<template v-if="labels.length > 0">-->
-                        <!--<div style="max-height: 200px;width: 500px;overflow: scroll;border: 1px solid #999;border-radius: 10px;">-->
-                            <!--<el-checkbox-group class="checkbox-border" v-model="form.label" size="mini" style="display: inline-block;" >-->
-                                <!--<template v-for="(item, index) in labels">-->
-                                    <!--<el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>-->
-                                <!--</template>-->
-                            <!--</el-checkbox-group>-->
-                        <!--</div>-->
-                    <!--</template>-->
-                    <!--<template v-else>-->
-                        <!--<span style="color: red">当前标签组下无标签</span>-->
-                    <!--</template>-->
-                <!--</el-form-item>-->
+                    <template v-if="knowledge_points.length > 0">
+                        <div style="max-height: 200px;width: 500px;overflow: scroll;border: 1px solid #999;border-radius: 10px;">
+                            <el-checkbox-group class="checkbox-border" v-model="form.knowledge_point" size="mini" style="display: inline-block;">
+                                <template v-for="(item, index) in knowledge_points">
+                                    <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
+                                </template>
+                            </el-checkbox-group>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <span style="color: red">当前分组下无标签</span>
+                    </template>
+                </el-form-item>
+                <el-form-item label="标签组" prop="label">
+                    <el-select v-model="form.label_group" value-key="id" placeholder="请选择标签组" style="width: 120px;" @change="get_labels()" clearable>
+                        <el-option
+                                v-for="item in label_groups"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="标签">
+                    <template v-if="labels.length > 0">
+                        <div style="max-height: 200px;width: 500px;overflow: scroll;border: 1px solid #999;border-radius: 10px;">
+                            <el-checkbox-group class="checkbox-border" v-model="form.label" size="mini" style="display: inline-block;" >
+                                <template v-for="(item, index) in labels">
+                                    <el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
+                                </template>
+                            </el-checkbox-group>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <span style="color: red">当前标签组下无标签</span>
+                    </template>
+                </el-form-item>
                 <el-form-item label="选择关联原题" prop="questions">
                     <el-button size="small" type="primary" @click="dialogFormVisibleQuestions = true;">选择题目</el-button>
                     <div style="display: inline-block">
@@ -256,7 +256,7 @@
                     img: { required: true, message: '请上传视频封面', trigger: 'blur' },
                     url: { required: true, message: '请上传视频', trigger: 'blur' },
                     level: { required: true, message: '请选择星级', trigger: 'blur' },
-                    questions: { type:'array', required: true, message: '请选择原题', trigger: 'blur' },
+//                    questions: { type:'array', required: true, message: '请选择原题', trigger: 'blur' },
                     price: { required: true, message: '请输入价格', trigger: 'blur' },
                 },
                 knowledge_points:[],
@@ -325,8 +325,8 @@
                     img: '',
                     url: '',
                     level: '1',
-                    knowledge_group_subject:{id:1,name:'语文'},
-                    knowledge_group:{id:1,name:'一年级'},
+                    knowledge_group_subject:{},
+                    knowledge_group:{},
                     grade:[],
                     knowledge_point:[],
                     label:[],
