@@ -40,7 +40,9 @@
                 </el-table-column>
 
                 <el-table-column label="价格" prop="price"></el-table-column>
-                <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                <el-table-column label="支付单号" prop="pay_no"></el-table-column>
+                <el-table-column label="支付时间" prop="pay_time"></el-table-column>
+                <el-table-column label="创建时间" prop="create_time"></el-table-column>
                 <!--<el-table-column label="操作" width="300">-->
                     <!--<template slot-scope="scope">-->
                         <!--<el-button size="mini" @click="goto_edit_video(scope.row.id)">编辑</el-button>-->

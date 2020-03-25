@@ -31,7 +31,15 @@
                 <el-table-column label="知识点" prop="knowledge_names"></el-table-column>
                 <el-table-column label="原题id" prop="questions[0]"></el-table-column>
                 <el-table-column label="价格" prop="price"></el-table-column>
+                <el-table-column label="实际购买人数" prop="video_counts.buy_count"></el-table-column>
+                <el-table-column label="展示购买人数" prop="video_counts.buy_count_show"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                <el-table-column label="排序">
+                    <template slot-scope="scope">
+                        {{scope.row.sort}}
+                        <el-button size="mini" @click="handleSort(scope.row)">设置</el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="goto_edit_video(scope.row.id)">编辑</el-button>
@@ -52,17 +60,17 @@
                 </el-pagination>
             </div>
         </div>
-        <!--<el-dialog title="修改排序" :visible.sync="dialogFormVisible" width="30%">-->
-            <!--<el-form :model="current">-->
-                <!--<el-form-item label="排序值(越大越靠前)">-->
-                    <!--<el-input v-model="current.sort" auto-complete="off"></el-input>-->
-                <!--</el-form-item>-->
-            <!--</el-form>-->
-            <!--<div slot="footer" class="dialog-footer">-->
-                <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-                <!--<el-button type="primary" @click="sort">确 定</el-button>-->
-            <!--</div>-->
-        <!--</el-dialog>-->
+        <el-dialog title="修改排序" :visible.sync="dialogFormVisible" width="30%">
+            <el-form :model="current">
+                <el-form-item label="排序值(越大越靠前)">
+                    <el-input v-model="current.sort" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sort">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
