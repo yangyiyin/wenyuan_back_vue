@@ -193,6 +193,38 @@
                 <el-form-item label="价格(元)" prop="price">
                     <el-input type="number" clearable v-model="form.price"></el-input>
                 </el-form-item>
+
+                <el-form-item label="制作者" >
+                    <el-select v-model="form.maker"  clearable value-key="id" >
+                        <el-option
+                                v-for="item in makers"
+                                :key="item.id"
+                                :label="item.show_name"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="录入者" >
+                    <el-select v-model="form.submiter"  clearable value-key="id" >
+                        <el-option
+                                v-for="item in submiters"
+                                :key="item.id"
+                                :label="item.show_name"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="检查者" >
+                    <el-select v-model="form.checker"  clearable value-key="id" >
+                        <el-option
+                                v-for="item in checkers"
+                                :key="item.id"
+                                :label="item.show_name"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
@@ -215,7 +247,7 @@
 <script>
     import headTop from '../components/headTop'
     import questions from '../components/questions'
-    import {get_grades,get_qiniu_token} from '@/api/getDataEarth'
+    import {get_grades,get_qiniu_token,admin_user_all_list} from '@/api/getDataEarth'
 
     import {deepCopy} from '../config/mUtils'
     import {video_edit,video_info} from '@/api/getDatavideo'
@@ -232,6 +264,9 @@
                 uploading_percent:0,
                 dialogFormVisibleQuestions:false,
                 fileList:[],
+                submiters:[],
+                checkers:[],
+                makers:[],
                 form: {
                     type: {label:'题目精讲',value:'1'},
                     entity: '',
@@ -247,7 +282,10 @@
                     label:[],
                     label_group:{id:'0',name:'全部'},
                     questions:[],
-                    price:''
+                    price:'',
+                    submiter:{},
+                    checker:{},
+                    maker:{},
                 },
                 rule:{
                     type: { required: true, message: '请输入视频类型', trigger: 'blur' },
@@ -288,24 +326,26 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
 //                console.log(vm.id )
-                if (vm.id && vm.id > 0) {
-                    vm.get_info().then(()=>{
+                vm.init_authors().then(()=>{
+                    if (vm.id && vm.id > 0) {
+                        vm.get_info().then(()=>{
+                            vm.init_options().then(function () {
+                                vm.init_groups().then(function(){
+                                    vm.init_grades();
+                                })
+
+                            })
+                        })
+                    } else {
+                        vm.init();
                         vm.init_options().then(function () {
                             vm.init_groups().then(function(){
                                 vm.init_grades();
                             })
 
                         })
-                    })
-                } else {
-                    vm.init();
-                    vm.init_options().then(function () {
-                        vm.init_groups().then(function(){
-                            vm.init_grades();
-                        })
-
-                    })
-                }
+                    }
+                })
 
             })
         },
@@ -317,6 +357,9 @@
                 this.fileList = [];
                 this.uploading=false;
                 this.uploading_percent=0;
+//                this.submiters =[];
+//                this.checkers=[];
+//                this.makers=[];
                 this.form = {
                     type: {label:'题目精讲',value:'1'},
                     entity: '',
@@ -332,9 +375,36 @@
                     label:[],
                     label_group:{id:'0',name:'全部'},
                     questions:[],
-                    price:''
+                    price:'',
+                    submiter:{},
+                    checker:{},
+                    maker:{},
                 }
             },
+
+            init_authors(){
+//                console.log(123);
+                return new Promise(function (resolve, reject) {
+                    this.loading_info = true;
+
+                    admin_user_all_list({'is_question_author': 1}).then(function (res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.submiters = res.data;
+                            this.checkers = deepCopy(res.data);
+                            this.makers = deepCopy(res.data);
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                        }
+                        this.loading_info = false;
+                        resolve();
+                    }.bind(this));
+
+                }.bind(this));
+            },
+
             async get_info() {
                 await video_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
@@ -354,6 +424,9 @@
                             label_group:res.data.label_group,
                             questions:res.data.questions,
                             price:res.data.price,
+                            submiter:res.data.submiter,
+                            checker:res.data.checker,
+                            maker:res.data.maker,
                         }
                         this.fileList = [
                             {
@@ -487,7 +560,7 @@
                 }.bind(this));
             },
             submit: function () {
-//                console.log(this.fileList[0].name);return;
+//                console.log(this.form);return;
                 var error = false;
                 this.$refs['form'].validate((valid) => {
                     if (valid) {

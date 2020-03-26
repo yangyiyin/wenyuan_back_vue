@@ -33,6 +33,9 @@
                 <el-table-column label="价格" prop="price"></el-table-column>
                 <el-table-column label="实际购买人数" prop="video_counts.buy_count"></el-table-column>
                 <el-table-column label="展示购买人数" prop="video_counts.buy_count_show"></el-table-column>
+                <el-table-column label="制作者" prop="maker.show_name"></el-table-column>
+                <el-table-column label="录入者" prop="submiter.show_name"></el-table-column>
+                <el-table-column label="检查者" prop="checker.show_name"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="排序">
                     <template slot-scope="scope">
