@@ -45,6 +45,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
+                        <el-button size="mini" @click="show_erweima(scope.row)">查看二维码</el-button>
                         <el-button size="mini" @click="goto_edit_video(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
@@ -74,6 +75,15 @@
                 <el-button type="primary" @click="sort">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog title="二维码" :visible.sync="showerweima" width="30%">
+            <!--<img :src="'http://api.yixsu.com/minipro/index_pre?page=/pages/video/detail&id='+current_showerweima_item.id"/>-->
+            <img :src="'http://api.yixsu.com/index.php/waibao/common/qrcode?text='+encodeURIComponent('http://api.yixsu.com/minipro/index_pre?page=/pages/video_detail/index&id='+current_showerweima_item.id)"/>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="showerweima = false">关 闭</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
@@ -88,6 +98,8 @@
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
+                showerweima:false,
+                current_showerweima_item:{},
                 current:{},
 //                remark:'',
 //                choose_categories:[],
@@ -223,8 +235,12 @@
                     }
                 }.bind(this));
                 this.dialogFormVisible = false;
+            },
+            show_erweima(item){
+                this.showerweima = true;
+                this.current_showerweima_item = item;
             }
-        },
+        }
     }
 </script>
 
