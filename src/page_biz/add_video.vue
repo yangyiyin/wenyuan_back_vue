@@ -73,29 +73,25 @@
                     </el-upload>
                 </el-form-item>
 
-                <el-form-item label="视频上传"  prop="url">
-                    <!--<el-upload-->
-                    <!--:action="upload_url_time_fangdao"-->
-                    <!--:limit="1"-->
-                    <!--:on-remove="(file, fileList) => {return handleRemove(file, fileList, 'audio')}"-->
-                    <!--:on-exceed="(files, fileList) => {return handleExceed(files, fileList, 'audio')}"-->
-                    <!--:on-progress="()=>{url_info = '上传尚未完成,请耐心等待...'}"-->
-                    <!--:on-success="(res, file, fileList) => {return handleSuccess(res, file, fileList, 'audio')}"-->
-                    <!--:before-upload="(file) => {return beforeUpload(file, 'audio')}"-->
-                    <!--:file-list="fileList"-->
-                    <!--&gt;-->
-                    <!--<el-button size="small" type="primary">点击上传</el-button>-->
-                    <!--<div slot="tip" class="el-upload__tip">请控制视频大小不要过大(1G)</div>-->
-                    <!--</el-upload>-->
+                <el-form-item label="预览视频上传"  prop="url">
+                    <div id="box2" style="width:150px;height:50px;cursor:pointer;line-height:50px;border-radius:10px;text-align:center;position: relative;background: #00a0e9;color: #fff">
+                        选择文件
+                        <input @change="choose_file_preview" style="position: absolute;top:0;left:0;width: 100%;cursor:pointer;height:100%;opacity: 0" class="file-input" type="file" id="select2" />
+                    </div>
+                    <el-progress v-if="uploading_preview" :percentage="uploading_percent_preview"></el-progress>
 
+                    <video  style="width: 200px" controls="controls" v-if="form.preview_url" :src="form.preview_url"></video>
+                    <div>{{fileList_preview[0]?fileList_preview[0].name:''}}</div>
+                </el-form-item>
 
+                <el-form-item label="正式视频上传"  prop="url">
                     <div id="box2" style="width:150px;height:50px;cursor:pointer;line-height:50px;border-radius:10px;text-align:center;position: relative;background: #00a0e9;color: #fff">
                         选择文件
                         <input @change="choose_file" style="position: absolute;top:0;left:0;width: 100%;cursor:pointer;height:100%;opacity: 0" class="file-input" type="file" id="select2" />
                     </div>
                     <el-progress v-if="uploading" :percentage="uploading_percent"></el-progress>
 
-                    <video  style="width: 200px" controls="controls" v-if="form.url" :src="form.url"></video>
+                    <video  style="width: 200px" controls="controls" v-if="form.url" :src="form.preview_url"></video>
                     <div>{{fileList[0]?fileList[0].name:''}}</div>
                 </el-form-item>
 
@@ -262,8 +258,14 @@
                 loading:false,
                 uploading:false,
                 uploading_percent:0,
+
+                uploading_preview:false,
+                uploading_percent_preview:0,
+
+
                 dialogFormVisibleQuestions:false,
                 fileList:[],
+                fileList_preview:[],
                 submiters:[],
                 checkers:[],
                 makers:[],
@@ -355,8 +357,9 @@
                 this.loading = false;
                 this.name = '';
                 this.fileList = [];
-                this.uploading=false;
-                this.uploading_percent=0;
+                this.fileList_preview = [];
+                this.uploading_preview=false;
+                this.uploading_percent_preview=0;
 //                this.submiters =[];
 //                this.checkers=[];
 //                this.makers=[];
@@ -415,6 +418,7 @@
                             desc: res.data.desc,
                             img: res.data.img,
                             url: res.data.url,
+                            preview_url: res.data.preview_url,
                             level: res.data.level,
                             knowledge_group_subject:res.data.knowledge_group_subject,
                             knowledge_group:res.data.knowledge_group,
@@ -432,6 +436,12 @@
                             {
                                 url:res.data.url,
                                 name:res.data.url_name,
+                            }
+                        ]
+                        this.fileList_preview = [
+                            {
+                                url:res.data.preview_url,
+                                name:res.data.preview_url_name,
                             }
                         ]
                     } else {
@@ -589,7 +599,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    video_edit({id:this.id,...this.form,url_name:this.fileList[0].name}).then(function (res) {
+                    video_edit({id:this.id,...this.form,url_name:this.fileList[0].name,preview_url_name:this.fileList_preview[0].name}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
@@ -758,6 +768,94 @@
 
                     this.uploading = true;
                     this.uploading_percent = total.percent;
+                };
+
+
+                function generateUUID() {
+                    var d = new Date().getTime();
+                    if (window.performance && typeof window.performance.now === "function") {
+                        d += performance.now(); //use high-precision timer if available
+                    }
+                    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                        var r = (d + Math.random() * 16) % 16 | 0;
+                        d = Math.floor(d / 16);
+                        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                    });
+                    return uuid;
+                }
+
+                var subObject = {
+                    next: next,
+                    error: error,
+                    complete: complete
+                };
+
+                var observable = qiniu.upload(file, generateUUID(), token, putExtra, config)
+                var subscription = observable.subscribe(subObject);
+
+            },
+            async choose_file_preview(event){
+                var file = event.target.files[0];
+//                console.log(file);return;
+
+                const isJPG = (file.name.indexOf('.mp4') != -1|| (file.name.indexOf('.MP4') != -1))
+//                    const isJPG = true;
+
+                const isLt2M = file.size / 1024  < 1024 * 1024;
+
+                if (!isJPG) {
+                    this.$message.error('只能上传mp4文件!');
+                    return;
+                }
+
+                if (!isLt2M) {
+                    this.$message.error('文件大小不能超过 1G!');
+                    return;
+                }
+                var token = '';
+                await get_qiniu_token({bucket:'time-fangdao'}).then( (res) => {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        token = res.data;
+                    }
+                })
+
+                var config = {
+                    useCdnDomain: true,
+                    disableStatisticsReport: false,
+                    region: qiniu.region.z0
+                };
+                var putExtra = {
+                    fname: file.name,
+                    params: {},
+                    mimeType: ['video/mp4']
+                };
+
+                // 设置next,error,complete对应的操作，分别处理相应的进度信息，错误信息，以及完成后的操作
+                var error = (err) => {
+//                    console.log(err);
+                    this.$message.error('上传出错!');
+//                    this.$message.error(err);
+                };
+
+                var complete = (res) => {
+//                    console.log(res);
+                    var url = 'http://time-fangdao-qiniu.yixsu.com/'+res.key;
+                    this.fileList_preview = [{
+                        name:file.name,
+                        url:url,
+                    }
+                    ];
+                    this.form.preview_url = url;
+
+                };
+
+                var next = (response) => {
+                    var chunks = response.chunks||[];
+                    var total = response.total;
+//                    console.log(response);
+
+                    this.uploading_preview = true;
+                    this.uploading_percent_preview = total.percent;
                 };
 
 
