@@ -407,7 +407,7 @@
           </el-input>
         </div>
         <div class="search_item">
-          <el-input type="number" clearable placeholder="备注" v-model="offlineorder.remark_back" style="width: 450px">
+          <el-input clearable placeholder="备注" v-model="offlineorder.remark_back" style="width: 450px">
             <template slot="prepend">备注</template>
           </el-input>
         </div>
