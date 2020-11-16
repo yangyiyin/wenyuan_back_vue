@@ -64,6 +64,7 @@
 
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
+            <el-button  @click="dialogOfflineOrder = true;">创建线下订单</el-button>
         </div>
         <div class="table_container">
             <el-table
@@ -365,12 +366,62 @@
                 <el-button type="primary" @click="course_arrange(current)" :loading="loadingBtn == 'course_arrange'">确认</el-button>
             </div>
         </el-dialog>
+
+
+      <el-dialog title="线下报名录入单" :visible.sync="dialogOfflineOrder" width="50%">
+
+        <div class="search_item">
+          <el-input disabled value="精品课" style="width: 450px">
+            <template slot="prepend">课程类型</template>
+          </el-input>
+        </div>
+
+        <div class="search_item">
+          <el-input clearable placeholder="课程名称" v-model="offlineorder.goods_title" style="width: 450px">
+            <template slot="prepend">课程名称</template>
+          </el-input>
+        </div>
+        <div class="search_item">
+          <el-input clearable placeholder="学生姓名" v-model="offlineorder.student_name" style="width: 450px">
+            <template slot="prepend">学生姓名</template>
+          </el-input>
+        </div>
+        <div class="search_item">
+          <el-input clearable placeholder="学号" v-model="offlineorder.studentid" style="width: 450px">
+            <template slot="prepend">学号</template>
+          </el-input>
+        </div>
+        <div class="search_item">
+          <el-input clearable placeholder="手机号(小程序)" v-model="offlineorder.tel" style="width: 450px">
+            <template slot="prepend">手机号(小程序)</template>
+          </el-input>
+        </div>
+        <div class="search_item">
+          <el-input type="number" clearable placeholder="0" v-model="offlineorder.price" style="width: 450px">
+            <template slot="prepend">总价（元）</template>
+          </el-input>
+        </div>
+        <div class="search_item">
+          <el-input type="number" clearable placeholder="0" v-model="offlineorder.payed_money" style="width: 450px">
+            <template slot="prepend">已支付（元）</template>
+          </el-input>
+        </div>
+        <div class="search_item">
+          <el-input type="number" clearable placeholder="备注" v-model="offlineorder.remark_back" style="width: 450px">
+            <template slot="prepend">备注</template>
+          </el-input>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogOfflineOrder = false">取 消</el-button>
+          <el-button type="primary" @click="addOfflineOrder(offlineorder)">确认</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {order_list,cancel_order_force,cancel_order_force_sign_course,complete_order,pay_left_money,course_arrange,course_arrange_del,order_edit_info} from '@/api/getDataEarth'
+    import {order_list,add_offline_order, cancel_order_force,cancel_order_force_sign_course,complete_order,pay_left_money,course_arrange,course_arrange_del,order_edit_info} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -382,10 +433,12 @@
                 dialogFormVisible:false,
                 dialogFormVisibleDaochu:false,
                 dialogFormVisibleCourseArrangeTest:false,
+              dialogOfflineOrder:false,
                 dialogFormVisibleCourseArrange:false,
                 dialogFormVisibleEditPrice:false,
                 dialogFormVisibleRemark:false,
                 current:{extra_data:{}},
+              offlineorder:{},
 //                remark:'',
 //                choose_categories:[],
 //                categories:[],
@@ -630,6 +683,27 @@
 //                this.dialogFormVisible = true;
 //                this.current = row;
 //            },
+          addOfflineOrder(row) {
+            add_offline_order({
+              offlineorder: this.offlineorder
+
+            }).then(function(res){
+              if (res.code == this.$store.state.constant.status_success) {
+                this.dialogOfflineOrder = false;
+                this.$message({
+                  type: 'success',
+                  message: '操作成功'
+                });
+                this.search();
+              } else {
+                this.$message({
+                  message: res.msg,
+                  type: 'warning'
+                });
+              }
+            }.bind(this));
+            this.dialogOfflineOrder = false;
+          },
             course_arrange_test(row) {
                 course_arrange({
                     order_id:this.current.id,
@@ -654,6 +728,8 @@
                }.bind(this));
                this.dialogFormVisibleCourseArrangeTest = false;
            },
+
+
             course_arrange(row) {
                 course_arrange({
                     order_id:this.current.id,

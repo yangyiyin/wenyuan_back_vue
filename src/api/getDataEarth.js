@@ -77,6 +77,7 @@ export const goods_edit = data => fetch('/wenyuanjiaoyu/goods/edit', data, 'POST
 export const goods_sort = data => fetch('/wenyuanjiaoyu/goods/sort', data, 'POST').then(check_login);
 export const get_all_properties = data => fetch('/wenyuanjiaoyu/goods/get_all_properties', data, 'POST').then(check_login);
 export const order_list = data => fetch('/wenyuanjiaoyu/order/index', data, 'POST').then(check_login);
+export const add_offline_order = data => fetch('/wenyuanjiaoyu/order/add_offline_order', data, 'POST').then(check_login);
 export const order_edit_info = data => fetch('/wenyuanjiaoyu/order/edit_info', data, 'POST').then(check_login);
 export const cancel_order_force = data => fetch('/wenyuanjiaoyu/order/cancel_order_force', data, 'POST').then(check_login);
 export const cancel_order_force_sign_course = data => fetch('/wenyuanjiaoyu/order/cancel_order_force_sign_course', data, 'POST').then(check_login);

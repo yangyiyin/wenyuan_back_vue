@@ -24,7 +24,18 @@
                     v-model="order_no"
                     clearable>
             </el-input>
-
+          <el-input
+            style="display: inline-block;width: 250px;"
+            placeholder="学生姓名"
+            v-model="student_name"
+            clearable>
+          </el-input>
+          <el-input
+            style="display: inline-block;width: 250px;"
+            placeholder="课程名称"
+            v-model="goods_title"
+            clearable>
+          </el-input>
             <el-input
                     style="display: inline-block;width: 250px;"
                     placeholder="操作员"
@@ -110,6 +121,7 @@
                 opt_name:'',
                 order_no:'',
                 goods_title:'',
+                student_name:'',
                 start_time:'',
                 end_time:'',
                 loadingBtn:-1
@@ -132,7 +144,7 @@
         },
         methods: {
             list() {
-                order_pay_left_log_list({page:this.currentPage,page_size:this.limit,opt_name:this.opt_name,order_no:this.order_no,start_time:this.start_time,end_time:this.end_time}).then(function(res){
+                order_pay_left_log_list({page:this.currentPage,page_size:this.limit,opt_name:this.opt_name,order_no:this.order_no,student_name:this.student_name,goods_title:this.goods_title,start_time:this.start_time,end_time:this.end_time}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
