@@ -41,7 +41,14 @@
 
                 <el-table-column label="订单编号" prop="order_no"></el-table-column>
                 <el-table-column label="余款收账金额" prop="remark"></el-table-column>
-                <el-table-column label="备忘" prop="bak"></el-table-column>
+                <el-table-column label="学生姓名" prop="student_name"></el-table-column>
+                <el-table-column label="课程" prop="goods_title"></el-table-column>
+                <el-table-column label="备忘" >
+                    <template slot-scope="scope">
+                        {{scope.row.bak}}
+                        <el-button size="mini" @click="dialogBak = true;current = scope.row">备注</el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作员" prop="opt_name"></el-table-column>
                 <el-table-column label="时间" prop="create_time" width="180"></el-table-column>
 
@@ -57,17 +64,17 @@
                 </el-pagination>
             </div>
         </div>
-        <!--<el-dialog title="修改排序" :visible.sync="dialogFormVisible" width="30%">-->
-            <!--<el-form :model="current">-->
-                <!--<el-form-item label="排序值(越大越靠前)">-->
-                    <!--<el-input v-model="current.sort" auto-complete="off"></el-input>-->
-                <!--</el-form-item>-->
-            <!--</el-form>-->
-            <!--<div slot="footer" class="dialog-footer">-->
-                <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-                <!--<el-button type="primary" @click="sort">确 定</el-button>-->
-            <!--</div>-->
-        <!--</el-dialog>-->
+        <el-dialog title="备注" :visible.sync="dialogBak" width="30%">
+            <el-form :model="current">
+                <el-form-item label="备注">
+                    <el-input v-model="current.bak" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogBak = false">取 消</el-button>
+                <el-button type="primary" @click="bak()">确 定</el-button>
+            </div>
+        </el-dialog>
 
         <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
             <p>
@@ -87,7 +94,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {order_pay_left_log_list} from '@/api/getDataEarth'
+    import {order_pay_left_log_list,order_pay_left_log_bak} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -97,6 +104,7 @@
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
+                dialogBak:false,
                 dialogFormVisibleDaochu:false,
                 current:{},
                 opt_name:'',
@@ -131,6 +139,29 @@
                     }
                 }.bind(this));
 
+            },
+            bak() {
+                order_pay_left_log_bak({
+                    id:this.current.id,
+                    bak:this.current.bak
+
+                }).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogBak = false;
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                }.bind(this));
+                this.dialogBak = false;
             },
             handleCurrentChange(val){
                 this.currentPage = val;
