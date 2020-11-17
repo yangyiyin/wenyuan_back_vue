@@ -91,7 +91,7 @@
                     </div>
                     <el-progress v-if="uploading" :percentage="uploading_percent"></el-progress>
 
-                    <video  style="width: 200px" controls="controls" v-if="form.url" :src="form.preview_url"></video>
+                    <video  style="width: 200px" controls="controls" v-if="form.url" :src="form.url"></video>
                     <div>{{fileList[0]?fileList[0].name:''}}</div>
                 </el-form-item>
 
@@ -738,7 +738,7 @@
                 };
                 var putExtra = {
                     fname: file.name,
-                    params: {},
+                    customVars: {},
                     mimeType: 'video/mp4'
                 };
 
@@ -826,8 +826,8 @@
                 };
                 var putExtra = {
                     fname: file.name,
-                    params: {},
-                    mimeType: ['video/mp4']
+                    customVars: {},
+                    mimeType: 'video/mp4'
                 };
 
                 // 设置next,error,complete对应的操作，分别处理相应的进度信息，错误信息，以及完成后的操作
