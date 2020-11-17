@@ -739,7 +739,7 @@
                 var putExtra = {
                     fname: file.name,
                     params: {},
-                    mimeType: ['video/mp4']
+                    mimeType: 'video/mp4'
                 };
 
                 // 设置next,error,complete对应的操作，分别处理相应的进度信息，错误信息，以及完成后的操作
