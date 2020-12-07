@@ -31,7 +31,7 @@
                 <el-table-column label="知识点" prop="knowledge_names"></el-table-column>
                 <el-table-column label="原题id" prop="questions[0]"></el-table-column>
                 <el-table-column label="价格" prop="price"></el-table-column>
-                <el-table-column label="点击人数" prop="video_counts.play_count"></el-table-column>
+                <el-table-column label="点击次数" prop="video_counts.play_count"></el-table-column>
                 <!--<el-table-column label="展示购买人数" prop="video_counts.buy_count_show"></el-table-column>-->
                 <el-table-column label="制作者" prop="maker.show_name"></el-table-column>
                 <el-table-column label="录入者" prop="submiter.show_name"></el-table-column>
