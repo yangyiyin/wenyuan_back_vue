@@ -412,7 +412,7 @@
             filter_knowledge_points(){
                 console.log(this.knowledge_points_keywords);
                 this.knowledge_points = this.knowledge_points.filter((item) => {
-                    return item.search(this.knowledge_points_keywords) > -1;
+                    return item.name.search(this.knowledge_points_keywords) > -1;
                 })
             },
             async get_info() {
