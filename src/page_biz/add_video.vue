@@ -126,6 +126,8 @@
                                 :value="item">
                         </el-option>
                     </el-select>
+
+                    <el-input @input="filter_knowledge_points" v-model="knowledge_points_keywords" placeholder="关键字" style="width: 150px;"></el-input>
                 </el-form-item>
                 <el-form-item label="" >
 
@@ -261,7 +263,7 @@
 
                 uploading_preview:false,
                 uploading_percent_preview:0,
-
+                knowledge_points_keywords:'',
 
                 dialogFormVisibleQuestions:false,
                 fileList:[],
@@ -407,7 +409,12 @@
 
                 }.bind(this));
             },
-
+            filter_knowledge_points(){
+                console.log(this.knowledge_points_keywords);
+                this.knowledge_points = this.knowledge_points.filter((item) => {
+                    return item.search(this.knowledge_points_keywords) > -1;
+                })
+            },
             async get_info() {
                 await video_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
