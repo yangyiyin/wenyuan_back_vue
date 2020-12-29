@@ -529,6 +529,7 @@
                     knowledge_point_all_list({group:this.form.knowledge_group, group_subject:this.form.knowledge_group_subject}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.knowledge_points = res.data;
+                            this.knowledge_points_origin = res.data;
                             label_all_list({group_id:this.form.label_group.id}).then(function (res) {
                                 if (res.code == this.$store.state.constant.status_success) {
                                     this.labels = res.data;
