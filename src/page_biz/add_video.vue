@@ -107,7 +107,7 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="知识点" prop="knowledge" style="width: 500px;">
+                <el-form-item label="知识点" prop="knowledge" style="width: 600px;">
 
                     <el-select v-model="form.knowledge_group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
                         <el-option
@@ -411,11 +411,9 @@
                 }.bind(this));
             },
             filter_knowledge_points(){
-                if (this.knowledge_points_keywords) {
-                    this.knowledge_points = this.knowledge_points_origin.filter((item) => {
-                        return item.name.search(this.knowledge_points_keywords) > -1;
-                    })
-                }
+                this.knowledge_points = this.knowledge_points_origin.filter((item) => {
+                    return item.name.search(this.knowledge_points_keywords) > -1;
+                })
             },
             async get_info() {
                 await video_info({id:this.id}).then(function (res) {
