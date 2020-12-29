@@ -107,7 +107,7 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="知识点" prop="knowledge">
+                <el-form-item label="知识点" prop="knowledge" style="width: 500px;">
 
                     <el-select v-model="form.knowledge_group" value-key="id" placeholder="请选择知识点分组" style="width: 120px;" @change="get_knowledge_points()" clearable>
                         <el-option
@@ -302,6 +302,7 @@
                     price: { required: true, message: '请输入价格', trigger: 'blur' },
                 },
                 knowledge_points:[],
+                knowledge_points_origin:[],
                 labels:[],
                 label_groups:[],
                 groups:[],
@@ -410,10 +411,11 @@
                 }.bind(this));
             },
             filter_knowledge_points(){
-                console.log(this.knowledge_points_keywords);
-                this.knowledge_points = this.knowledge_points.filter((item) => {
-                    return item.name.search(this.knowledge_points_keywords) > -1;
-                })
+                if (this.knowledge_points_keywords) {
+                    this.knowledge_points = this.knowledge_points_origin.filter((item) => {
+                        return item.name.search(this.knowledge_points_keywords) > -1;
+                    })
+                }
             },
             async get_info() {
                 await video_info({id:this.id}).then(function (res) {
@@ -551,10 +553,12 @@
                 }.bind(this))
             },
             get_knowledge_points() {
+                this.knowledge_points_keywords = '';
                 knowledge_point_all_list({group:this.form.knowledge_group,group_subject:this.form.knowledge_group_subject}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.form.knowledge_point = [];
                         this.knowledge_points = res.data;
+                        this.knowledge_points_origin = res.data;
                     } else {
                         this.$message({
                             message: res.msg,
