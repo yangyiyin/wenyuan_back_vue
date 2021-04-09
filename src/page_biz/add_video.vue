@@ -20,7 +20,7 @@
                 <el-form-item label="科目" prop="entity">
                     <el-select v-model="form.entity" placeholder="请选择">
                         <el-option
-                                v-for="item in [{label:'语文',value:'1'},{label:'数学',value:'2'},{label:'英语',value:'3'}]"
+                                v-for="item in [{label:'语文',value:'1'},{label:'数学',value:'2'},{label:'英语',value:'3'},{label:'科学',value:'4'}]"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
